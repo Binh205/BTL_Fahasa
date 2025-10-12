@@ -1,23 +1,56 @@
 <?php
-class Controller {
-    // Load model
-    public function model($model){
-    //   // Require model file
-    //   if(file_exists('../app/models/' . $model . '.php'))
-      require_once 'app/models/' . $model . '.php';
+/**
+ * CONTROLLER BASE CLASS
+ * Class cha cho tất cả controller
+ */
 
-      // Instatiate model
-      return new $model();
+class Controller {
+    
+    /**
+     * Load Model
+     */
+    public function model($model) {
+        $modelFile = APP_ROOT . '/models/' . $model . '.php';
+        
+        if(file_exists($modelFile)) {
+            require_once $modelFile;
+            return new $model();
+        } else {
+            die("Model {$model}.php không tồn tại");
+        }
     }
 
-    // Load view
-    public function view($view, $data = []){
-      // Check for view file
-      if(file_exists('app/views/' . $view . '.php')){
-        require_once 'app/views/' . $view . '.php';
-      } else {
-        // View does not exist
-        die('View does not exist');
-      }
+    /**
+     * Load View
+     */
+    public function view($view, $data = []) {
+        $viewFile = APP_ROOT . '/views/' . $view . '.php';
+        
+        if(file_exists($viewFile)) {
+            // Chuyển array thành biến để dùng trong view
+            extract($data);
+            require_once $viewFile;
+        } else {
+            die("View {$view}.php không tồn tại");
+        }
+    }
+
+    /**
+     * Redirect đến URL khác
+     */
+    public function redirect($path = '') {
+        header('Location: ' . BASE_URL . $path);
+        exit();
+    }
+
+    /**
+     * Kiểm tra phương thức request (cho form submit)
+     */
+    public function isPost() {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    public function isGet() {
+        return $_SERVER['REQUEST_METHOD'] === 'GET';
     }
 }

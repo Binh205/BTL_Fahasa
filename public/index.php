@@ -1,5 +1,5 @@
 <?php
 session_start();
-require_once 'app/router.php';
+require_once __DIR__ . '/../app/router.php';
 
 $app = new App();

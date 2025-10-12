@@ -16,13 +16,20 @@ define('DB_NAME', 'fahasa_db');
 // CẤU HÌNH ỨNG DỤNG
 // =================================
 define('APP_NAME', 'BTL FAHASA');
-define('BASE_URL', 'http://localhost/BTL_FAHASA/public/');
-define('APP_ROOT', dirname(dirname(__FILE__))); // Đường dẫn gốc của app/
+
+// QUAN TRỌNG: Chỉ cần sửa tên thư mục ở đây!
+define('PROJECT_NAME', 'BTL_Fahasa'); // ← Sửa tên này theo thư mục của bạn
+define('BASE_URL', 'http://localhost/' . PROJECT_NAME . '/public/');
+
+// Đường dẫn tuyệt đối
+define('APP_ROOT', dirname(dirname(__FILE__))); // app/
+define('ROOT', dirname(APP_ROOT)); // BTL_Fahasa/
+define('PUBLIC_PATH', ROOT . '/public/');
 
 // =================================
 // CẤU HÌNH MÔI TRƯỜNG
 // =================================
-define('ENVIRONMENT', 'development');
+define('ENVIRONMENT', 'development'); // development hoặc production
 
 // Bật/tắt hiển thị lỗi
 if(ENVIRONMENT === 'development') {

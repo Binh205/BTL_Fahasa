@@ -1,5 +1,8 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+# BẮT BUỘC phải vào qua public/
+# Nếu truy cập localhost/BTL_Fahasa → tự động chuyển về public/
 
+RewriteEngine On
+
+# Nếu không phải thư mục public, chuyển hướng vào public/
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L]
