@@ -41,7 +41,10 @@ BTL_Fahasa/
 │   ├── config/
 │   │   └── config.php          ← CHỈ SỬA FILE NÀY!
 │   ├── controllers/
-│   │   └── HomeController.php
+│   │   ├── AboutController.php
+│   │   ├── HomeController.php
+│   │   ├── LandingController.php
+│   │   └── QaController.php
 │   ├── core/
 │   │   ├── App.php
 │   │   ├── Controller.php
@@ -61,6 +64,7 @@ BTL_Fahasa/
 
 - Trang chủ: `http://localhost/BTL_Fahasa/public/`
 - Giới thiệu: `http://localhost/BTL_Fahasa/public/home/about`
+- Hỏi/Đáp: `http://localhost/BTL_Fahasa/public/home/qa`
 - Sản phẩm: `http://localhost/BTL_Fahasa/public/product`
 
 ## ⚙️ Lưu ý quan trọng
