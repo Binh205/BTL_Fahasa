@@ -164,24 +164,6 @@
         background-color: #a81b20;
     }
 
-    .contact-map {
-        height: 300px;
-        border-radius: 10px;
-        overflow: hidden;
-        margin-bottom: 30px;
-    }
-
-    .map-placeholder {
-        width: 100%;
-        height: 100%;
-        background-color: var(--fahasa-light-gray);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--fahasa-gray);
-        font-size: 18px;
-    }
-
     .social-contacts {
         display: flex;
         gap: 15px;
@@ -319,7 +301,7 @@
                         <i class="fab fa-instagram"></i>
                     </a>
                     <a href="#" class="social-btn" title="Zalo">
-                        <i class="fab fa-zalo"></i>
+                        <i class="fas fa-comment-alt"></i>
                     </a>
                     <a href="#" class="social-btn" title="Youtube">
                         <i class="fab fa-youtube"></i>
@@ -327,12 +309,6 @@
                 </div>
             </div>
 
-            <!-- Map -->
-            <div class="contact-map">
-                <div class="map-placeholder">
-                    <i class="fas fa-map-marked-alt"></i> Bản đồ vị trí cửa hàng
-                </div>
-            </div>
         </div>
 
         <!-- Contact Form -->
