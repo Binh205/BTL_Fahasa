@@ -5,7 +5,7 @@
  */
 
 class HomeController extends Controller {
-    
+
     /**
      * Trang chủ
      */
@@ -14,11 +14,10 @@ class HomeController extends Controller {
             'title' => 'Trang chủ - ' . APP_NAME,
             'page' => 'home'
         ];
-        
-        // Tạm thời redirect về landing, sau này sẽ có view riêng
-        $this->redirect('landing');
+
+        $this->view('home', $data);
     }
-    
+
     /**
      * Trang giới thiệu
      */
@@ -27,10 +26,10 @@ class HomeController extends Controller {
             'title' => 'Giới thiệu - ' . APP_NAME,
             'page' => 'about'
         ];
-        
+
         $this->view('about', $data);
     }
-    
+
     /**
      * Trang hỏi đáp
      */
@@ -39,7 +38,7 @@ class HomeController extends Controller {
             'title' => 'Hỏi/Đáp - ' . APP_NAME,
             'page' => 'qa'
         ];
-        
+
         $this->view('qa', $data);
     }
 }
