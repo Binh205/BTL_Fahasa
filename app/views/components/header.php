@@ -189,7 +189,7 @@
     <div class="nav-menu">
         <div class="container">
             <div class="d-flex justify-content-start">
-                <a href="<?= BASE_URL ?>" class="nav-link <?= ($page ?? '') == 'home' ? 'active' : '' ?>">
+                <a href="<?= BASE_URL ?>home" class="nav-link <?= ($page ?? '') == 'home' ? 'active' : '' ?>">
                     <i class="fas fa-home"></i> Trang chủ
                 </a>
                 <a href="<?= BASE_URL ?>home/about" class="nav-link <?= ($page ?? '') == 'about' ? 'active' : '' ?>">
