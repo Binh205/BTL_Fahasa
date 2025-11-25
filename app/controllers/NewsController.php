@@ -43,16 +43,16 @@ class NewsController extends Controller {
         // Trong thực tế, bạn sẽ truy vấn database để lấy thông tin bài viết
         // Dưới đây là dữ liệu mẫu
         $article = $this->getArticleById($id);
-        
+
         if (!$article) {
             // Nếu không tìm thấy bài viết, chuyển hướng về trang danh sách
             header('Location: ' . BASE_URL . 'news');
             exit;
         }
-        
+
         // Lấy bài viết liên quan (cùng danh mục)
         $relatedArticles = $this->getRelatedArticles($article['category'], $id, 3);
-        
+
         $data = [
             'title' => $article['title'] . ' - ' . APP_NAME,
             'page' => 'news',
@@ -62,7 +62,7 @@ class NewsController extends Controller {
 
         $this->view('news/detail', $data);
     }
-    
+
     /**
      * Mô phỏng hàm lấy bài viết từ database
      */
@@ -178,12 +178,12 @@ class NewsController extends Controller {
                 'comments' => 52
             ]
         ];
-        
+
         // Lọc bài viết theo tìm kiếm
         if (!empty($search)) {
             $filteredArticles = [];
             foreach ($allArticles as $article) {
-                if (stripos($article['title'], $search) !== false || 
+                if (stripos($article['title'], $search) !== false ||
                     stripos($article['summary'], $search) !== false ||
                     stripos($article['content'], $search) !== false) {
                     $filteredArticles[] = $article;
@@ -191,7 +191,7 @@ class NewsController extends Controller {
             }
             $allArticles = $filteredArticles;
         }
-        
+
         // Lọc bài viết theo danh mục
         if (!empty($category) && $category !== 'all') {
             $filteredArticles = [];
@@ -202,14 +202,14 @@ class NewsController extends Controller {
             }
             $allArticles = $filteredArticles;
         }
-        
+
         // Phân trang
         $totalArticles = count($allArticles);
         $articles = array_slice($allArticles, $offset, $limit);
-        
+
         return $articles;
     }
-    
+
     /**
      * Mô phỏng hàm lấy tổng số bài viết (cho phân trang)
      */
@@ -217,7 +217,7 @@ class NewsController extends Controller {
         $allArticles = $this->getArticles($search, $category);
         return count($allArticles);
     }
-    
+
     /**
      * Mô phỏng hàm lấy bài viết theo ID
      */
@@ -258,12 +258,84 @@ class NewsController extends Controller {
                 'published_date' => '2024-09-28',
                 'views' => 1800,
                 'comments' => 42
+            ],
+            4 => [
+                'id' => 4,
+                'title' => 'Văn hóa đọc ở Việt Nam: Thách thức và cơ hội',
+                'summary' => 'Văn hóa đọc là một phần quan trọng trong phát triển xã hội. Bài viết phân tích thực trạng và đề xuất giải pháp phát triển văn hóa đọc...',
+                'content' => 'Văn hóa đọc là một phần không thể thiếu trong quá trình phát triển xã hội và giáo dục con người. Ở Việt Nam, mặc dù đã có những chuyển biến tích cực trong những năm gần đây, nhưng văn hóa đọc vẫn còn nhiều thách thức cần được giải quyết.\n\nThực trạng hiện nay:\n\n- Tỷ lệ người đọc sách còn thấp so với các nước phát triển\n- Thiếu thói quen đọc sách từ nhỏ\n- Thiếu không gian đọc phù hợp\n- Sự cạnh tranh từ các hình thức giải trí khác\n\nGiải pháp phát triển văn hóa đọc:\n\n1. Tăng cường đầu tư cho thư viện công cộng\n2. Tổ chức các sự kiện văn hóa đọc\n3. Đưa văn hóa đọc vào trường học từ cấp tiểu học\n4. Tạo môi trường đọc sách thân thiện\n5. Khuyến khích các hoạt động đọc sách trong gia đình\n6. Phát triển sách chất lượng cao\n7. Ứng dụng công nghệ trong việc phổ biến sách\n\nTuy nhiên, bên cạnh thách thức, vẫn có nhiều cơ hội để phát triển văn hóa đọc ở Việt Nam. Sự phát triển của công nghệ, sự quan tâm của xã hội, và nhu cầu học hỏi của người dân là những yếu tố thuận lợi để xây dựng một xã hội ham đọc sách.',
+                'author' => 'Lê Thị Bích Ngọc',
+                'category' => 'van-hoa',
+                'image' => 'images/news-page/van-hoa-doc-vietnam.jpg',
+                'published_date' => '2024-09-20',
+                'views' => 1500,
+                'comments' => 28
+            ],
+            5 => [
+                'id' => 5,
+                'title' => 'Sách và vai trò trong giáo dục hiện đại',
+                'summary' => 'Trong thời đại công nghệ phát triển, sách vẫn giữ vai trò quan trọng trong quá trình giáo dục và phát triển tư duy...',
+                'content' => 'Dù công nghệ thông tin ngày càng phát triển, sách vẫn giữ vai trò không thể thay thế trong giáo dục và phát triển tư duy con người. Sách không chỉ là phương tiện truyền đạt kiến thức mà còn là công cụ hình thành nhân cách, phát triển khả năng tư duy phản biện và sáng tạo.\n\nVai trò của sách trong giáo dục hiện đại:\n\n1. Nguồn kiến thức đáng tin cậy: Sách là nguồn thông tin đã qua kiểm duyệt, đánh giá và được đánh giá cao về độ tin cậy.\n\n2. Hình thành tư duy logic: Việc đọc sách giúp người đọc hình thành khả năng suy luận logic, phân tích và đánh giá thông tin.\n\n3. Rèn luyện kỹ năng đọc hiểu: Đây là kỹ năng cơ bản và quan trọng trong học tập và làm việc.\n\n4. Phát triển ngôn ngữ: Sách là công cụ hiệu quả để học từ vựng, ngữ pháp và phong cách viết.\n\n5. Giáo dục đạo đức và nhân cách: Qua những câu chuyện, bài học trong sách, người đọc học được những giá trị đạo đức và cách sống.\n\n6. Phản tư và tự học: Sách giúp người đọc có thời gian phản tư về bản thân và thế giới xung quanh.\n\nTuy nhiên, để sách phát huy hết vai trò trong giáo dục hiện đại, cần có sự đổi mới trong nội dung và hình thức xuất bản, cũng như nâng cao nhận thức về vai trò của sách trong xã hội.',
+                'author' => 'Hoàng Văn Cường',
+                'category' => 'giao-duc',
+                'image' => 'images/news-page/sach-va-vai-tro-trong-giao-duc-hien-dai.jpg',
+                'published_date' => '2024-09-15',
+                'views' => 1300,
+                'comments' => 31
+            ],
+            6 => [
+                'id' => 6,
+                'title' => 'Xu hướng xuất bản sách điện tử năm 2024',
+                'summary' => 'Sách điện tử ngày càng phát triển và trở thành xu hướng trong ngành xuất bản hiện đại...',
+                'content' => 'Năm 2024 ghi nhận nhiều thay đổi tích cực trong xu hướng xuất bản sách điện tử. Với sự phát triển của công nghệ và nhu cầu đọc sách tiện lợi, sách điện tử đã trở thành lựa chọn phổ biến của nhiều độc giả.\n\nCác xu hướng nổi bật:\n\n1. Tăng trưởng mạnh về doanh số sách điện tử: Theo báo cáo của các nền tảng xuất bản, doanh số sách điện tử tăng trưởng 40% so với năm 2023.\n\n2. Đa dạng hóa nội dung: Ngoài sách văn học, sách giáo dục, xu hướng sách kỹ năng, sách âm thanh cũng phát triển mạnh.\n\n3. Tích hợp công nghệ AI: Nhiều nền tảng bắt đầu sử dụng trí tuệ nhân tạo để cá nhân hóa trải nghiệm đọc sách.\n\n4. Sự kết hợp giữa sách giấy và sách điện tử: Nhiều nhà xuất bản cung cấp cả hai định dạng để phục vụ đa dạng nhu cầu.\n\n5. Tăng cường bảo mật bản quyền: Công nghệ chống sao chép được cải thiện để bảo vệ quyền lợi tác giả và nhà xuất bản.\n\n6. Phát triển nền tảng đọc sách xã hội: Cho phép người đọc chia sẻ nhận xét, đánh giá và tương tác với cộng đồng.\n\n7. Tích hợp sách nói: Nhiều nền tảng cung cấp cả sách điện tử và sách nói để tăng trải nghiệm người đọc.\n\nTuy nhiên, sách điện tử vẫn đối mặt với một số thách thức như: cạnh tranh từ các nền tảng giải trí, vấn đề bản quyền, và thói quen đọc sách truyền thống của một bộ phận độc giả.',
+                'author' => 'Nguyễn Thị Mai',
+                'category' => 'cong-nghe',
+                'image' => 'images/news-page/xu-huong-xuat-ban-sach-dien-tu-nam-2024.jpg',
+                'published_date' => '2024-08-25',
+                'views' => 1100,
+                'comments' => 25
+            ],
+            7 => [
+                'id' => 7,
+                'title' => 'Thư viện số: Giải pháp cho thời đại mới',
+                'summary' => 'Thư viện số đang trở thành xu hướng phát triển mạnh mẽ trong thời đại công nghệ số...',
+                'content' => 'Thư viện số là mô hình thư viện ứng dụng công nghệ thông tin để số hóa tài liệu và cung cấp dịch vụ thông tin cho người dùng qua môi trường mạng. Đây là xu hướng phát triển tất yếu trong thời đại số.\n\nLợi ích của thư viện số:\n\n1. Truy cập dễ dàng: Người dùng có thể truy cập tài liệu mọi lúc, mọi nơi\n2. Tiết kiệm không gian: Không cần diện tích vật lý lớn\n3. Chi phí bảo quản thấp: Không bị ảnh hưởng bởi thời tiết, mối mọt\n4. Khả năng lưu trữ lớn: Số lượng tài liệu không giới hạn\n5. Dễ dàng tìm kiếm: Công cụ tìm kiếm mạnh mẽ giúp nhanh chóng tìm được tài liệu cần\n6. Hỗ trợ nhiều định dạng: Sách, báo, tạp chí, video, âm thanh\n\nTuy nhiên, thư viện số cũng đối mặt với thách thức:\n\n1. Yêu cầu kỹ năng công nghệ từ người dùng\n2. Vấn đề bản quyền nội dung\n3. Phụ thuộc vào hạ tầng công nghệ thông tin\n4. Nguy cơ mất dữ liệu nếu không có biện pháp sao lưu\n\nMột số quốc gia đã thành công trong việc xây dựng thư viện số như Mỹ, Singapore, Hàn Quốc. Việt Nam cần học hỏi kinh nghiệm để phát triển mô hình phù hợp với điều kiện thực tế.',
+                'author' => 'Đỗ Quang Vinh',
+                'category' => 'cong-nghe',
+                'image' => 'images/news-page/thu-vien-so-giai-phap-cho-thoi-dai-moi.jpg',
+                'published_date' => '2024-08-10',
+                'views' => 950,
+                'comments' => 18
+            ],
+            8 => [
+                'id' => 8,
+                'title' => 'Sách thiếu nhi và vai trò trong phát triển trí tuệ trẻ em',
+                'summary' => 'Sách thiếu nhi đóng vai trò quan trọng trong việc hình thành nhân cách và phát triển trí tuệ cho trẻ em...',
+                'content' => 'Sách thiếu nhi là loại sách được thiết kế đặc biệt cho trẻ em, thường có hình ảnh minh họa sinh động, nội dung ngắn gọn, dễ hiểu và mang tính giáo dục cao. Vai trò của sách thiếu nhi trong sự phát triển của trẻ em là vô cùng quan trọng.\n\nVai trò chính:\n\n1. Phát triển ngôn ngữ: Sách giúp trẻ mở rộng vốn từ, học cách diễn đạt ý tưởng và giao tiếp hiệu quả.\n\n2. Hình thành nhân cách: Qua những câu chuyện, trẻ học được các giá trị đạo đức, phép ứng xử và cách sống.\n\n3. Kích thích trí tưởng tượng: Hình ảnh minh họa và nội dung hấp dẫn giúp trẻ phát triển trí tưởng tượng.\n\n4. Rèn luyện tư duy logic: Việc theo dõi cốt truyện giúp trẻ phát triển kỹ năng tư duy.\n\n5. Giáo dục cảm xúc: Sách giúp trẻ nhận biết, hiểu và kiểm soát cảm xúc của mình.\n\n6. Tạo thói quen đọc sách: Hình thành thói quen đọc sách từ nhỏ là nền tảng cho việc học tập suốt đời.\n\n7. Kết nối gia đình: Việc đọc sách cùng con là cách để cha mẹ gắn kết với con cái.\n\nĐể lựa chọn sách phù hợp cho trẻ, phụ huynh cần lưu ý:\n\n- Độ tuổi của trẻ\n- Sở thích cá nhân\n- Nội dung tích cực, phù hợp chuẩn mực đạo đức\n- Hình ảnh minh họa đẹp, hấp dẫn\n- Có thể khuyến khích trẻ tự chọn sách theo sở thích',
+                'author' => 'Phan Thị Hương',
+                'category' => 'giao-duc',
+                'image' => 'images/news-page/sach-thieu-nhi-va-vai-tro.jpg',
+                'published_date' => '2024-07-20',
+                'views' => 1400,
+                'comments' => 45
+            ],
+            9 => [
+                'id' => 9,
+                'title' => 'Sách kinh doanh và kỹ năng sống - xu hướng đọc của giới trẻ',
+                'summary' => 'Sách về kinh doanh và kỹ năng sống đang trở thành xu hướng đọc phổ biến trong giới trẻ hiện nay...',
+                'content' => 'Trong bối cảnh thị trường lao động cạnh tranh gay gắt, giới trẻ ngày càng quan tâm đến việc trang bị kỹ năng mềm và kiến thức kinh doanh. Sách về kinh doanh và kỹ năng sống đã trở thành một trong những thể loại được ưa chuộng nhất hiện nay.\n\nLý do sách kinh doanh và kỹ năng sống được ưa chuộng:\n\n1. Nhu cầu thực tế: Giới trẻ cần kỹ năng để thành công trong công việc và cuộc sống\n\n2. Khả năng ứng dụng cao: Nội dung sách thường có thể áp dụng trực tiếp vào thực tế\n\n3. Truyền cảm hứng: Nhiều cuốn sách truyền cảm hứng thành công từ những người nổi tiếng\n\n4. Kỹ năng cần thiết: Gồm kỹ năng giao tiếp, làm việc nhóm, quản lý thời gian, tư duy phản biện\n\n5. Tư duy kinh doanh: Học cách lập kế hoạch, ra quyết định và tư duy chiến lược\n\nTuy nhiên, người đọc cũng cần lưu ý:\n\n- Chọn sách từ tác giả, dịch giả uy tín\n- Kết hợp đọc sách với thực hành\n- Không nên chỉ đọc một chủ đề mà cần đa dạng hóa\n- Áp dụng những gì học được vào thực tế\n- Đánh giá sách sau khi đọc để chọn lựa những cuốn phù hợp hơn\n\nSách kinh doanh và kỹ năng sống không chỉ giúp người đọc phát triển bản thân mà còn định hướng con đường sự nghiệp rõ ràng hơn.',
+                'author' => 'Vũ Minh Tuấn',
+                'category' => 'ky-nang',
+                'image' => 'images/news-page/sach-kinh-doanh-va-ky-nang-song-xu-huong-doc-cua-gioi-tre.jpg',
+                'published_date' => '2024-07-05',
+                'views' => 1600,
+                'comments' => 52
             ]
         ];
-        
+
         return $articles[$id] ?? null;
     }
-    
+
     /**
      * Mô phỏng hàm lấy bài viết liên quan
      */
@@ -330,7 +402,7 @@ class NewsController extends Controller {
                 'views' => 1100
             ]
         ];
-        
+
         $related = [];
         foreach ($allArticles as $article) {
             if ($article['category'] === $category && $article['id'] !== $currentId) {
@@ -340,7 +412,7 @@ class NewsController extends Controller {
                 }
             }
         }
-        
+
         return $related;
     }
 }

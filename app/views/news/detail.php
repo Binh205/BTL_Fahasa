@@ -381,9 +381,13 @@
         
         <div class="article-content">
             <?php 
-            // Convert newline characters to HTML paragraphs
-            $content = htmlspecialchars($article['content']);
+            // Replace literal '\n' with actual newline
+            $content = str_replace('\\n', "\n", $article['content']);
+            
+            // Now proceed with htmlspecialchars and splitting
+            $content = htmlspecialchars($content);
             $paragraphs = explode("\n", $content);
+            
             foreach ($paragraphs as $paragraph):
                 $paragraph = trim($paragraph);
                 if (!empty($paragraph)):
