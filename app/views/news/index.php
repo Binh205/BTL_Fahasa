@@ -389,7 +389,7 @@
             <?php foreach ($articles as $article): ?>
                 <a href="<?= BASE_URL ?>news/detail/<?= $article['id'] ?>" class="news-card">
                     <div class="news-image">
-                        <img src="<?= $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                        <img src="<?= BASE_URL . $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
                     </div>
                     <div class="news-content">
                         <div class="news-category"><?= ucfirst(str_replace('-', ' ', $article['category'])) ?></div>

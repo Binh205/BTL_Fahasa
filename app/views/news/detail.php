@@ -375,7 +375,7 @@
                 </div>
             </div>
             <div class="article-image">
-                <img src="<?= $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                <img src="<?= BASE_URL . $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
             </div>
         </header>
         
@@ -419,7 +419,7 @@
                 <?php foreach ($relatedArticles as $related): ?>
                     <a href="<?= BASE_URL ?>news/detail/<?= $related['id'] ?>" class="related-card">
                         <div class="related-image">
-                            <img src="<?= $related['image'] ?>" alt="<?= htmlspecialchars($related['title']) ?>">
+                            <img src="<?= BASE_URL . $related['image'] ?>" alt="<?= htmlspecialchars($related['title']) ?>">
                         </div>
                         <div class="related-content">
                             <h3 class="related-title"><?= htmlspecialchars($related['title']) ?></h3>

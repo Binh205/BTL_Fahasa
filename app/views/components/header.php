@@ -99,13 +99,18 @@
             padding: 8px 20px;
             text-decoration: none;
             transition: all 0.3s;
+            border-radius: 4px;
         }
 
         .nav-menu .nav-link:hover,
         .nav-menu .nav-link.active {
             color: var(--fahasa-red);
             background-color: white;
-            border-radius: 4px;
+        }
+
+        .nav-menu .nav-link:focus {
+            outline: 2px solid var(--fahasa-red);
+            outline-offset: 2px;
         }
 
         .header-icons a {
@@ -189,24 +194,56 @@
     <div class="nav-menu">
         <div class="container">
             <div class="d-flex justify-content-start">
-                <a href="<?= BASE_URL ?>home" class="nav-link <?= ($page ?? '') == 'home' ? 'active' : '' ?>">
-                    <i class="fas fa-home"></i> Trang chủ
+                <a href="<?= BASE_URL ?>home" class="nav-link <?= ($page ?? '') == 'home' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'home' ? 'page' : false ?>">
+                    <i class="fas fa-home" aria-hidden="true"></i> Trang chủ
                 </a>
-                <a href="<?= BASE_URL ?>home/about" class="nav-link <?= ($page ?? '') == 'about' ? 'active' : '' ?>">
-                    <i class="fas fa-info-circle"></i> Giới thiệu
+                <a href="<?= BASE_URL ?>home/about" class="nav-link <?= ($page ?? '') == 'about' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'about' ? 'page' : false ?>">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i> Giới thiệu
                 </a>
-                <a href="<?= BASE_URL ?>home/qa" class="nav-link <?= ($page ?? '') == 'qa' ? 'active' : '' ?>">
-                    <i class="fas fa-question-circle"></i> Hỏi/Đáp
+                <a href="<?= BASE_URL ?>home/qa" class="nav-link <?= ($page ?? '') == 'qa' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'qa' ? 'page' : false ?>">
+                    <i class="fas fa-question-circle" aria-hidden="true"></i> Hỏi/Đáp
                 </a>
-                <a href="<?= BASE_URL ?>product" class="nav-link <?= ($page ?? '') == 'product' ? 'active' : '' ?>">
-                    <i class="fas fa-book"></i> Sản phẩm
+                <a href="<?= BASE_URL ?>product" class="nav-link <?= ($page ?? '') == 'product' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'product' ? 'page' : false ?>">
+                    <i class="fas fa-book" aria-hidden="true"></i> Sản phẩm
                 </a>
-                <a href="<?= BASE_URL ?>news" class="nav-link <?= ($page ?? '') == 'news' ? 'active' : '' ?>">
-                    <i class="fas fa-newspaper"></i> Tin tức
+                <a href="<?= BASE_URL ?>news" class="nav-link <?= ($page ?? '') == 'news' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'news' ? 'page' : false ?>">
+                    <i class="fas fa-newspaper" aria-hidden="true"></i> Tin tức
                 </a>
-                <a href="<?= BASE_URL ?>contact" class="nav-link <?= ($page ?? '') == 'contact' ? 'active' : '' ?>">
-                    <i class="fas fa-phone"></i> Liên hệ
+                <a href="<?= BASE_URL ?>contact" class="nav-link <?= ($page ?? '') == 'contact' ? 'active' : '' ?>" aria-current="<?= ($page ?? '') == 'contact' ? 'page' : false ?>">
+                    <i class="fas fa-phone" aria-hidden="true"></i> Liên hệ
                 </a>
             </div>
         </div>
     </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for anchor links
+            const links = document.querySelectorAll('a[href^="#"]');
+            for (const link of links) {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+
+            // Add loading states for important links
+            const importantLinks = document.querySelectorAll('a[href*="/product"], a[href*="/news"]');
+            for (const link of importantLinks) {
+                link.addEventListener('click', function() {
+                    // Add a loading indicator for external navigation
+                    this.setAttribute('aria-busy', 'true');
+                });
+            }
+        });
+    </script>

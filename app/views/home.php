@@ -2,7 +2,7 @@
 
 <style>
     .hero-section {
-        background: linear-gradient(rgba(201, 33, 39, 0.7), rgba(247, 148, 30, 0.7)), url('https://images.unsplash.com/photo-1495741545814-2d7f4d75ea09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80') no-repeat center center;
+        background: linear-gradient(rgba(201, 33, 39, 0.7), rgba(247, 148, 30, 0.7)), url('<?= BASE_URL ?>images/home-page/library.jpg') no-repeat center center;
         background-size: cover;
         height: 500px;
         display: flex;
@@ -419,7 +419,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/dac-nhan-tam.jpg" alt="Đắc Nhân Tâm">
+                    <img src="<?= BASE_URL ?>images/home-page/dac-nhan-tam.jpg" alt="Đắc Nhân Tâm">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Đắc Nhân Tâm - Tác phẩm kinh điển về nghệ thuật thu phục và ảnh hưởng người khác</h3>
@@ -431,7 +431,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/nha-gia-kim.jpg" alt="Nhà Giả Kim">
+                    <img src="<?= BASE_URL ?>images/home-page/nha-gia-kim.jpg" alt="Nhà Giả Kim">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Nhà Giả Kim - Phiên bản kỷ niệm 25 năm</h3>
@@ -443,7 +443,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/nha-lanh-dao-khong-chuc-danh.jpg" alt="Nhà Lãnh Đạo Không Chức Danh">
+                    <img src="<?= BASE_URL ?>images/home-page/nha-lanh-dao-khong-chuc-danh.jpg" alt="Nhà Lãnh Đạo Không Chức Danh">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Nhà Lãnh Đạo Không Chức Danh</h3>
@@ -455,7 +455,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/doi-ngan-dung-ngu-dai.jpg" alt="Đời Ngắn Đừng Ngủ Dài">
+                    <img src="<?= BASE_URL ?>images/home-page/doi-ngan-dung-ngu-dai.jpg" alt="Đời Ngắn Đừng Ngủ Dài">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Đời Ngắn Đừng Ngủ Dài</h3>
@@ -474,7 +474,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/tu-duy-nhanh-va-cham.jpg" alt="Tư Duy Nhanh và Tư Duy Chậm">
+                    <img src="<?= BASE_URL ?>images/home-page/tu-duy-nhanh-va-cham.jpg" alt="Tư Duy Nhanh và Tư Duy Chậm">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Tư Duy Nhanh và Tư Duy Chậm</h3>
@@ -486,7 +486,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/tu-duy-tich-cuc.jpg" alt="Tư duy tích cực">
+                    <img src="<?= BASE_URL ?>images/home-page/tu-duy-tich-cuc.jpg" alt="Tư duy tích cực">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Tư Duy Tích Cực</h3>
@@ -498,7 +498,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/hieu-ve-trai-tim.jpg" alt="Hiểu về trái tim">
+                    <img src="<?= BASE_URL ?>images/home-page/hieu-ve-trai-tim.jpg" alt="Hiểu về trái tim">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Hiểu Về Trái Tim</h3>
@@ -510,7 +510,7 @@
         <div class="col-md-3 col-sm-6">
             <a href="#" class="product-card">
                 <div class="product-image">
-                    <img src="images/home-page/dam-bi-ghet.jpg" alt="Dám bị ghét">
+                    <img src="<?= BASE_URL ?>images/home-page/dam-bi-ghet.jpg" alt="Dám bị ghét">
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">Dám Bị Ghét</h3>
@@ -556,7 +556,7 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <img src="images/home-page/loi-ich-doc-sach.jpg" class="card-img-top" alt="Lợi ích của việc đọc sách">
+                <img src="<?= BASE_URL ?>images/home-page/loi-ich-doc-sach.jpg" class="card-img-top" alt="Lợi ích của việc đọc sách">
                 <div class="card-body">
                     <h5 class="card-title">Lợi ích của việc đọc sách mỗi ngày</h5>
                     <p class="card-text">Đọc sách không chỉ giúp mở rộng kiến thức mà còn cải thiện trí nhớ, tăng khả năng tập trung và giảm căng thẳng hiệu quả...</p>
@@ -566,7 +566,7 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <img src="images/home-page/top-10-cuon-sach-nen-doc.jpg" class="card-img-top" alt="Top 10 cuốn sách nên đọc trong đời">
+                <img src="<?= BASE_URL ?>images/home-page/top-10-cuon-sach-nen-doc.jpg" class="card-img-top" alt="Top 10 cuốn sách nên đọc trong đời">
                 <div class="card-body">
                     <h5 class="card-title">Top 10 cuốn sách nên đọc trong đời</h5>
                     <p class="card-text">Dưới đây là danh sách 10 cuốn sách kinh điển mà mỗi người nên đọc ít nhất một lần trong đời để mở mang tri thức và hiểu biết...</p>
@@ -576,7 +576,7 @@
         </div>
         <div class="col-md-4">
             <div class="card">
-                <img src="images/home-page/doc-sach-hieu-qua.jpg" class="card-img-top" alt="Phương pháp đọc sách hiệu quả">
+                <img src="<?= BASE_URL ?>images/home-page/doc-sach-hieu-qua.jpg" class="card-img-top" alt="Phương pháp đọc sách hiệu quả">
                 <div class="card-body">
                     <h5 class="card-title">Phương pháp đọc sách hiệu quả</h5>
                     <p class="card-text">Bạn đang đọc sách nhưng không nhớ được nhiều nội dung? Dưới đây là một số phương pháp đọc sách hiệu quả giúp bạn ghi nhớ tốt hơn...</p>

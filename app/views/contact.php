@@ -322,73 +322,93 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="<?= BASE_URL ?>contact/submit" id="contactForm">
+                <form method="POST" action="<?= BASE_URL ?>contact/submit" id="contactForm" novalidate>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name" class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                <input type="text" 
-                                       class="form-control <?= isset($errors['name']) ? 'error' : '' ?>" 
-                                       id="name" 
-                                       name="name" 
-                                       value="<?= htmlspecialchars($old_data['name'] ?? '') ?? '' ?>" 
-                                       placeholder="Nhập họ tên của bạn">
+                                <label for="name" class="form-label">Họ và tên <span class="text-danger" aria-label="bắt buộc">*</span></label>
+                                <input type="text"
+                                       class="form-control <?= isset($errors['name']) ? 'error' : '' ?>"
+                                       id="name"
+                                       name="name"
+                                       value="<?= htmlspecialchars($old_data['name'] ?? '') ?? '' ?>"
+                                       placeholder="Nhập họ tên của bạn"
+                                       required
+                                       aria-describedby="name-error">
                                 <?php if (isset($errors['name'])): ?>
-                                    <div class="error-message"><?= $errors['name'] ?></div>
+                                    <div class="error-message" id="name-error"><?= $errors['name'] ?></div>
+                                <?php else: ?>
+                                    <div class="error-message" id="name-error" style="display:none;"></div>
                                 <?php endif; ?>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                <input type="email" 
-                                       class="form-control <?= isset($errors['email']) ? 'error' : '' ?>" 
-                                       id="email" 
-                                       name="email" 
-                                       value="<?= htmlspecialchars($old_data['email'] ?? '') ?? '' ?>" 
-                                       placeholder="Nhập địa chỉ email">
+                                <label for="email" class="form-label">Email <span class="text-danger" aria-label="bắt buộc">*</span></label>
+                                <input type="email"
+                                       class="form-control <?= isset($errors['email']) ? 'error' : '' ?>"
+                                       id="email"
+                                       name="email"
+                                       value="<?= htmlspecialchars($old_data['email'] ?? '') ?? '' ?>"
+                                       placeholder="Nhập địa chỉ email"
+                                       required
+                                       aria-describedby="email-error">
                                 <?php if (isset($errors['email'])): ?>
-                                    <div class="error-message"><?= $errors['email'] ?></div>
+                                    <div class="error-message" id="email-error"><?= $errors['email'] ?></div>
+                                <?php else: ?>
+                                    <div class="error-message" id="email-error" style="display:none;"></div>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                        <input type="text" 
-                               class="form-control <?= isset($errors['phone']) ? 'error' : '' ?>" 
-                               id="phone" 
-                               name="phone" 
-                               value="<?= htmlspecialchars($old_data['phone'] ?? '') ?? '' ?>" 
-                               placeholder="Nhập số điện thoại">
+                        <label for="phone" class="form-label">Số điện thoại <span class="text-danger" aria-label="bắt buộc">*</span></label>
+                        <input type="tel"
+                               class="form-control <?= isset($errors['phone']) ? 'error' : '' ?>"
+                               id="phone"
+                               name="phone"
+                               value="<?= htmlspecialchars($old_data['phone'] ?? '') ?? '' ?>"
+                               placeholder="Nhập số điện thoại"
+                               required
+                               aria-describedby="phone-error">
                         <?php if (isset($errors['phone'])): ?>
-                            <div class="error-message"><?= $errors['phone'] ?></div>
+                            <div class="error-message" id="phone-error"><?= $errors['phone'] ?></div>
+                        <?php else: ?>
+                            <div class="error-message" id="phone-error" style="display:none;"></div>
                         <?php endif; ?>
                     </div>
                     
                     <div class="form-group">
-                        <label for="subject" class="form-label">Tiêu đề <span class="text-danger">*</span></label>
-                        <input type="text" 
-                               class="form-control <?= isset($errors['subject']) ? 'error' : '' ?>" 
-                               id="subject" 
-                               name="subject" 
-                               value="<?= htmlspecialchars($old_data['subject'] ?? '') ?? '' ?>" 
-                               placeholder="Nhập tiêu đề">
+                        <label for="subject" class="form-label">Tiêu đề <span class="text-danger" aria-label="bắt buộc">*</span></label>
+                        <input type="text"
+                               class="form-control <?= isset($errors['subject']) ? 'error' : '' ?>"
+                               id="subject"
+                               name="subject"
+                               value="<?= htmlspecialchars($old_data['subject'] ?? '') ?? '' ?>"
+                               placeholder="Nhập tiêu đề"
+                               required
+                               aria-describedby="subject-error">
                         <?php if (isset($errors['subject'])): ?>
-                            <div class="error-message"><?= $errors['subject'] ?></div>
+                            <div class="error-message" id="subject-error"><?= $errors['subject'] ?></div>
+                        <?php else: ?>
+                            <div class="error-message" id="subject-error" style="display:none;"></div>
                         <?php endif; ?>
                     </div>
                     
                     <div class="form-group">
-                        <label for="message" class="form-label">Nội dung <span class="text-danger">*</span></label>
-                        <textarea class="form-control <?= isset($errors['message']) ? 'error' : '' ?>" 
-                                  id="message" 
-                                  name="message" 
-                                  rows="5" 
-                                  placeholder="Nhập nội dung tin nhắn của bạn"><?= htmlspecialchars($old_data['message'] ?? '') ?? '' ?></textarea>
+                        <label for="message" class="form-label">Nội dung <span class="text-danger" aria-label="bắt buộc">*</span></label>
+                        <textarea class="form-control <?= isset($errors['message']) ? 'error' : '' ?>"
+                                  id="message"
+                                  name="message"
+                                  rows="5"
+                                  placeholder="Nhập nội dung tin nhắn của bạn"
+                                  required
+                                  aria-describedby="message-error"><?= htmlspecialchars($old_data['message'] ?? '') ?? '' ?></textarea>
                         <?php if (isset($errors['message'])): ?>
-                            <div class="error-message"><?= $errors['message'] ?></div>
+                            <div class="error-message" id="message-error"><?= $errors['message'] ?></div>
+                        <?php else: ?>
+                            <div class="error-message" id="message-error" style="display:none;"></div>
                         <?php endif; ?>
                     </div>
                     
@@ -402,78 +422,120 @@
 </div>
 
 <script>
-    // Real-time form validation
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        let isValid = true;
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const subject = document.getElementById('subject').value.trim();
-        const message = document.getElementById('message').value.trim();
-        
-        // Clear previous error messages
-        const errorElements = document.querySelectorAll('.error-message');
-        errorElements.forEach(el => el.parentNode.removeChild(el));
-        
-        // Validate name
-        if (!name) {
-            addErrorMessage('name', 'Vui lòng nhập họ tên');
-            isValid = false;
-        }
-        
-        // Validate email
-        if (!email) {
-            addErrorMessage('email', 'Vui lòng nhập email');
-            isValid = false;
-        } else if (!isValidEmail(email)) {
-            addErrorMessage('email', 'Email không hợp lệ');
-            isValid = false;
-        }
-        
-        // Validate phone
-        if (!phone) {
-            addErrorMessage('phone', 'Vui lòng nhập số điện thoại');
-            isValid = false;
-        } else if (!isValidPhone(phone)) {
-            addErrorMessage('phone', 'Số điện thoại không hợp lệ');
-            isValid = false;
-        }
-        
-        // Validate subject
-        if (!subject) {
-            addErrorMessage('subject', 'Vui lòng nhập tiêu đề');
-            isValid = false;
-        }
-        
-        // Validate message
-        if (!message) {
-            addErrorMessage('message', 'Vui lòng nhập nội dung');
-            isValid = false;
-        }
-        
-        if (!isValid) {
+    // Enhanced real-time form validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('contactForm');
+        if (!form) return;
+
+        // Add input event listeners for real-time validation
+        const fields = ['name', 'email', 'phone', 'subject', 'message'];
+        fields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    validateField(fieldId);
+                });
+
+                field.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        validateField(fieldId);
+                    }
+                });
+            }
+        });
+
+        // Form submission handler
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
+
+            // Validate all fields
+            let isValid = true;
+            for (const fieldId of fields) {
+                if (!validateField(fieldId)) {
+                    isValid = false;
+                }
+            }
+
+            if (isValid) {
+                // If all validations pass, submit the form
+                e.target.submit();
+            } else {
+                // Focus on the first invalid field
+                const firstErrorField = form.querySelector('.form-control.error');
+                if (firstErrorField) {
+                    firstErrorField.focus();
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            let isValid = true;
+            let errorMessage = '';
+
+            const value = field.value.trim();
+
+            // Clear previous error
+            field.classList.remove('error');
+            if (errorElement) {
+                errorElement.style.display = 'none';
+                errorElement.textContent = '';
+            }
+
+            // Required validation
+            if (!value) {
+                errorMessage = getRequiredMessage(fieldId);
+                isValid = false;
+            } else {
+                // Additional field-specific validation
+                switch(fieldId) {
+                    case 'email':
+                        if (!isValidEmail(value)) {
+                            errorMessage = 'Email không hợp lệ';
+                            isValid = false;
+                        }
+                        break;
+                    case 'phone':
+                        if (!isValidPhone(value)) {
+                            errorMessage = 'Số điện thoại không hợp lệ';
+                            isValid = false;
+                        }
+                        break;
+                }
+            }
+
+            if (!isValid && errorElement) {
+                field.classList.add('error');
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+            }
+
+            return isValid;
+        }
+
+        function getRequiredMessage(fieldId) {
+            const messages = {
+                'name': 'Vui lòng nhập họ tên',
+                'email': 'Vui lòng nhập email',
+                'phone': 'Vui lòng nhập số điện thoại',
+                'subject': 'Vui lòng nhập tiêu đề',
+                'message': 'Vui lòng nhập nội dung'
+            };
+            return messages[fieldId] || 'Trường này là bắt buộc';
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function isValidPhone(phone) {
+            const phoneRegex = /^[0-9]{10,11}$/;
+            return phoneRegex.test(phone);
         }
     });
-
-    function addErrorMessage(fieldId, message) {
-        const field = document.getElementById(fieldId);
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = message;
-        field.classList.add('error');
-        field.parentNode.appendChild(errorDiv);
-    }
-
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function isValidPhone(phone) {
-        const phoneRegex = /^[0-9]{10,11}$/;
-        return phoneRegex.test(phone);
-    }
 </script>
 
 <?php require_once APP_ROOT . '/views/components/footer.php'; ?>
