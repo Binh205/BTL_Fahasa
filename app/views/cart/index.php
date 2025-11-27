@@ -545,7 +545,6 @@
     function handleCheckout() {
         alert('Chức năng thanh toán sẽ được phát triển trong phiên bản tiếp theo!');
         // Trong thực tế, chuyển hướng đến trang thanh toán
-        // window.location.href = '<?= BASE_URL ?>checkout';
     }
 </script>
 
