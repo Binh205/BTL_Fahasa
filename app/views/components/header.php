@@ -1,3 +1,9 @@
+<?php 
+// Khởi tạo session nếu chưa có
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -180,9 +186,9 @@
                         <a href="#" title="Yêu thích">
                             <i class="far fa-heart"></i>
                         </a>
-                        <a href="#" title="Giỏ hàng">
+                        <a href="<?= BASE_URL ?>cart" title="Giỏ hàng">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-badge">0</span>
+                            <span class="cart-badge"><?= array_sum($_SESSION['cart'] ?? []) ?></span>
                         </a>
                     </div>
                 </div>

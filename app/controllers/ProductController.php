@@ -6,6 +6,13 @@
 
 class ProductController extends Controller {
 
+    public function __construct() {
+        // Khởi tạo session nếu chưa có
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
     /**
      * Trang danh sách sản phẩm
      */
