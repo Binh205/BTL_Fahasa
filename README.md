@@ -42,8 +42,12 @@ BTL_Fahasa/
 │   │   └── config.php          ← CHỈ SỬA FILE NÀY!
 │   ├── controllers/
 │   │   ├── AboutController.php
+│   │   ├── CartController.php
+│   │   ├── ContactController.php
 │   │   ├── HomeController.php
 │   │   ├── LandingController.php
+│   │   ├── NewsController.php
+│   │   ├── ProductController.php
 │   │   └── QaController.php
 │   ├── core/
 │   │   ├── App.php
@@ -70,6 +74,7 @@ BTL_Fahasa/
 - Chi tiết sản phẩm: `http://localhost/BTL_Fahasa/public/product/detail/{id}`
 - Tin tức/Bài viết: `http://localhost/BTL_Fahasa/public/news`
 - Chi tiết bài viết: `http://localhost/BTL_Fahasa/public/news/detail/{id}`
+- Giỏ hàng: `http://localhost/BTL_Fahasa/public/cart`
 
 ## ⚙️ Lưu ý quan trọng
 
