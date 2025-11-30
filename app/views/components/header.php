@@ -23,7 +23,15 @@ if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
 }
 
 // User info
-$user = $_SESSION['user'] ?? null;
+$user = null;
+if (isset($_SESSION['user_id'])) {
+    $user = [
+        'id' => $_SESSION['user_id'],
+        'name' => $_SESSION['user_name'] ?? 'User',
+        'email' => $_SESSION['user_email'] ?? '',
+        'role' => $_SESSION['user_role'] ?? 'user'
+    ];
+}
 
 // BASE_URL constant phải được định nghĩa ở config (bạn đã dùng trước đó)
 $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
@@ -192,6 +200,9 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
                 <div class="col-5 col-sm-6 text-end">
                     <?php if ($user): ?>
                         <span class="me-2"><i class="fas fa-user"></i> <?= e($user['name'] ?? $user['email'] ?? 'Người dùng') ?></span>
+                        <?php if (isset($user['role']) && $user['role'] === 'admin'): ?>
+                            <a href="<?= $base ?>admin" class="me-2 text-danger fw-bold"><i class="fas fa-cog"></i> Quản trị</a>
+                        <?php endif; ?>
                         <a href="<?= $base ?>auth/logout" class="me-2" style="color:inherit;"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Đăng xuất</a>
                     <?php else: ?>
                         <a href="<?= $base ?>auth/login" class="me-2"><i class="fas fa-user"></i> Đăng nhập</a>

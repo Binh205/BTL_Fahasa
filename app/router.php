@@ -4,7 +4,6 @@
  * Nhiệm vụ: Kết nối các core class và khởi tạo ứng dụng
  * Không chứa logic nghiệp vụ, chỉ làm cầu nối
  */
-
 // Bước 1: Load cấu hình
 require_once __DIR__ . "/config/config.php";
 

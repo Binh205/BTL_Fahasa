@@ -39,7 +39,7 @@ http://localhost/BTL_Fahasa/public/
 BTL_Fahasa/
 ├── app/
 │   ├── config/
-│   │   └── config.php          ← CHỈ SỬA FILE NÀY!
+│   │   └── config.php          
 │   ├── controllers/
 │   │   ├── AboutController.php
 │   │   ├── CartController.php

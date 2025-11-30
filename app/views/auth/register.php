@@ -15,7 +15,7 @@ $old = $data['old'] ?? [];
     </div>
   <?php endif; ?>
 
-  <form method="post" action="/auth/register">
+  <form method="post" action="<?= BASE_URL ?>auth/register">
     <div style="margin-bottom:10px;">
       <label>Họ và tên</label><br>
       <input name="fullname" value="<?=htmlspecialchars($old['fullname'] ?? '')?>" required style="width:100%; padding:8px; border-radius:6px;">
@@ -39,7 +39,7 @@ $old = $data['old'] ?? [];
     <button type="submit" style="width:100%; padding:10px; background:#f97316; color:#fff; border:none; border-radius:8px;">Đăng ký</button>
   </form>
 
-  <p style="margin-top:12px;">Bạn đã có tài khoản? <a href="/auth/login" style="color:#f97316;">Đăng nhập</a></p>
+  <p style="margin-top:12px;">Bạn đã có tài khoản? <a href="<?= BASE_URL ?>auth/login" style="color:#f97316;">Đăng nhập</a></p>
 </div>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>

@@ -4,48 +4,63 @@
 class AuthController extends Controller
 {
     // Hiển thị form đăng nhập
-    public function login()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    public function login() {
+        // 1. Nếu đã đăng nhập thì đá về trang tương ứng
+        if (isset($_SESSION['user_id'])) {
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                $this->redirect('admin');
+            } else {
+                $this->redirect('home');
+            }
+        }
+
+        // 2. Xử lý khi bấm nút Đăng nhập (POST)
+        if ($this->isPost()) {
             $emailOrPhone = trim($_POST['emailOrPhone'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            // simple server-side validation
             $errors = [];
-            if ($emailOrPhone === '') $errors[] = 'Vui lòng nhập Email hoặc Số điện thoại.';
+            if ($emailOrPhone === '') $errors[] = 'Vui lòng nhập Email hoặc SĐT.';
             if ($password === '') $errors[] = 'Vui lòng nhập mật khẩu.';
 
             if (empty($errors)) {
-                require_once APPROOT . '/models/User.php';
-                $userModel = new User();
-                $user = $userModel->findByEmailOrPhone($emailOrPhone);
+                // --- CHỖ LẤY USER (Dùng đúng chuẩn MVC) ---
+                // Gọi model AuthModel (hoặc User nếu bạn đổi tên file thành User.php)
+                // Lưu ý: Đảm bảo file models/AuthModel.php hoặc models/User.php tồn tại
+                $userModel = $this->model('User'); 
+                
+                // Tìm user trong DB
+                $user = $userModel->findUserByEmail($emailOrPhone);
 
+                // Kiểm tra mật khẩu
                 if ($user && password_verify($password, $user['password'])) {
-                    // login success: set session
-                    session_regenerate_id(true);
-                    $_SESSION['user'] = [
-                        'id' => $user['id'],
-                        'name' => $user['fullname'] ?? $user['email'],
-                        'email' => $user['email'] ?? '',
-                    ];
-                    // redirect về trang chủ hoặc trang trước đó
-                    header('Location: /');
-                    exit;
+                    
+                    // --- ĐĂNG NHẬP THÀNH CÔNG ---
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['fullname'];
+                    $_SESSION['user_role'] = $user['role']; // QUAN TRỌNG CHO ADMIN
+
+                    // Chuyển hướng đúng (Sửa lỗi Location /)
+                    if ($user['role'] === 'admin') {
+                        $this->redirect('admin');
+                    } else {
+                        $this->redirect('home');
+                    }
                 } else {
-                    $errors[] = 'Email/SĐT hoặc mật khẩu không đúng.';
+                    $errors[] = 'Tài khoản hoặc mật khẩu không đúng.';
                 }
             }
 
             $data = [
                 'errors' => $errors,
-                'old' => ['emailOrPhone' => $emailOrPhone],
+                'old' => ['emailOrPhone' => $emailOrPhone]
             ];
             $this->view('auth/login', $data);
-            return;
+        } 
+        // 3. Hiển thị form (GET)
+        else {
+            $this->view('auth/login');
         }
-
-        // GET: show login form
-        $this->view('auth/login');
     }
 
     // Hiển thị form đăng ký
@@ -63,7 +78,7 @@ class AuthController extends Controller
             if (strlen($password) < 6) $errors[] = 'Mật khẩu tối thiểu 6 ký tự.';
             if ($password !== $confirm) $errors[] = 'Mật khẩu xác nhận không khớp.';
 
-            require_once APPROOT . '/models/User.php';
+            require_once APP_ROOT . '/models/User.php';
             $userModel = new User();
 
             // kiểm tra đã tồn tại
@@ -99,19 +114,9 @@ class AuthController extends Controller
     }
 
     // Logout
-    public function logout()
-    {
-        session_start();
-        $_SESSION = [];
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
-            );
-        }
+    public function logout() {
+        if (!session_id()) session_start();
         session_destroy();
-        header('Location: /');
-        exit;
+        $this->redirect('auth/login');
     }
 }

@@ -3,7 +3,7 @@ class DB {
     private $host = "localhost";
     private $username = "root";
     private $password = "";
-    private $dbname = "";
+    private $dbname = "fahasa_db";
     public $con;
 
     public function __construct() {
