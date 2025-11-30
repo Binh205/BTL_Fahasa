@@ -4,7 +4,7 @@
  */
 
 class App {
-    protected $controller = "LandingController"; // Trang mặc định
+    protected $controller = "HomeController"; // Trang mặc định
     protected $method = "index";
     protected $params = [];
 
