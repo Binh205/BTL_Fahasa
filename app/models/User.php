@@ -5,7 +5,7 @@ class User extends DB {
      * Tìm user theo Email hoặc SĐT
      * Hàm này sửa lỗi "Call to undefined method User::findUserByEmail()"
      */
-    public function findUserByEmail($emailOrPhone) {
+    public function findUserByEmailOrPhone($emailOrPhone) {
         // SỬA: Dùng 2 placeholder khác nhau (:email và :phone)
         $sql = "SELECT * FROM users WHERE email = :email OR phone = :phone LIMIT 1";
         
@@ -36,8 +36,8 @@ class User extends DB {
         }
 
         // 3. Câu SQL Insert
-        $sql = "INSERT INTO users (fullname, email, phone, password, role, created_at) 
-                VALUES (:fullname, :email, :phone, :password, 'user', NOW())";
+        $sql = "INSERT INTO users (fullname, email, phone, password, created_date) 
+                VALUES (:fullname, :email, :phone, :password, NOW())";
 
         // 4. Thực thi
         return $this->query($sql, [

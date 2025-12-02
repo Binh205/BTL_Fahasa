@@ -34,7 +34,7 @@ $old = $data['old'] ?? [];
     <button type="submit" style="width:100%; padding:10px; background:#f97316; color:#fff; border:none; border-radius:8px;">Đăng nhập</button>
   </form>
 
-  <p style="margin-top:12px;">Bạn chưa có tài khoản? <a href="<?= BASE_URL ?>auth/register"> style="color:#f97316;">Đăng ký</a></p>
+  <p style="margin-top:12px;">Bạn chưa có tài khoản? <a href="<?= BASE_URL ?>auth/register" style="color:#f97316;">Đăng ký</style=></a></p>
 </div>
 
 <?php include __DIR__ . '/../components/footer.php'; ?>

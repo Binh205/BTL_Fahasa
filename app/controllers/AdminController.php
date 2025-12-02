@@ -5,11 +5,11 @@ class AdminController extends Controller {
 
     public function __construct() {
         // Khởi tạo Model 1 lần dùng cho toàn bộ controller
-        $this->adminModel = $this->model('AdminModel');
+        $this->adminModel = $this->model('Admin');
         
         // Check quyền admin ở đây nếu cần
-        if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') { 
-            $this->redirect('auth/login'); 
+        if (!isset($_SESSION['users_role']) || $_SESSION['users_role'] !== 'admin') { 
+            $this->redirect('home'); 
         }
     }
 
