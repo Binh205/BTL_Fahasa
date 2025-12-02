@@ -1,5 +1,5 @@
 <?php
-class AdminModel extends DB {
+class Admin extends DB {
 
     // ================= TASK 1: QUẢN LÝ CẤU HÌNH (SETTINGS) =================
     

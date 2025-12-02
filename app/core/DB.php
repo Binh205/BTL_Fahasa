@@ -3,25 +3,28 @@ class DB {
     private $host = "localhost";
     private $username = "root";
     private $password = "";
-    private $dbname = "fahasa_db";
+    private $dbname = "fahasa";
+    private $port = 3307;
     public $con;
 
-    public function __construct() {
-        try {
-            $this->con = new PDO(
-                "mysql:host={$this->host};dbname={$this->dbname};charset=utf8mb4",
-                $this->username,
-                $this->password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false
-                ]
-            );
-        } catch(PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
-        }
+    // Đoạn code ĐÃ SỬA (Thêm Port)
+public function __construct() {
+    try {
+        $this->con = new PDO(
+            "mysql:host={$this->host};port={$this->port};dbname={$this->dbname};charset=utf8mb4",
+            $this->username,
+            $this->password,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false
+            ]
+        );
+    } catch(PDOException $e) {
+        // Dùng die() để dễ dàng debug lỗi
+        die("Connection failed: " . $e->getMessage()); 
     }
+}
 
     // Query helper with prepared statements
     public function query($sql, $params = []) {

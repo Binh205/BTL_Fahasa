@@ -6,8 +6,8 @@ class AuthController extends Controller
     // Hiển thị form đăng nhập
     public function login() {
         // 1. Nếu đã đăng nhập thì đá về trang tương ứng
-        if (isset($_SESSION['user_id'])) {
-            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+        if (isset($_SESSION['users_id'])) {
+            if (isset($_SESSION['users_role']) && $_SESSION['users_role'] === 'admin') {
                 $this->redirect('admin');
             } else {
                 $this->redirect('home');
@@ -24,21 +24,18 @@ class AuthController extends Controller
             if ($password === '') $errors[] = 'Vui lòng nhập mật khẩu.';
 
             if (empty($errors)) {
-                // --- CHỖ LẤY USER (Dùng đúng chuẩn MVC) ---
-                // Gọi model AuthModel (hoặc User nếu bạn đổi tên file thành User.php)
-                // Lưu ý: Đảm bảo file models/AuthModel.php hoặc models/User.php tồn tại
                 $userModel = $this->model('User'); 
                 
                 // Tìm user trong DB
-                $user = $userModel->findUserByEmail($emailOrPhone);
+                $user = $userModel->findUserByEmailOrPhone($emailOrPhone);
 
                 // Kiểm tra mật khẩu
                 if ($user && password_verify($password, $user['password'])) {
                     
                     // --- ĐĂNG NHẬP THÀNH CÔNG ---
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_name'] = $user['fullname'];
-                    $_SESSION['user_role'] = $user['role']; // QUAN TRỌNG CHO ADMIN
+                    $_SESSION['users_id'] = $user['id'];
+                    $_SESSION['users_username'] = $user['username'];
+                    $_SESSION['users_role'] = $user['role']; // QUAN TRỌNG CHO ADMIN
 
                     // Chuyển hướng đúng (Sửa lỗi Location /)
                     if ($user['role'] === 'admin') {
@@ -82,7 +79,7 @@ class AuthController extends Controller
             $userModel = new User();
 
             // kiểm tra đã tồn tại
-            if ($userModel->findByEmailOrPhone($emailOrPhone)) {
+            if ($userModel->findUserByEmailOrPhone($emailOrPhone)) {
                 $errors[] = 'Email hoặc Số điện thoại đã được sử dụng.';
             }
 
