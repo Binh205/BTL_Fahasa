@@ -1,16 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head><title>Admin Dashboard</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-5">
-    <h1>Trang Quản Trị</h1>
-    <div class="list-group mt-4">
-        <a href="<?= BASE_URL ?>admin/settings" class="list-group-item list-group-item-action">1. Quản lý Thông tin chung</a>
-        <a href="<?= BASE_URL ?>admin/contacts" class="list-group-item list-group-item-action">2. Quản lý Liên hệ khách hàng</a>
-        <a href="<?= BASE_URL ?>admin/pageContent?page=about" class="list-group-item list-group-item-action">3. Sửa nội dung trang Giới thiệu</a>
-        <a href="<?= BASE_URL ?>admin/qa" class="list-group-item list-group-item-action">4. Quản lý Hỏi/Đáp (QA)</a>
+<?php 
+// Gọi header nằm trong thư mục layout
+require_once APP_ROOT . '/views/admin/layout/header.php'; 
+?>
+
+<div class="row row-deck row-cards">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h3>Xin chào Admin!</h3>
+                <p>Chọn chức năng bên menu trái để quản lý.</p>
+            </div>
+        </div>
     </div>
 </div>
-</body></html>
+
+<?php 
+// Gọi footer nằm trong thư mục layout
+require_once APP_ROOT . '/views/admin/layout/footer.php'; 
+?>

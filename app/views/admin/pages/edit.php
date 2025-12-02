@@ -1,11 +1,26 @@
-<div class="container mt-4">
-    <h2>Chỉnh sửa trang: <?= ucfirst($currPage) ?></h2>
-    <form method="POST" action="">
-        <div class="mb-3">
-            <label>Nội dung bài viết:</label>
-            <textarea name="content" rows="10" class="form-control"><?= htmlspecialchars($content) ?></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Cập nhật nội dung</button>
-        <a href="<?= BASE_URL ?>admin" class="btn btn-secondary">Quay lại</a>
-    </form>
+<?php require_once APP_ROOT . '/views/admin/layout/header.php'; ?>
+
+<div class="row row-cards">
+    <div class="col-12">
+        <form method="POST" action="" class="card">
+            <div class="card-header">
+                <h3 class="card-title">Chỉnh sửa nội dung trang: <?= ucfirst($currPage) ?></h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Nội dung bài viết (HTML)</label>
+                    <textarea class="form-control" name="content" rows="15" placeholder="Nhập nội dung tại đây..."><?= htmlspecialchars($content) ?></textarea>
+                    <small class="form-hint">Bạn có thể nhập mã HTML hoặc văn bản thường.</small>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <a href="<?= BASE_URL ?>admin" class="btn btn-link">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i> Cập nhật nội dung
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<?php require_once APP_ROOT . '/views/admin/layout/footer.php'; ?>
