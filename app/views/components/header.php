@@ -24,12 +24,12 @@ if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
 
 // User info
 $user = null;
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['users_id'])) {
     $user = [
-        'id' => $_SESSION['user_id'],
-        'name' => $_SESSION['user_name'] ?? 'User',
-        'email' => $_SESSION['user_email'] ?? '',
-        'role' => $_SESSION['user_role'] ?? 'user'
+        'id' => $_SESSION['users_id'],
+        'name' => $_SESSION['users_username'] ?? 'User',
+        'email' => $_SESSION['users_email'] ?? '',
+        'role' => $_SESSION['users_role'] ?? 'user'
     ];
 }
 
@@ -257,10 +257,12 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
                                     <span class="account-name"><?= e($user['name'] ?? $user['email']) ?></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="<?= $base ?>account">Tài khoản của tôi</a></li>
-                                    <li><a class="dropdown-item" href="<?= $base ?>orders">Đơn hàng</a></li>
+                                    <li><a class="dropdown-item" href="<?= $base ?>customer"><i class="fas fa-user me-2"></i>Thông tin tài khoản</a></li>
+                                    <li><a class="dropdown-item" href="<?= $base ?>customer/orders"><i class="fas fa-box me-2"></i>Đơn hàng của tôi</a></li>
+                                    <li><a class="dropdown-item" href="<?= $base ?>customer/notifications"><i class="fas fa-bell me-2"></i>Thông báo</a></li>
+                                    <li><a class="dropdown-item" href="<?= $base ?>customer/wishlist"><i class="fas fa-heart me-2"></i>Sản phẩm yêu thích</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="<?= $base ?>auth/logout">Đăng xuất</a></li>
+                                    <li><a class="dropdown-item text-danger" href="<?= $base ?>auth/logout"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                                 </ul>
                             </div>
                         <?php endif; ?>
@@ -296,7 +298,7 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
         </div>
     </nav>
 
-    <!-- Scripts: Bootstrap JS (popper) -->
+    <!-- Scripts: Bootstrap JS (popper)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -310,6 +312,6 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
 
             // Improve clickable phone for mobile by ensuring tel: link exists (handled in markup)
         });
-    </script>
+    </script> -->
 </body>
 </html>
