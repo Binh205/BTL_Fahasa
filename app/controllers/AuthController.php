@@ -4,7 +4,8 @@
 class AuthController extends Controller
 {
     // Hiển thị form đăng nhập
-    public function login() {
+    public function login()
+    {
         // 1. Nếu đã đăng nhập thì đá về trang tương ứng
         if (isset($_SESSION['users_id'])) {
             if (isset($_SESSION['users_role']) && $_SESSION['users_role'] === 'admin') {
@@ -24,14 +25,14 @@ class AuthController extends Controller
             if ($password === '') $errors[] = 'Vui lòng nhập mật khẩu.';
 
             if (empty($errors)) {
-                $userModel = $this->model('User'); 
-                
+                $userModel = $this->model('User');
+
                 // Tìm user trong DB
                 $user = $userModel->findUserByEmailOrPhone($emailOrPhone);
 
                 // Kiểm tra mật khẩu
                 if ($user && password_verify($password, $user['password'])) {
-                    
+
                     // --- ĐĂNG NHẬP THÀNH CÔNG ---
                     $_SESSION['users_id'] = $user['user_id'];
                     $_SESSION['users_username'] = $user['username'];
@@ -41,6 +42,8 @@ class AuthController extends Controller
                     if ($user['role'] === 'admin') {
                         $this->redirect('admin');
                     } else {
+                        // ✅ THÊM: Set flag để JS biết cần sync cart
+                        $_SESSION['need_sync_cart'] = true;
                         $this->redirect('home');
                     }
                 } else {
@@ -53,7 +56,7 @@ class AuthController extends Controller
                 'old' => ['emailOrPhone' => $emailOrPhone]
             ];
             $this->view('auth/login', $data);
-        } 
+        }
         // 3. Hiển thị form (GET)
         else {
             $this->view('auth/login');
@@ -111,7 +114,8 @@ class AuthController extends Controller
     }
 
     // Logout
-    public function logout() {
+    public function logout()
+    {
         if (!session_id()) session_start();
         session_destroy();
         $this->redirect('auth/login');

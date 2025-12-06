@@ -381,7 +381,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="<?= BASE_URL ?>"><i class="fas fa-home"></i> Trang chủ</a></li>
                 <li class="breadcrumb-item"><a href="<?= BASE_URL ?>product">Sản phẩm</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($product['name']) ?></li>
+                <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($product['title']) ?></li>
             </ol>
         </nav>
     </div>
@@ -392,57 +392,66 @@
     <div class="product-detail">
         <div class="product-image-section">
             <div class="product-image">
-                <img src="<?= BASE_URL . $product['image'] ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                <img src="<?= BASE_URL . $product['image_url'] ?>" alt="<?= htmlspecialchars($product['title']) ?>">
             </div>
         </div>
         
         <div class="product-info-section">
-            <h1 class="product-title"><?= htmlspecialchars($product['name']) ?></h1>
+            <h1 class="product-title"><?= htmlspecialchars($product['title']) ?></h1>
             <div class="product-author">Tác giả: <?= htmlspecialchars($product['author']) ?></div>
             
             <div class="product-price">
                 <span class="current-price"><?= number_format($product['price']) ?>đ</span>
-                <?php if ($product['old_price'] > $product['price']): ?>
+                <?php if (isset($product['old_price']) && $product['old_price'] > $product['price']): ?>
                     <span class="old-price"><?= number_format($product['old_price']) ?>đ</span>
                     <span class="discount-percent">-<?= round(100 - ($product['price'] / $product['old_price']) * 100) ?>%</span>
                 <?php endif; ?>
             </div>
             
+            <!-- Tạm thời ẩn phần đánh giá sản phẩm để tránh lỗi "Undefined array key \"rating\". Sẽ bổ sung sau. -->
+            <!-- 
             <div class="product-rating">
                 <div class="stars">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                    <?php /* for ($i = 1; $i <= 5; $i++): ?>
                         <?php if ($i <= $product['rating']): ?>
                             <i class="fas fa-star"></i>
                         <?php else: ?>
                             <i class="fas fa-star-half-alt"></i>
                         <?php endif; ?>
-                    <?php endfor; ?>
+                    <?php endfor; */ ?>
                 </div>
-                <div class="rating-count">(<?= $product['reviews'] ?> đánh giá)</div>
+                <div class="rating-count">(<?php //= $product['reviews'] ?> đánh giá)</div>
             </div>
+            -->
             
             <div class="product-meta">
                 <div class="meta-item">
                     <span class="meta-label">Nhà xuất bản</span>
                     <span class="meta-value"><?= htmlspecialchars($product['publisher']) ?></span>
                 </div>
+                <?php if (isset($product['published_date']) && !empty($product['published_date'])): ?>
                 <div class="meta-item">
                     <span class="meta-label">Ngày xuất bản</span>
                     <span class="meta-value"><?= date('d/m/Y', strtotime($product['published_date'])) ?></span>
                 </div>
+                <?php endif; ?>
+                <?php if (isset($product['pages']) && !empty($product['pages'])): ?>
                 <div class="meta-item">
                     <span class="meta-label">Số trang</span>
-                    <span class="meta-value"><?= $product['pages'] ?></span>
+                    <span class="meta-value"><?= htmlspecialchars($product['pages']) ?></span>
                 </div>
+                <?php endif; ?>
+                <?php if (isset($product['dimensions']) && !empty($product['dimensions'])): ?>
                 <div class="meta-item">
                     <span class="meta-label">Kích thước</span>
                     <span class="meta-value"><?= htmlspecialchars($product['dimensions']) ?></span>
                 </div>
+                <?php endif; ?>
             </div>
             
-            <div class="stock-status <?= $product['in_stock'] ? 'available' : '' ?>">
-                <?php if ($product['in_stock']): ?>
-                    <i class="fas fa-check-circle"></i> Còn hàng
+            <div class="stock-status <?= ($product['stock_quantity'] > 0) ? 'available' : '' ?>">
+                <?php if ($product['stock_quantity'] > 0): ?>
+                    <i class="fas fa-check-circle"></i> Còn hàng (<?= $product['stock_quantity'] ?> sản phẩm)
                 <?php else: ?>
                     <i class="fas fa-times-circle"></i> Hết hàng
                 <?php endif; ?>
@@ -456,16 +465,16 @@
             <div class="cart-section">
                 <div class="quantity-control">
                     <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                    <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="99">
+                    <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="<?= $product['stock_quantity'] ?>">
                     <button class="quantity-btn" onclick="increaseQuantity()">+</button>
                 </div>
                 
-                <button class="btn-add-to-cart" onclick="addToCart(<?= $product['id'] ?>)" <?= !$product['in_stock'] ? 'disabled' : '' ?>>
-                    <?= !$product['in_stock'] ? 'Hết hàng' : 'Thêm vào giỏ hàng' ?>
+                <button class="btn-add-to-cart" onclick="addToCart(<?= $product['product_id'] ?>)" <?= ($product['stock_quantity'] <= 0) ? 'disabled' : '' ?> >
+                    <?= ($product['stock_quantity'] <= 0) ? 'Hết hàng' : 'Thêm vào giỏ hàng' ?>
                 </button>
                 
-                <button class="btn-buy-now" onclick="buyNow(<?= $product['id'] ?>)" <?= !$product['in_stock'] ? 'disabled' : '' ?>>
-                    <?= !$product['in_stock'] ? 'Hết hàng' : 'Mua ngay' ?>
+                <button class="btn-buy-now" onclick="buyNow(<?= $product['product_id'] ?>)" <?= ($product['stock_quantity'] <= 0) ? 'disabled' : '' ?> >
+                    <?= ($product['stock_quantity'] <= 0) ? 'Hết hàng' : 'Mua ngay' ?>
                 </button>
             </div>
         </div>
@@ -476,12 +485,12 @@
         <h2 class="section-title">Sản phẩm liên quan</h2>
         <div class="related-products-grid">
             <?php foreach ($relatedProducts as $related): ?>
-                <a href="<?= BASE_URL ?>product/detail/<?= $related['id'] ?>" class="related-product-card">
+                <a href="<?= BASE_URL ?>product/detail/<?= $related['product_id'] ?>" class="related-product-card">
                     <div class="related-product-image">
-                        <img src="<?= BASE_URL . $related['image'] ?>" alt="<?= htmlspecialchars($related['name']) ?>">
+                        <img src="<?= BASE_URL . $related['image_url'] ?>" alt="<?= htmlspecialchars($related['title']) ?>">
                     </div>
                     <div class="related-product-info">
-                        <h3 class="related-product-title"><?= htmlspecialchars($related['name']) ?></h3>
+                        <h3 class="related-product-title"><?= htmlspecialchars($related['title']) ?></h3>
                         <div class="related-product-author"><?= htmlspecialchars($related['author']) ?></div>
                         <div class="related-product-price">
                             <?= number_format($related['price']) ?>đ
@@ -501,7 +510,8 @@
     function increaseQuantity() {
         const input = document.getElementById('quantity');
         let value = parseInt(input.value) || 0;
-        if (value < 99) {
+        const maxQuantity = parseInt(input.max) || 99; // Lấy max từ thuộc tính max của input
+        if (value < maxQuantity) {
             input.value = value + 1;
         }
     }
@@ -516,33 +526,48 @@
     
     // Add to cart function
     async function addToCart(productId) {
-        const quantity = document.getElementById('quantity').value;
-        
+        const quantity = parseInt(document.getElementById('quantity').value) || 1;
+
         try {
-            const response = await fetch('<?= BASE_URL ?>product/addToCart', {
+            // ✅ SỬA: Gọi đúng endpoint cart/add
+            const response = await fetch('<?= BASE_URL ?>cart/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: `product_id=${productId}&quantity=${quantity}`
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 showMessage(result.message, 'success');
-                
-                // Update cart badge
-                const cartBadge = document.querySelector('.cart-badge');
-                if (cartBadge) {
-                    cartBadge.textContent = result.cartCount;
+
+                // ✅ XỬ LÝ: Nếu chưa login, lưu vào localStorage
+                if (result.storage === 'local' && typeof cartManager !== 'undefined') {
+                    cartManager.addToLocalCart(productId, quantity);
+                    const localCount = cartManager.getLocalCartCount();
+                    updateCartBadge(localCount);
+                } else {
+                    // Đã login - cập nhật từ server
+                    updateCartBadge(result.cartCount);
                 }
             } else {
-                showMessage('Lỗi khi thêm sản phẩm vào giỏ hàng', 'error');
+                showMessage(result.message || 'Lỗi khi thêm sản phẩm vào giỏ hàng', 'error');
             }
         } catch (error) {
+            console.error('Add to cart error:', error);
             showMessage('Lỗi kết nối khi thêm sản phẩm vào giỏ hàng', 'error');
         }
+    }
+
+    // Helper: Update cart badge
+    function updateCartBadge(count) {
+        const badges = document.querySelectorAll('.cart-badge, .cart-count');
+        badges.forEach(badge => {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
+        });
     }
     
     // Buy now function (redirects to cart page with product)

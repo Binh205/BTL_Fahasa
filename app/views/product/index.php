@@ -354,12 +354,14 @@
             <h3>Danh mục sản phẩm</h3>
         </div>
         <div class="category-filter">
-            <a href="?category=all" class="category-btn <?= $category == 'all' || $category == '' ? 'active' : '' ?>">Tất cả</a>
-            <a href="?category=sach-tam-li" class="category-btn <?= $category == 'sach-tam-li' ? 'active' : '' ?>">Sách tâm lý</a>
-            <a href="?category=sach-van-hoc" class="category-btn <?= $category == 'sach-van-hoc' ? 'active' : '' ?>">Sách văn học</a>
-            <a href="?category=sach-ky-nang" class="category-btn <?= $category == 'sach-ky-nang' ? 'active' : '' ?>">Sách kỹ năng</a>
-            <a href="?category=sach-kien-thuc" class="category-btn <?= $category == 'sach-kien-thuc' ? 'active' : '' ?>">Sách kiến thức</a>
-            <a href="?category=sach-thieu-nhi" class="category-btn <?= $category == 'sach-thieu-nhi' ? 'active' : '' ?>">Sách thiếu nhi</a>
+            <a href="?category=all" class="category-btn <?= $selectedCategory == 'all' || $selectedCategory == '' ? 'active' : '' ?>">Tất cả</a>
+            <?php foreach ($categories as $cat):
+            ?>
+                <a href="?category=<?= $cat['category_id'] ?>" class="category-btn <?= $selectedCategory == $cat['category_id'] ? 'active' : '' ?>">
+                    <?= htmlspecialchars($cat['category_name']) ?>
+                </a>
+            <?php endforeach;
+            ?>
         </div>
     </div>
 
@@ -367,12 +369,25 @@
     <div class="sort-section">
         <div class="results-info">
             <strong><?= $totalProducts ?></strong> sản phẩm
-            <?php if (!empty($search)): ?>
+            <?php if (!empty($search)):
+            ?>
                 cho từ khóa "<strong><?= htmlspecialchars($search) ?></strong>"
-            <?php endif; ?>
-            <?php if (!empty($category)): ?>
-                trong danh mục <strong><?= ucfirst(str_replace('-', ' ', $category)) ?></strong>
-            <?php endif; ?>
+            <?php endif;
+            ?>
+            <?php if (!empty($selectedCategory) && $selectedCategory != 'all'): 
+            ?>
+                <?php 
+                    $categoryName = '';
+                    foreach ($categories as $cat) {
+                        if ($cat['category_id'] == $selectedCategory) {
+                            $categoryName = $cat['category_name'];
+                            break;
+                        }
+                    }
+                ?>
+                trong danh mục <strong><?= htmlspecialchars($categoryName) ?></strong>
+            <?php endif;
+            ?>
         </div>
         <div class="sort-options">
             <select name="sort" id="sortSelect" onchange="handleSortChange(this.value)">
@@ -381,67 +396,93 @@
                 <option value="price-desc" <?= (isset($_GET['sort']) && $_GET['sort'] == 'price-desc') ? 'selected' : '' ?>>Giá: Cao đến thấp</option>
                 <option value="name-asc" <?= (isset($_GET['sort']) && $_GET['sort'] == 'name-asc') ? 'selected' : '' ?>>Tên: A-Z</option>
                 <option value="name-desc" <?= (isset($_GET['sort']) && $_GET['sort'] == 'name-desc') ? 'selected' : '' ?>>Tên: Z-A</option>
-                <option value="rating" <?= (isset($_GET['sort']) && $_GET['sort'] == 'rating') ? 'selected' : '' ?>>Đánh giá</option>
+                <!-- <option value="rating" <?= (isset($_GET['sort']) && $_GET['sort'] == 'rating') ? 'selected' : '' ?>>Đánh giá</option> -->
             </select>
         </div>
     </div>
 
     <!-- Product Grid -->
-    <?php if (!empty($products)): ?>
+    <?php if (!empty($products)): 
+    ?>
         <div class="product-grid">
-            <?php foreach ($products as $product): ?>
-                <a href="<?= BASE_URL ?>product/detail/<?= $product['id'] ?>" class="product-card">
-                    <?php if ($product['old_price'] > $product['price']): ?>
-                        <div class="product-badge">Giảm <?= round(100 - ($product['price'] / $product['old_price']) * 100) ?>%</div>
-                    <?php endif; ?>
+            <?php foreach ($products as $product):
+                // Check if product has an old price and if it's greater than the current price
+                $isDiscounted = isset($product['old_price']) && $product['old_price'] > $product['price'];
+                $discountPercentage = $isDiscounted ? round(100 - ($product['price'] / $product['old_price']) * 100) : 0;
+            ?>
+                <a href="<?= BASE_URL ?>product/detail/<?= $product['product_id'] ?>" class="product-card">
+                    <?php if ($isDiscounted): 
+                        // Display discount badge if the product is discounted
+                    ?>
+                        <div class="product-badge">Giảm <?= $discountPercentage ?>%</div>
+                    <?php endif;
+                    ?>
                     <div class="product-image">
-                        <img src="<?= BASE_URL . $product['image'] ?>" alt="<?= htmlspecialchars($product['name']) ?>">
+                        <img src="<?= BASE_URL . $product['image_url'] ?>" alt="<?= htmlspecialchars($product['title']) ?>">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title"><?= htmlspecialchars($product['name']) ?></h3>
+                        <h3 class="product-title"><?= htmlspecialchars($product['title']) ?></h3>
                         <div class="product-author"><?= htmlspecialchars($product['author']) ?></div>
                         <div class="product-price">
                             <?= number_format($product['price']) ?>đ
-                            <?php if ($product['old_price'] > $product['price']): ?>
+                            <?php if ($isDiscounted): 
+                                // Display old price if the product is discounted
+                            ?>
                                 <span class="product-old-price"><?= number_format($product['old_price']) ?>đ</span>
-                            <?php endif; ?>
+                            <?php endif;
+                            ?>
                         </div>
+                        <!-- Tạm thời ẩn phần đánh giá sản phẩm để tránh lỗi "Undefined array key \"rating\"". Sẽ bổ sung sau. -->
+                        <!-- 
                         <div class="product-rating">
                             <div class="stars">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <?php /* for ($i = 1; $i <= 5; $i++): ?>
                                     <?php if ($i <= $product['rating']): ?>
                                         <i class="fas fa-star"></i>
                                     <?php else: ?>
                                         <i class="fas fa-star-half-alt"></i>
                                     <?php endif; ?>
-                                <?php endfor; ?>
+                                <?php endfor; */ ?>
                             </div>
-                            <div class="rating-count">(<?= $product['reviews'] ?>)</div>
+                            <div class="rating-count">(<?php //= $product['reviews'] ?>)</div>
                         </div>
+                        -->
                     </div>
                 </a>
-            <?php endforeach; ?>
+            <?php endforeach;
+            ?>
         </div>
 
         <!-- Pagination -->
-        <?php if ($totalPages > 1): ?>
+        <?php if ($totalPages > 1): 
+            // Determine the range of pages to display, showing current page and a few around it
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+        ?>
             <nav class="pagination">
                 <ul class="pagination-list">
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <?php for ($i = $startPage; $i <= $endPage; $i++):
+                        // Highlight the current page
+                    ?>
                         <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
-                            <a class="page-link" href="?page=<?= $i ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($category) ? '&category=' . urlencode($category) : '' ?>"><?= $i ?></a>
+                            <a class="page-link" href="?page=<?= $i ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?><?= !empty($selectedCategory) ? '&category=' . urlencode($selectedCategory) : '' ?>"><?= $i ?></a>
                         </li>
-                    <?php endfor; ?>
+                    <?php endfor;
+                    ?>
                 </ul>
             </nav>
-        <?php endif; ?>
-    <?php else: ?>
+        <?php endif;
+        ?>
+    <?php else:
+        // Display a message if no products are found
+    ?>
         <div class="no-results">
             <i class="fas fa-search"></i>
             <h4>Không tìm thấy sản phẩm nào</h4>
             <p>Vui lòng thử lại với từ khóa khác</p>
         </div>
-    <?php endif; ?>
+    <?php endif;
+    ?>
 </div>
 
 <script>

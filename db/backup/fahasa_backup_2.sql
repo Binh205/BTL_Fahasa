@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 06, 2025 at 10:24 AM
+-- Generation Time: Dec 02, 2025 at 10:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -38,42 +38,53 @@ CREATE TABLE `author_of_product` (
 
 INSERT INTO `author_of_product` (`product_id`, `author_name`) VALUES
 (1, 'Dale Carnegie'),
+(1, 'Nguyễn Hiến Lê'),
 (2, 'Paulo Coelho'),
-(3, 'Robin Sharma'),
-(4, 'Robin Sharma'),
-(5, 'Daniel Kahneman'),
-(6, 'Carol Dweck'),
-(7, 'Minh Niệm'),
-(8, 'Kishimi Ichiro & Koga Fumitake'),
-(9, 'Monty Don'),
-(10, 'Trần Quốc Vượng - Nguyễn Thị Bảy'),
-(11, 'Will Durant'),
-(12, 'Nhóm tác giả');
+(3, 'Albert Einstein'),
+(4, 'Trần Minh Quang'),
+(5, 'Eiichiro Oda');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cart_items`
+-- Table structure for table `cart`
 --
 
-CREATE TABLE `cart_items` (
-  `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `added_date` datetime DEFAULT current_timestamp()
+CREATE TABLE `cart` (
+  `cart_id` varchar(20) NOT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `cart_items`
+-- Dumping data for table `cart`
 --
 
-INSERT INTO `cart_items` (`user_id`, `product_id`, `quantity`, `added_date`) VALUES
-(101, 1, 2, '2025-12-06 15:30:38'),
-(101, 2, 3, '2025-12-06 15:30:55'),
-(101, 5, 25, '2025-12-06 15:31:41'),
-(103, 2, 2, '2025-12-06 15:33:20'),
-(111, 1, 9, '2025-12-06 15:40:19'),
-(111, 2, 2, '2025-12-06 15:35:51');
+INSERT INTO `cart` (`cart_id`, `quantity`, `customer_id`) VALUES
+('C-104', 3, 104),
+('C-105', 1, 105);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_product`
+--
+
+CREATE TABLE `cart_product` (
+  `card_id` varchar(20) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `cart_product`
+--
+
+INSERT INTO `cart_product` (`card_id`, `product_id`) VALUES
+('C-104', 1),
+('C-104', 2),
+('C-104', 4),
+('C-105', 3),
+('C-105', 5);
 
 -- --------------------------------------------------------
 
@@ -133,30 +144,11 @@ CREATE TABLE `category_product` (
 --
 
 INSERT INTO `category_product` (`category_id`, `product_id`) VALUES
-(1, 9),
-(1, 10),
+(1, 3),
 (2, 1),
 (2, 2),
-(2, 5),
-(2, 6),
-(2, 7),
-(3, 3),
-(3, 4);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `comments`
---
-
-CREATE TABLE `comments` (
-  `id` int(11) NOT NULL,
-  `news_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `content` text NOT NULL,
-  `parent_id` int(11) DEFAULT NULL COMMENT 'Để trả lời bình luận khác',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(3, 4),
+(5, 5);
 
 -- --------------------------------------------------------
 
@@ -249,22 +241,6 @@ INSERT INTO `flashsale_product` (`sale_id`, `product_id`, `discount_value`, `qua
 (2, 3, 25000.00, 5),
 (2, 4, 12000.00, 10),
 (2, 5, 5000.00, 100);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `news`
---
-
-CREATE TABLE `news` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `image_url` varchar(255) DEFAULT NULL,
-  `author_id` int(11) NOT NULL COMMENT 'ID của admin viết bài',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -395,18 +371,14 @@ CREATE TABLE `product` (
   `product_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `publisher` varchar(100) DEFAULT NULL,
-  `published_date` date DEFAULT NULL COMMENT 'Date the product was published.',
   `supplier` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `year` int(11) DEFAULT NULL,
   `language` varchar(50) DEFAULT NULL,
-  `pages` int(11) DEFAULT NULL COMMENT 'Number of pages in the product.',
   `product_type` varchar(50) DEFAULT NULL,
   `stock_quantity` int(11) NOT NULL,
   `price` decimal(12,2) NOT NULL,
-  `old_price` decimal(12,2) DEFAULT NULL COMMENT 'The original price before discount. NULL if not on sale.',
   `weight` decimal(10,2) DEFAULT NULL,
-  `dimensions` varchar(50) DEFAULT NULL COMMENT 'Physical dimensions of the product (e.g., 13 x 20.5 cm).',
   `size` varchar(255) DEFAULT NULL
 ) ;
 
@@ -414,17 +386,12 @@ CREATE TABLE `product` (
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`product_id`, `title`, `publisher`, `published_date`, `supplier`, `description`, `year`, `language`, `pages`, `product_type`, `stock_quantity`, `price`, `old_price`, `weight`, `dimensions`, `size`) VALUES
-(1, 'Đắc Nhân Tâm - Tác phẩm kinh điển về nghệ thuật thu phục và ảnh hưởng người khác', 'NXB Tổng hợp TP.HCM', '2020-06-15', NULL, 'Đắc Nhân Tâm là quyển sách duy nhất về thể loại self-help bán chạy nhất mọi thời đại. Cuốn sách đã và đang thay đổi cuộc sống của hàng triệu người trên thế   \r\n     giới.', NULL, NULL, 400, NULL, 100, 85000.00, 100000.00, NULL, '13 x 20.5 cm', NULL),
-(2, 'Nhà Giả Kim - Phiên bản kỷ niệm 25 năm', 'NXB Trẻ', '2019-08-10', NULL, 'Một câu chuyện cổ tích dành cho người lớn, một câu chuyện cổ tích về việc theo đuổi giấc mơ và tìm kiếm ý nghĩa cuộc sống.', NULL, NULL, 162, NULL, 100, 75000.00, 90000.00, NULL, '11 x 18 cm', NULL),
-(3, 'Nhà Lãnh Đạo Không Chức Danh', 'NXB Lao Động', '2021-03-05', NULL, 'Cuốn sách truyền cảm hứng cho độc giả rằng ai cũng có thể trở thành một nhà lãnh đạo, không phải bởi chức vụ mà bởi hành động.', NULL, NULL, 224, NULL, 100, 95000.00, 110000.00, NULL, '14 x 20.5 cm', NULL),
-(4, 'Đời Ngắn Đừng Ngủ Dài', 'NXB Tổng hợp TP.HCM', '2020-11-20', NULL, 'Cuốn sách giúp bạn khám phá cách thức để thức dậy mỗi ngày với sự hăng hái, hiệu suất và cảm giác tuyệt vời.', NULL, NULL, 208, NULL, 100, 88000.00, 105000.00, NULL, '13 x 20.5 cm', NULL),
-(5, 'Tư Duy Nhanh và Tư Duy Chậm', 'NXB Chính Trị Quốc Gia', '2018-07-15', NULL, 'Cuốn sách khám phá hai hệ thống tư duy chi phối cách chúng ta suy nghĩ: hệ thống nhanh và hệ thống chậm.', NULL, NULL, 499, NULL, 100, 120000.00, 140000.00, NULL, '14 x 21 cm', NULL),
-(6, 'Tư Duy Tích Cực', 'NXB Trẻ', '2020-05-12', NULL, 'Cuốn sách giải thích cách tư duy ảnh hưởng đến thành công và cách phát triển tư duy tăng trưởng.', NULL, NULL, 320, NULL, 100, 92000.00, 110000.00, NULL, '14 x 21 cm', NULL),
-(7, 'Hiểu Về Trái Tim', 'NXB Tổng hợp TP.HCM', '2019-11-30', NULL, 'Cuốn sách giúp người đọc hiểu rõ hơn về bản thân và cảm xúc của mình, từ đó sống an nhiên và hạnh phúc hơn.', NULL, NULL, 280, NULL, 100, 75000.00, 90000.00, NULL, '13 x 20 cm', NULL),
-(9, 'Gardening at Longmeadow', 'DK Publishing', '2021-02-08', NULL, 'Cuốn sách hướng dẫn chăm sóc vườn tược với nhiều mẹo hay và kinh nghiệm từ chuyên gia.', NULL, NULL, 352, NULL, 100, 468000.00, 585000.00, NULL, '21 x 25 cm', NULL),
-(10, 'Văn Hóa Ẩm Thực Việt Nam', 'NXB Văn Hóa', '2019-06-20', NULL, 'Khám phá văn hóa ẩm thực đặc sắc của Việt Nam qua từng vùng miền.', NULL, NULL, 208, NULL, 100, 40500.00, 45000.00, NULL, '16 x 24 cm', NULL),
-(11, 'Câu Chuyện Triết Học', 'NXB Thế Giới', '2020-04-10', NULL, 'Cuốn sách kinh điển giúp bạn nắm trọn tinh hoa triết học phương Tây qua những câu chuyện súc tích, dễ hiểu và đầy cảm hứng', NULL, NULL, 736, NULL, 100, 289800.00, 450000.00, NULL, '15 x 23 cm', NULL);
+INSERT INTO `product` (`product_id`, `title`, `publisher`, `supplier`, `description`, `year`, `language`, `product_type`, `stock_quantity`, `price`, `weight`, `size`) VALUES
+(1, 'Đắc Nhân Tâm', 'NXB Tổng Hợp TP.HCM', 'First News', NULL, 2020, NULL, 'softcover', 150, 100000.00, NULL, NULL),
+(2, 'Nhà Giả Kim', 'NXB Văn Học', 'Alpha Books', NULL, 2018, NULL, 'softcover', 80, 85000.00, NULL, NULL),
+(3, 'Thuyết Tương Đối', 'NXB Khoa Học', 'Mekong Books', NULL, 2022, NULL, 'hardcover', 20, 250000.00, NULL, NULL),
+(4, 'Sổ Tay Kế Toán', 'NXB Tài Chính', 'Tài Chính Group', NULL, 2023, NULL, 'softcover', 5, 120000.00, NULL, NULL),
+(5, 'One Piece Vol 100', 'NXB Kim Đồng', 'Kim Đồng', NULL, 2024, NULL, 'softcover', 300, 25000.00, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -471,16 +438,12 @@ CREATE TABLE `product_image` (
 --
 
 INSERT INTO `product_image` (`product_id`, `image_url`, `ordinal_number`, `upload_date`) VALUES
-(1, 'images/product-page/dac-nhan-tam.jpg', NULL, NULL),
-(2, 'images/product-page/nha-gia-kim.jpg', NULL, NULL),
-(3, 'images/product-page/nha-lanh-dao-khong-chuc-danh.jpg', NULL, NULL),
-(4, 'images/product-page/doi-ngan-dung-ngu-dai.jpg', NULL, NULL),
-(5, 'images/product-page/tu-duy-nhanh-va-cham.jpg', NULL, NULL),
-(6, 'images/product-page/tu-duy-tich-cuc.jpg', NULL, NULL),
-(7, 'images/product-page/hieu-ve-trai-tim.jpg', NULL, NULL),
-(9, 'images/product-page/gardening-at-longmeadow.jpg', NULL, NULL),
-(10, 'images/product-page/van-hoa-am-thuc-viet-nam.jpg', NULL, NULL),
-(11, 'images/product-page/cau-chuyen-triet-hoc.jpg', NULL, NULL);
+(1, 'image_url/product1/back.jpg', 2, '2023-01-01 10:00:00'),
+(1, 'image_url/product1/main.jpg', 1, '2023-01-01 10:00:00'),
+(2, 'image_url/product2/main.jpg', 1, '2023-01-05 10:00:00'),
+(3, 'image_url/product3/main.jpg', 1, '2023-02-01 10:00:00'),
+(4, 'image_url/product4/main.jpg', 1, '2023-03-01 10:00:00'),
+(5, 'image_url/product5/main.jpg', 1, '2023-04-01 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -493,8 +456,6 @@ CREATE TABLE `qa` (
   `question` varchar(255) NOT NULL,
   `answer` text NOT NULL,
   `category` varchar(100) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID của người dùng đặt câu hỏi',
-  `status` varchar(50) NOT NULL DEFAULT 'pending' COMMENT 'Trạng thái: pending, answered',
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -502,9 +463,9 @@ CREATE TABLE `qa` (
 -- Dumping data for table `qa`
 --
 
-INSERT INTO `qa` (`id`, `question`, `answer`, `category`, `user_id`, `status`, `created_at`) VALUES
-(1, 'Fahasa hỗ trợ những phương thức thanh toán nào?', 'Chúng tôi chấp nhận thanh toán bằng Thẻ tín dụng, E-Wallet và COD (thanh toán khi nhận hàng).', 'Thanh toán', NULL, 'answered', '2025-12-02 15:50:37'),
-(2, 'Làm thế nào để đổi trả sản phẩm?', 'Vui lòng liên hệ bộ phận hỗ trợ trong vòng 7 ngày kể từ ngày nhận hàng để được hướng dẫn chi tiết.', 'Đổi trả', NULL, 'answered', '2025-12-02 15:50:37');
+INSERT INTO `qa` (`id`, `question`, `answer`, `category`, `created_at`) VALUES
+(1, 'Fahasa hỗ trợ những phương thức thanh toán nào?', 'Chúng tôi chấp nhận thanh toán bằng Thẻ tín dụng, E-Wallet và COD (thanh toán khi nhận hàng).', 'Thanh toán', '2025-12-02 15:50:37'),
+(2, 'Làm thế nào để đổi trả sản phẩm?', 'Vui lòng liên hệ bộ phận hỗ trợ trong vòng 7 ngày kể từ ngày nhận hàng để được hướng dẫn chi tiết.', 'Đổi trả', '2025-12-02 15:50:37');
 
 -- --------------------------------------------------------
 
@@ -609,6 +570,7 @@ INSERT INTO `staff` (`user_id`, `branch`, `hired_date`, `salary`, `is_admin`) VA
 
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `password` varchar(100) NOT NULL,
   `fullname` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -622,18 +584,18 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `password`, `fullname`, `email`, `phone`, `role`, `note`, `created_date`) VALUES
-(101, '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Nguyễn Văn A', 'nguyen.a@example.com', NULL, 'customer', NULL, '2023-01-15'),
-(102, '$2y$10$mtHmt7DlmK4CxYr5ineCROaP6K2tqDttJm325JrtzY9Os0KdpGwMy', 'Trần Thị B', 'tran.b@example.com', NULL, 'customer', NULL, '2023-03-20'),
-(103, '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Lê Hoàng C', 'le.c@example.com', NULL, 'customer', NULL, '2024-01-10'),
-(104, '$2y$10$mtHmt7DlmK4CxYr5ineCROaP6K2tqDttJm325JrtzY9Os0KdpGwMy', 'Phạm Minh D', 'pham.d@example.com', NULL, 'customer', NULL, '2024-05-01'),
-(105, '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Võ Thanh E', 'vo.e@example.com', NULL, 'customer', NULL, '2024-06-12'),
-(106, '$2y$10$GrIswAeI.aLpfkqQ.x6C.ulNRqbN7knlCDtJV7yCZNToORt8.DoHe', 'Admin', 'admin@fahasa.com', NULL, 'admin', NULL, '2022-10-01'),
-(107, '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Hoàng Thị G', 'hoang.g@fahasa.com', NULL, 'staff', NULL, '2023-05-15'),
-(108, '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Bùi Xuân H', 'bui.h@fahasa.com', NULL, 'staff', NULL, '2023-08-22'),
-(109, '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Dương Văn I', 'duong.i@fahasa.com', NULL, 'staff', NULL, '2024-02-14'),
-(110, '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Mai Thị K', 'mai.k@fahasa.com', NULL, 'staff', NULL, '2024-04-10'),
-(111, '$2y$10$QqRyMiw8F3ylGvmhFj/8L.8Z1d8FG.GSupZtFEbJoOY6.8ZKbufsK', 'Hà Bình', 'binh.hathe2023@hcmut.edu.vn', NULL, 'Customer', NULL, '2025-12-02');
+INSERT INTO `users` (`user_id`, `username`, `password`, `fullname`, `email`, `phone`, `role`, `note`, `created_date`) VALUES
+(101, 'khachhang_A', '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Nguyễn Văn A', 'nguyen.a@example.com', NULL, 'Customer', NULL, '2023-01-15'),
+(102, 'khachhang_B', '$2y$10$mtHmt7DlmK4CxYr5ineCROaP6K2tqDttJm325JrtzY9Os0KdpGwMy', 'Trần Thị B', 'tran.b@example.com', NULL, 'Customer', NULL, '2023-03-20'),
+(103, 'khachhang_C', '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Lê Hoàng C', 'le.c@example.com', NULL, 'Customer', NULL, '2024-01-10'),
+(104, 'khachhang_D', '$2y$10$mtHmt7DlmK4CxYr5ineCROaP6K2tqDttJm325JrtzY9Os0KdpGwMy', 'Phạm Minh D', 'pham.d@example.com', NULL, 'Customer', NULL, '2024-05-01'),
+(105, 'khachhang_E', '$2y$10$6t7Iv2l13qnBSZvd2efpSOyAqUZZ6zHuR/mUaJWRgyljDNbjbhfby', 'Võ Thanh E', 'vo.e@example.com', NULL, 'Customer', NULL, '2024-06-12'),
+(106, 'admin', '$2y$10$GrIswAeI.aLpfkqQ.x6C.ulNRqbN7knlCDtJV7yCZNToORt8.DoHe', 'Admin', 'admin@fahasa.com', NULL, 'admin', NULL, '2022-10-01'),
+(107, 'staff_sales', '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Hoàng Thị G', 'hoang.g@fahasa.com', NULL, 'staff', NULL, '2023-05-15'),
+(108, 'staff_warehouse', '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Bùi Xuân H', 'bui.h@fahasa.com', NULL, 'staff', NULL, '2023-08-22'),
+(109, 'staff_support', '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Dương Văn I', 'duong.i@fahasa.com', NULL, 'staff', NULL, '2024-02-14'),
+(110, 'staff_packing', '$2y$10$8I0BJABP4rEETVQ8GWLGYuRMWxkb6UEGhWBtFryh7y/xA9ZCfso3.', 'Mai Thị K', 'mai.k@fahasa.com', NULL, 'staff', NULL, '2024-04-10'),
+(111, '', '$2y$10$QqRyMiw8F3ylGvmhFj/8L.8Z1d8FG.GSupZtFEbJoOY6.8ZKbufsK', 'Hà Bình', 'binh.hathe2023@hcmut.edu.vn', NULL, 'Customer', NULL, '2025-12-02');
 
 -- --------------------------------------------------------
 
@@ -707,19 +669,6 @@ INSERT INTO `voucher` (`voucher_code`, `usage_limit`, `used_count`, `start_time`
 ('TEST_OK', 10, 0, '2025-01-01 00:00:00', '2025-03-01 23:59:59', 200000.00, 25000.00, 10000.00),
 ('VIP_20', 50, 5, '2024-11-01 00:00:00', '2025-11-01 23:59:59', 500000.00, 50000.00, 20000.00);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `wishlist`
---
-
-CREATE TABLE `wishlist` (
-  `wishlist_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `added_date` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 --
 -- Indexes for dumped tables
 --
@@ -731,11 +680,18 @@ ALTER TABLE `author_of_product`
   ADD PRIMARY KEY (`product_id`,`author_name`);
 
 --
--- Indexes for table `cart_items`
+-- Indexes for table `cart`
 --
-ALTER TABLE `cart_items`
-  ADD PRIMARY KEY (`user_id`,`product_id`),
-  ADD KEY `product_id` (`product_id`);
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`cart_id`),
+  ADD KEY `FK_Cart_Customer` (`customer_id`);
+
+--
+-- Indexes for table `cart_product`
+--
+ALTER TABLE `cart_product`
+  ADD PRIMARY KEY (`card_id`,`product_id`),
+  ADD KEY `FK_CP_Product` (`product_id`);
 
 --
 -- Indexes for table `categorizes`
@@ -757,15 +713,6 @@ ALTER TABLE `category`
 ALTER TABLE `category_product`
   ADD PRIMARY KEY (`category_id`,`product_id`),
   ADD KEY `FK_CtP_Product` (`product_id`);
-
---
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_Comment_News` (`news_id`),
-  ADD KEY `FK_Comment_User` (`user_id`),
-  ADD KEY `FK_Comment_Parent` (`parent_id`);
 
 --
 -- Indexes for table `contacts`
@@ -791,13 +738,6 @@ ALTER TABLE `flashsale`
 ALTER TABLE `flashsale_product`
   ADD PRIMARY KEY (`sale_id`,`product_id`),
   ADD KEY `FK_FSP_Product` (`product_id`);
-
---
--- Indexes for table `news`
---
-ALTER TABLE `news`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_News_Author` (`author_id`);
 
 --
 -- Indexes for table `orders`
@@ -857,8 +797,7 @@ ALTER TABLE `product_image`
 -- Indexes for table `qa`
 --
 ALTER TABLE `qa`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_QA_User` (`user_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `settings`
@@ -912,23 +851,8 @@ ALTER TABLE `voucher`
   ADD PRIMARY KEY (`voucher_code`);
 
 --
--- Indexes for table `wishlist`
---
-ALTER TABLE `wishlist`
-  ADD PRIMARY KEY (`wishlist_id`),
-  ADD UNIQUE KEY `unique_user_product` (`user_id`,`product_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `idx_wishlist_user` (`user_id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `comments`
---
-ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -937,17 +861,10 @@ ALTER TABLE `contacts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `news`
---
-ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
   MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `pages`
 --
@@ -965,7 +882,6 @@ ALTER TABLE `payment`
 --
 ALTER TABLE `product`
   MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT;
-
 --
 -- AUTO_INCREMENT for table `qa`
 --
@@ -985,12 +901,6 @@ ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
 --
--- AUTO_INCREMENT for table `wishlist`
---
-ALTER TABLE `wishlist`
-  MODIFY `wishlist_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- Constraints for dumped tables
 --
 
@@ -1001,11 +911,17 @@ ALTER TABLE `author_of_product`
   ADD CONSTRAINT `FK_Au_Product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Constraints for table `cart_items`
+-- Constraints for table `cart`
 --
-ALTER TABLE `cart_items`
-  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE;
+ALTER TABLE `cart`
+  ADD CONSTRAINT `FK_Cart_Customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`user_id`);
+
+--
+-- Constraints for table `cart_product`
+--
+ALTER TABLE `cart_product`
+  ADD CONSTRAINT `FK_CP_Cart` FOREIGN KEY (`card_id`) REFERENCES `cart` (`cart_id`),
+  ADD CONSTRAINT `FK_CP_Product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
 -- Constraints for table `categorizes`
@@ -1022,14 +938,6 @@ ALTER TABLE `category_product`
   ADD CONSTRAINT `FK_CtP_Product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Constraints for table `comments`
---
-ALTER TABLE `comments`
-  ADD CONSTRAINT `FK_Comment_News` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_Comment_Parent` FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_Comment_User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `customer`
 --
 ALTER TABLE `customer`
@@ -1041,12 +949,6 @@ ALTER TABLE `customer`
 ALTER TABLE `flashsale_product`
   ADD CONSTRAINT `FK_FSP_Flashsale` FOREIGN KEY (`sale_id`) REFERENCES `flashsale` (`sale_id`),
   ADD CONSTRAINT `FK_FSP_Product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
-
---
--- Constraints for table `news`
---
-ALTER TABLE `news`
-  ADD CONSTRAINT `FK_News_Author` FOREIGN KEY (`author_id`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `orders`
@@ -1088,12 +990,6 @@ ALTER TABLE `product_image`
   ADD CONSTRAINT `FK_PI_Product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`);
 
 --
--- Constraints for table `qa`
---
-ALTER TABLE `qa`
-  ADD CONSTRAINT `FK_QA_User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-
---
 -- Constraints for table `shipment_order`
 --
 ALTER TABLE `shipment_order`
@@ -1117,15 +1013,60 @@ ALTER TABLE `user_address`
 --
 ALTER TABLE `user_phone`
   ADD CONSTRAINT `FK_UserPhone_User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-
---
--- Constraints for table `wishlist`
---
-ALTER TABLE `wishlist`
-  ADD CONSTRAINT `wishlist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `wishlist_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- ==================================================================================
+-- PHẦN BỔ SUNG CHO CÁC TÍNH NĂNG MỚI
+-- ==================================================================================
+
+--
+-- Cấu trúc cho bảng Tin tức (News)
+--
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `image_url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `author_id` int(11) NOT NULL COMMENT 'ID của admin viết bài',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK_News_Author` (`author_id`),
+  CONSTRAINT `FK_News_Author` FOREIGN KEY (`author_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+--
+-- Cấu trúc cho bảng Bình luận (Comments)
+--
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `news_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `parent_id` int(11) DEFAULT NULL COMMENT 'Để trả lời bình luận khác',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK_Comment_News` (`news_id`),
+  KEY `FK_Comment_User` (`user_id`),
+  KEY `FK_Comment_Parent` (`parent_id`),
+  CONSTRAINT `FK_Comment_News` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Comment_User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_Comment_Parent` FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Cập nhật bảng Hỏi-Đáp (QA)
+--
+ALTER TABLE `qa`
+  ADD COLUMN `user_id` INT(11) NULL DEFAULT NULL COMMENT 'ID của người dùng đặt câu hỏi' AFTER `category`,
+  ADD COLUMN `status` VARCHAR(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'pending' COMMENT 'Trạng thái: pending, answered' AFTER `user_id`;
+
+UPDATE `qa` SET `status` = 'answered' WHERE `user_id` IS NULL;
+
+ALTER TABLE `qa`
+  ADD CONSTRAINT `FK_QA_User` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);

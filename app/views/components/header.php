@@ -186,6 +186,23 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
             .header-icons a { margin-left: 10px; }
         }
     </style>
+
+<script>
+    // Global variables for JavaScript
+    const BASE_URL = '<?= BASE_URL ?>';
+    window.isLoggedIn = <?= isset($_SESSION['users_id']) ? 'true' : 'false' ?>;
+    window.needSyncCart = <?= isset($_SESSION['need_sync_cart']) ? 'true' : 'false' ?>;
+
+    <?php if (isset($_SESSION['need_sync_cart'])): ?>
+        // Xóa flag sau khi đã set
+        <?php unset($_SESSION['need_sync_cart']); ?>
+    <?php endif; ?>
+</script>
+
+<!-- Load cart.js -->
+<script src="<?= BASE_URL ?>js/cart.js"></script>
+
+
 </head>
 <body>
     <!-- Top Header -->

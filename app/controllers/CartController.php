@@ -1,319 +1,275 @@
-<?php
-/**
- * CART CONTROLLER
- * Quản lý giỏ hàng và thanh toán
- */
+ <?php
+  // app/controllers/CartController.php
 
-class CartController extends Controller {
+  class CartController extends Controller
+  {
+      private $cartModel;
+      private $productModel;
 
-    public function __construct() {
-        // Khởi tạo session nếu chưa có
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+      public function __construct()
+      {
+          if (session_status() === PHP_SESSION_NONE) {
+              session_start();
+          }
+
+          $this->cartModel = $this->model('CartModel');
+          $this->productModel = $this->model('ProductModel');
+      }
+
+      /**
+       * Hiển thị giỏ hàng
+       */
+      public function index()
+    {
+        $cartItems = [];
+        $summary = ['subtotal' => 0, 'discount' => 0, 'shipping' => 0, 'total' => 0];
+        $isLoggedIn = $this->isLoggedIn();
+        $localCartItemsJson = $_COOKIE['local_cart'] ?? '[]';
+        $localCartItems = json_decode($localCartItemsJson, true) ?? [];
+
+        if ($isLoggedIn) {
+            // 1. User đã đăng nhập → lấy từ database
+            $userId = $_SESSION['users_id'];
+            $cartItems = $this->cartModel->getCartByUserId($userId);
+        } elseif (!empty($localCartItems)) {
+            // 2. User chưa đăng nhập → Lấy thông tin chi tiết từ LocalStorage
+            $cartItems = $this->getCartItemsFromLocal($localCartItems);
         }
-    }
+        
+        $summary = $this->calculateSummary($cartItems);
 
-    /**
-     * Trang giỏ hàng
-     */
-    public function index() {
-        // Xử lý khi người dùng nhấn "Mua ngay" từ trang chi tiết
-        if (isset($_GET['product_id']) && isset($_GET['quantity'])) {
-            $this->addToCartFromBuyNow($_GET['product_id'], $_GET['quantity']);
-            // Redirect về /cart (không có params) để tránh thêm lại khi reload
-            header('Location: ' . BASE_URL . 'cart');
-            exit;
-        }
-
-        // Lấy giỏ hàng từ session
-        $cart = $_SESSION['cart'] ?? [];
-        
-        // Lấy thông tin chi tiết các sản phẩm trong giỏ
-        $cartItems = $this->getCartItems($cart);
-        
-        // Tính tổng tiền
-        $summary = $this->calculateCartSummary($cartItems);
-        
         $data = [
             'title' => 'Giỏ hàng - ' . APP_NAME,
             'page' => 'cart',
             'cartItems' => $cartItems,
-            'summary' => $summary
+            'summary' => $summary,
+            'isLoggedIn' => $isLoggedIn
         ];
 
         $this->view('cart/index', $data);
     }
+      /**
+       * Thêm sản phẩm vào giỏ hàng (AJAX)
+       */
+      public function add()
+      {
+          if (!$this->isPost()) {
+              $this->jsonResponse(['success' => false, 'message' => 'Invalid request']);
+          }
 
-    /**
-     * Cập nhật số lượng sản phẩm trong giỏ
-     */
-    public function updateQuantity() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $productId = $_POST['product_id'] ?? 0;
-            $quantity = (int)($_POST['quantity'] ?? 1);
-            
-            if ($quantity <= 0) {
-                // Xóa sản phẩm nếu số lượng <= 0
-                $this->removeFromCart();
-                return;
-            }
-            
-            // Cập nhật số lượng
-            if (isset($_SESSION['cart'][$productId])) {
-                $_SESSION['cart'][$productId] = $quantity;
-                
-                $response = [
-                    'success' => true,
-                    'message' => 'Đã cập nhật số lượng sản phẩm!',
-                    'cartCount' => array_sum($_SESSION['cart'] ?? [])
-                ];
-            } else {
-                $response = [
-                    'success' => false,
-                    'message' => 'Sản phẩm không tồn tại trong giỏ hàng!'
-                ];
-            }
-            
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            exit;
+          $productId = (int)($_POST['product_id'] ?? 0);
+          $quantity = (int)($_POST['quantity'] ?? 1);
+
+          // Validate
+          if ($productId <= 0 || $quantity <= 0) {
+              $this->jsonResponse(['success' => false, 'message' => 'Dữ liệu không hợp lệ']);
+          }
+
+          // Kiểm tra sản phẩm tồn tại
+          $product = $this->productModel->getProductDetailsById($productId);
+          if (!$product) {
+              $this->jsonResponse(['success' => false, 'message' => 'Sản phẩm không tồn tại']);
+          }
+
+          // Kiểm tra stock
+          if ($product['stock_quantity'] < $quantity) {
+              $this->jsonResponse(['success' => false, 'message' => 'Số lượng vượt quá tồn kho']);
+          }
+
+          if ($this->isLoggedIn()) {
+              // User đã đăng nhập → lưu vào database
+              $userId = $_SESSION['users_id'];
+              // THÊM DEBUG
+      error_log("DEBUG CART: userId=$userId, productId=$productId, quantity=$quantity");
+              $this->cartModel->addToCart($userId, $productId, $quantity);
+              $cartCount = $this->cartModel->getCartCount($userId);
+
+              $this->jsonResponse([
+                  'success' => true,
+                  'message' => 'Đã thêm vào giỏ hàng',
+                  'cartCount' => $cartCount,
+                  'storage' => 'database'
+              ]);
+          } else {
+              // Chưa đăng nhập → trả về để JS lưu localStorage
+              $this->jsonResponse([
+                  'success' => true,
+                  'message' => 'Đã thêm vào giỏ hàng',
+                  'storage' => 'local',
+                  'needSync' => true
+              ]);
+          }
+      }
+
+      /**
+       * Cập nhật số lượng (AJAX)
+       */
+      public function updateQuantity()
+    {
+        if (!$this->isPost()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Invalid request']);
         }
+
+        $productId = (int)($_POST['product_id'] ?? 0);
+        $quantity = (int)($_POST['quantity'] ?? 1);
+        $isLoggedIn = $this->isLoggedIn();
+
+        if (!$isLoggedIn && (!isset($_POST['is_local']) || $_POST['is_local'] != 'true')) {
+             // Nếu chưa đăng nhập, phải có cờ is_local. Nếu không, coi là request lỗi
+            $this->jsonResponse(['success' => false, 'message' => 'Unauthorized or missing local flag']);
+        }
+
+        // Logic xử lý stock... (nên được thêm ở đây)
+
+        if ($isLoggedIn) {
+            // Xử lý DB
+            $userId = $_SESSION['users_id'];
+            $this->cartModel->updateQuantity($userId, $productId, $quantity);
+        }
+        // else: Logic Local Storage sẽ được xử lý hoàn toàn phía client (JS)
         
-        header('Location: ' . BASE_URL . 'cart');
+        // Trả về thành công để client cập nhật UI (và LocalStorage nếu cần)
+        $this->jsonResponse([
+            'success' => true, 
+            'message' => 'Đã cập nhật',
+            // Không cần cartCount hay reload vì client sẽ tự cập nhật UI/tổng tiền
+        ]);
     }
 
-    /**
-     * Xóa sản phẩm khỏi giỏ hàng
-     */
-    public function removeFromCart() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $productId = $_POST['product_id'] ?? 0;
-            
-            if (isset($_SESSION['cart'][$productId])) {
-                unset($_SESSION['cart'][$productId]);
-                
-                $response = [
-                    'success' => true,
-                    'message' => 'Đã xóa sản phẩm khỏi giỏ hàng!',
-                    'cartCount' => array_sum($_SESSION['cart'] ?? [])
-                ];
-            } else {
-                $response = [
-                    'success' => false,
-                    'message' => 'Sản phẩm không tồn tại trong giỏ hàng!'
-                ];
-            }
-            
-            header('Content-Type: application/json');
-            echo json_encode($response);
-            exit;
+      /**
+       * Xóa sản phẩm khỏi giỏ (AJAX)
+       */
+      public function remove()
+    {
+        if (!$this->isPost()) {
+            $this->jsonResponse(['success' => false, 'message' => 'Invalid request']);
+        }
+
+        $productId = (int)($_POST['product_id'] ?? 0);
+        $isLoggedIn = $this->isLoggedIn();
+
+        if (!$isLoggedIn && (!isset($_POST['is_local']) || $_POST['is_local'] != 'true')) {
+            $this->jsonResponse(['success' => false, 'message' => 'Unauthorized or missing local flag']);
+        }
+
+        if ($isLoggedIn) {
+            // Xử lý DB
+            $userId = $_SESSION['users_id'];
+            $this->cartModel->removeFromCart($userId, $productId);
         }
         
-        header('Location: ' . BASE_URL . 'cart');
+        // Trả về thành công để client cập nhật UI (và LocalStorage nếu cần)
+        $this->jsonResponse([
+            'success' => true, 
+            'message' => 'Đã xóa sản phẩm',
+        ]);
     }
 
-    /**
-     * Thêm sản phẩm vào giỏ từ nút "Mua ngay"
-     */
-    private function addToCartFromBuyNow($productId, $quantity) {
-        $productId = (int)$productId;
-        $quantity = (int)$quantity;
-        
-        if ($productId > 0 && $quantity > 0) {
-            $cart = $_SESSION['cart'] ?? [];
-            
-            // Kiểm tra xem sản phẩm đã có trong giỏ chưa
-            if (isset($cart[$productId])) {
-                $cart[$productId] += $quantity;
-            } else {
-                $cart[$productId] = $quantity;
-            }
-            
-            $_SESSION['cart'] = $cart;
-        }
-    }
+      /**
+       * Sync cart từ localStorage khi user login (AJAX)
+       */
+      public function syncFromLocal()
+      {
+          if (!$this->isPost() || !$this->isLoggedIn()) {
+              $this->jsonResponse(['success' => false, 'message' => 'Unauthorized']);
+          }
 
-    /**
-     * Lấy thông tin chi tiết các sản phẩm trong giỏ hàng
-     */
-    private function getCartItems($cart) {
-        if (empty($cart)) {
+          // Nhận cart từ localStorage (qua POST JSON)
+          $json = file_get_contents('php://input');
+          $data = json_decode($json, true);
+          $localCart = $data['cart'] ?? [];
+
+          if (!empty($localCart) && is_array($localCart)) {
+              $userId = $_SESSION['users_id'];
+              $this->cartModel->syncFromLocalStorage($userId, $localCart);
+          }
+
+          $cartCount = $this->cartModel->getCartCount($_SESSION['users_id']);
+
+          $this->jsonResponse([
+              'success' => true,
+              'message' => 'Đã đồng bộ giỏ hàng',
+              'cartCount' => $cartCount
+          ]);
+      }
+
+      /**
+       * Helper: Kiểm tra đăng nhập
+       */
+      private function isLoggedIn()
+      {
+        return isset($_SESSION['users_id']) && !empty($_SESSION['users_id']);
+      }
+
+      private function getCartItemsFromLocal($localCartItems)
+    {
+        $cartItems = [];
+        if (empty($localCartItems) || !is_array($localCartItems)) {
             return [];
         }
 
-        $cartItems = [];
-        
-        foreach ($cart as $productId => $quantity) {
-            $product = $this->getProductById($productId);
-            
-            if ($product) {
+        // Lấy danh sách ID sản phẩm để truy vấn 1 lần
+        $productIds = array_column($localCartItems, 'product_id');
+        if (empty($productIds)) {
+            return [];
+        }
+
+        // Giả sử ProductModel có hàm getProductsByIds
+        $productsData = $this->productModel->getProductsByIds($productIds); 
+        $productsMap = array_column($productsData, null, 'product_id');
+
+        foreach ($localCartItems as $item) {
+            $productId = (int)$item['product_id'];
+            $quantity = (int)($item['quantity'] ?? 1);
+
+            if (isset($productsMap[$productId])) {
+                $product = $productsMap[$productId];
+                $subtotal = $product['price'] * $quantity;
+
+                // Tạo cấu trúc dữ liệu giống như khi lấy từ DB
                 $cartItems[] = [
-                    'product' => $product,
+                    'product_id' => $productId,
                     'quantity' => $quantity,
-                    'subtotal' => $product['price'] * $quantity
+                    'title' => $product['title'],
+                    'price' => $product['price'],
+                    'stock_quantity' => $product['stock_quantity'],
+                    'image_url' => $product['image_url'] ?? '', // Giả sử ProductModel có trả về
+                    'author' => $product['author'] ?? 'N/A',
+                    'subtotal' => $subtotal,
                 ];
             }
         }
-        
         return $cartItems;
     }
+      /**
+       * Helper: Tính tổng tiền
+       */
+      private function calculateSummary($cartItems)
+      {
+          $subtotal = 0;
+          foreach ($cartItems as $item) {
+              $subtotal += $item['subtotal'];
+          }
 
-    /**
-     * Tính tổng tiền giỏ hàng
-     */
-    private function calculateCartSummary($cartItems) {
-        $subtotal = 0;
-        $totalDiscount = 0;
-        
-        foreach ($cartItems as $item) {
-            $subtotal += $item['subtotal'];
-            
-            // Tính tiền giảm giá
-            if ($item['product']['old_price'] > $item['product']['price']) {
-                $discount = ($item['product']['old_price'] - $item['product']['price']) * $item['quantity'];
-                $totalDiscount += $discount;
-            }
-        }
-        
-        $shipping = $subtotal > 0 ? 30000 : 0; // Phí ship cố định 30,000đ
-        $total = $subtotal + $shipping;
-        
-        return [
-            'subtotal' => $subtotal,
-            'discount' => $totalDiscount,
-            'shipping' => $shipping,
-            'total' => $total
-        ];
-    }
+          $discount = 0; // Chưa có chức năng giảm giá
+          $shipping = $subtotal > 0 ? 30000 : 0;
+          $total = $subtotal - $discount + $shipping;
 
-    /**
-     * Lấy thông tin sản phẩm theo ID
-     * (Giống trong ProductController - trong thực tế nên tách ra model)
-     */
-    private function getProductById($id) {
-        $products = [
-            1 => [
-                'id' => 1,
-                'name' => 'Đắc Nhân Tâm - Tác phẩm kinh điển về nghệ thuật thu phục và ảnh hưởng người khác',
-                'author' => 'Dale Carnegie',
-                'price' => 85000,
-                'old_price' => 100000,
-                'category' => 'sach-tam-li',
-                'image' => 'images/product-page/dac-nhan-tam.jpg',
-                'in_stock' => true
-            ],
-            2 => [
-                'id' => 2,
-                'name' => 'Nhà Giả Kim - Phiên bản kỷ niệm 25 năm',
-                'author' => 'Paulo Coelho',
-                'price' => 75000,
-                'old_price' => 90000,
-                'category' => 'sach-van-hoc',
-                'image' => 'images/product-page/nha-gia-kim.jpg',
-                'in_stock' => true
-            ],
-            3 => [
-                'id' => 3,
-                'name' => 'Nhà Lãnh Đạo Không Chức Danh',
-                'author' => 'Robin Sharma',
-                'price' => 95000,
-                'old_price' => 110000,
-                'category' => 'sach-ky-nang',
-                'image' => 'images/product-page/nha-lanh-dao-khong-chuc-danh.jpg',
-                'in_stock' => true
-            ],
-            4 => [
-                'id' => 4,
-                'name' => 'Đời Ngắn Đừng Ngủ Dài',
-                'author' => 'Robin Sharma',
-                'price' => 88000,
-                'old_price' => 105000,
-                'category' => 'sach-ky-nang',
-                'image' => 'images/product-page/doi-ngan-dung-ngu-dai.jpg',
-                'in_stock' => true
-            ],
-            5 => [
-                'id' => 5,
-                'name' => 'Tư Duy Nhanh và Tư Duy Chậm',
-                'author' => 'Daniel Kahneman',
-                'price' => 120000,
-                'old_price' => 140000,
-                'category' => 'sach-tam-li',
-                'image' => 'images/product-page/tu-duy-nhanh-va-cham.jpg',
-                'in_stock' => true
-            ],
-            6 => [
-                'id' => 6,
-                'name' => 'Tư Duy Tích Cực',
-                'author' => 'Carol Dweck',
-                'price' => 92000,
-                'old_price' => 110000,
-                'category' => 'sach-tam-li',
-                'image' => 'images/product-page/tu-duy-tich-cuc.jpg',
-                'in_stock' => true
-            ],
-            7 => [
-                'id' => 7,
-                'name' => 'Hiểu Về Trái Tim',
-                'author' => 'Minh Niệm',
-                'price' => 75000,
-                'old_price' => 90000,
-                'category' => 'sach-tam-li',
-                'image' => 'images/product-page/hieu-ve-trai-tim.jpg',
-                'in_stock' => true
-            ],
-            8 => [
-                'id' => 8,
-                'name' => 'Dám Bị Ghét',
-                'author' => 'Kishimi Ichiro & Koga Fumitake',
-                'price' => 85000,
-                'old_price' => 100000,
-                'category' => 'sach-tam-li',
-                'image' => 'images/product-page/dam-bi-ghet.jpg',
-                'in_stock' => true
-            ],
-            9 => [
-                'id' => 9,
-                'name' => 'Gardening at Longmeadow',
-                'author' => 'Monty Don',
-                'price' => 468000,
-                'old_price' => 585000,
-                'category' => 'sach-kien-thuc',
-                'image' => 'images/product-page/gardening-at-longmeadow.jpg',
-                'in_stock' => true
-            ],
-            10 => [
-                'id' => 10,
-                'name' => 'Văn Hóa Ẩm Thực Việt Nam',
-                'author' => 'Trần Quốc Vượng - Nguyễn Thị Bảy',
-                'price' => 40500,
-                'old_price' => 45000,
-                'category' => 'sach-kien-thuc',
-                'image' => 'images/product-page/van-hoa-am-thuc-viet-nam.jpg',
-                'in_stock' => true
-            ],
-            11 => [
-                'id' => 11,
-                'name' => 'Câu Chuyện Triết Học',
-                'author' => 'Will Durant',
-                'price' => 289800,
-                'old_price' => 450000,
-                'category' => 'sach-kien-thuc',
-                'image' => 'images/product-page/cau-chuyen-triet-hoc.jpg',
-                'in_stock' => true
-            ],
-            12 => [
-                'id' => 12,
-                'name' => 'Bách Khoa Cho Trẻ Em - Bách Khoa Khoa Học',
-                'author' => 'Nhóm tác giả',
-                'price' => 140800,
-                'old_price' => 160000,
-                'category' => 'sach-thieu-nhi',
-                'image' => 'images/product-page/bach-khoa-khoa-hoc-cho-tre-em.jpg',
-                'in_stock' => true
-            ]
-        ];
+          return [
+              'subtotal' => $subtotal,
+              'discount' => $discount,
+              'shipping' => $shipping,
+              'total' => $total
+          ];
+      }
 
-        return $products[$id] ?? null;
-    }
-}
+      /**
+       * Helper: JSON response
+       */
+      private function jsonResponse($data)
+      {
+          header('Content-Type: application/json');
+          echo json_encode($data);
+          exit;
+      }
+  }
