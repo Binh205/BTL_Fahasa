@@ -1,4 +1,4 @@
-<?php require_once APP_ROOT . '/views/admin/layout/header.php'; ?>
+
 
 <div class="page-header d-print-none">
     <div class="container-xl">
@@ -55,5 +55,3 @@
         </div>
     </div>
 </div>
-
-<?php require_once APP_ROOT . '/views/admin/layout/footer.php'; ?>

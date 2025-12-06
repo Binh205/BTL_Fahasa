@@ -106,15 +106,15 @@
         gap: 8px;
     }
 
-    /* Ví dụ CSS (Nếu bạn cần thêm) */
+
 .item-title-link {
-    text-decoration: none; /* Bỏ gạch chân */
-    color: inherit; /* Giữ màu chữ mặc định của cha */
-    display: block; /* Quan trọng: làm cho link chiếm hết chiều rộng của item-title */
+    text-decoration: none; 
+    color: inherit; 
+    display: block; 
 }
 
 .item-title-link:hover {
-    color: #007bff; /* Thay đổi màu khi di chuột */
+    color: #007bff; 
 }
 
     .item-title {

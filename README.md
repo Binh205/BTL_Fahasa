@@ -7,10 +7,11 @@
 Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các tính năng:
 
 ### 🎯 Chức năng cho Khách hàng
+
 - 🔍 Tìm kiếm và lọc sản phẩm theo danh mục
-- 📖 Xem chi tiết sản phẩm, sản phẩm liên quan
-- 🛒 Giỏ hàng: Thêm/Xóa/Cập nhật số lượng
-- 👤 Đăng ký/Đăng nhập tài khoản
+- 📖 Xem chi tiết sản phẩm, sản phẩm liên quan (còn comment đánh giá)
+- 🛒 Giỏ hàng: Thêm/Xóa/Cập nhật số lượng (đã xong)
+- 👤 Đăng ký/Đăng nhập tài khoản (đã xong)
 - 📦 Quản lý đơn hàng cá nhân
 - ❤️ Danh sách sản phẩm yêu thích
 - 🔔 Thông báo đơn hàng và khuyến mãi
@@ -18,6 +19,7 @@ Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các
 - ❓ Hỏi đáp
 
 ### 🔧 Chức năng cho Admin
+
 - 📚 Quản lý sản phẩm (CRUD)
 - 📰 Quản lý tin tức/bài viết
 - ❓ Quản lý câu hỏi/câu trả lời
@@ -26,6 +28,7 @@ Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các
 - 📝 Chỉnh sửa nội dung trang tĩnh
 
 ### 💻 Công nghệ sử dụng
+
 - **Backend:** PHP thuần (không framework)
 - **Database:** MySQL/MariaDB
 - **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript
@@ -38,12 +41,14 @@ Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các
 ## 🚀 Hướng dẫn cài đặt
 
 ### Yêu cầu hệ thống
+
 - PHP >= 7.4
 - MySQL/MariaDB
 - Apache Server (hoặc XAMPP/WAMP/LAMP)
 - Extension: PDO, PDO_MySQL
 
 ### Bước 1: Clone/Download dự án
+
 ```bash
 # Clone từ Git
 git clone https://github.com/Binh205/BTL_Fahasa.git
@@ -97,6 +102,7 @@ chmod 755 public/images/uploads
 ### Bước 6: Đăng nhập Admin (tùy chọn)
 
 Sau khi import database, sử dụng tài khoản admin:
+
 ```
 Email/SĐT: admin@fahasa.com
 Mật khẩu: (xem trong database hoặc tạo mới qua register)
@@ -154,54 +160,60 @@ BTL_Fahasa/
 ## 🔗 Cấu trúc URL & Routing
 
 ### Trang công khai
-| Chức năng | URL | Controller | Method |
-|-----------|-----|------------|--------|
-| Trang chủ | `/public/` hoặc `/public/home` | HomeController | index() |
-| Giới thiệu | `/public/home/about` | HomeController | about() |
-| Hỏi/Đáp | `/public/home/qa` | HomeController | qa() |
-| Liên hệ | `/public/contact` | ContactController | index() |
-| Sản phẩm | `/public/product` | ProductController | index() |
-| Chi tiết SP | `/public/product/detail/1` | ProductController | detail(1) |
-| Tin tức | `/public/news` | NewsController | index() |
-| Chi tiết bài viết | `/public/news/detail/1` | NewsController | detail(1) |
+
+| Chức năng         | URL                            | Controller        | Method    |
+| ----------------- | ------------------------------ | ----------------- | --------- |
+| Trang chủ         | `/public/` hoặc `/public/home` | HomeController    | index()   |
+| Giới thiệu        | `/public/home/about`           | HomeController    | about()   |
+| Hỏi/Đáp           | `/public/home/qa`              | HomeController    | qa()      |
+| Liên hệ           | `/public/contact`              | ContactController | index()   |
+| Sản phẩm          | `/public/product`              | ProductController | index()   |
+| Chi tiết SP       | `/public/product/detail/1`     | ProductController | detail(1) |
+| Tin tức           | `/public/news`                 | NewsController    | index()   |
+| Chi tiết bài viết | `/public/news/detail/1`        | NewsController    | detail(1) |
 
 ### Giỏ hàng
-| Chức năng | URL | Method |
-|-----------|-----|--------|
-| Xem giỏ hàng | `/public/cart` | GET |
+
+| Chức năng         | URL                           | Method      |
+| ----------------- | ----------------------------- | ----------- |
+| Xem giỏ hàng      | `/public/cart`                | GET         |
 | Cập nhật số lượng | `/public/cart/updateQuantity` | POST (AJAX) |
-| Xóa sản phẩm | `/public/cart/removeFromCart` | POST (AJAX) |
+| Xóa sản phẩm      | `/public/cart/removeFromCart` | POST (AJAX) |
 
 ### Xác thực
-| Chức năng | URL | Yêu cầu |
-|-----------|-----|---------|
-| Đăng nhập | `/public/auth/login` | - |
-| Đăng ký | `/public/auth/register` | - |
-| Đăng xuất | `/public/auth/logout` | Đã đăng nhập |
+
+| Chức năng | URL                     | Yêu cầu      |
+| --------- | ----------------------- | ------------ |
+| Đăng nhập | `/public/auth/login`    | -            |
+| Đăng ký   | `/public/auth/register` | -            |
+| Đăng xuất | `/public/auth/logout`   | Đã đăng nhập |
 
 ### Trang khách hàng (Yêu cầu đăng nhập)
-| Chức năng | URL |
-|-----------|-----|
-| Thông tin tài khoản | `/public/customer` |
-| Đơn hàng của tôi | `/public/customer/orders` |
-| Sản phẩm yêu thích | `/public/customer/wishlist` |
-| Thông báo | `/public/customer/notifications` |
+
+| Chức năng           | URL                              |
+| ------------------- | -------------------------------- |
+| Thông tin tài khoản | `/public/customer`               |
+| Đơn hàng của tôi    | `/public/customer/orders`        |
+| Sản phẩm yêu thích  | `/public/customer/wishlist`      |
+| Thông báo           | `/public/customer/notifications` |
 
 ### Trang Admin (Yêu cầu role='admin')
-| Chức năng | URL |
-|-----------|-----|
-| Dashboard | `/public/admin` |
+
+| Chức năng        | URL                      |
+| ---------------- | ------------------------ |
+| Dashboard        | `/public/admin`          |
 | Quản lý sản phẩm | `/public/admin/products` |
-| Quản lý tin tức | `/public/admin/news` |
-| Quản lý Q&A | `/public/admin/qa` |
-| Quản lý liên hệ | `/public/admin/contacts` |
-| Cấu hình | `/public/admin/settings` |
+| Quản lý tin tức  | `/public/admin/news`     |
+| Quản lý Q&A      | `/public/admin/qa`       |
+| Quản lý liên hệ  | `/public/admin/contacts` |
+| Cấu hình         | `/public/admin/settings` |
 
 ---
 
 ## 🏗️ Kiến trúc MVC
 
 ### Flow hoạt động
+
 ```
 User Request
     ↓
@@ -223,18 +235,21 @@ Response to User
 ### Core Classes
 
 **1. App.php** - Router chính
+
 - Parse URL thành `[controller, method, params]`
 - Load controller tương ứng
 - Gọi method với parameters
 - Redirect về landing nếu không tìm thấy
 
 **2. Controller.php** - Base Controller
+
 - `model($name)` - Load model
 - `view($view, $data)` - Render view
 - `redirect($path)` - Chuyển hướng
 - `isPost()`, `isGet()` - Kiểm tra request method
 
 **3. DB.php** - Database wrapper
+
 - PDO với prepared statements
 - `query($sql, $params)` - Thực thi truy vấn
 - `single($sql, $params)` - Lấy 1 dòng
@@ -247,23 +262,28 @@ Response to User
 ### Các biện pháp đã áp dụng
 
 ✅ **SQL Injection Prevention**
+
 - Sử dụng PDO Prepared Statements
 - Bind parameters cho mọi query
 
 ✅ **Password Security**
+
 - Hash password với `password_hash()` (bcrypt)
 - Verify với `password_verify()`
 
 ✅ **XSS Prevention**
+
 - Escape output với `htmlspecialchars()` trong views
 - Function helper `e($value)` trong header.php
 
 ✅ **Session Security**
+
 - Session-based authentication
 - Role-based access control (admin/user)
 - Middleware check trong constructor của AdminController và CustomerController
 
 ✅ **CSRF Protection (Cần bổ sung)**
+
 - Chưa implement CSRF token cho forms
 
 ---
@@ -316,12 +336,14 @@ categorizes              # Phân loại danh mục
 ## 🎨 Frontend Stack
 
 ### Libraries & Frameworks
+
 - **Bootstrap 5.3** - CSS Framework
 - **Font Awesome 6** - Icons
 - **Google Fonts** - Roboto font
 - **Vanilla JavaScript** - AJAX requests
 
 ### Color Scheme (Fahasa Style)
+
 ```css
 --fahasa-red: #C92127      /* Màu đỏ chủ đạo */
 --fahasa-orange: #F7941E   /* Màu cam phụ */
@@ -335,17 +357,21 @@ categorizes              # Phân loại danh mục
 ## 📝 Quy ước đặt tên
 
 ### Controllers
+
 - `{Name}Controller.php` - PascalCase, suffix "Controller"
 - Method: `camelCase`
 
 ### Models
+
 - `{Name}.php` - PascalCase, singular noun
 
 ### Views
+
 - Folder: `snake_case` hoặc `kebab-case`
 - File: `lowercase.php`
 
 ### Database
+
 - Table: `snake_case`, plural
 - Column: `snake_case`
 
@@ -354,6 +380,7 @@ categorizes              # Phân loại danh mục
 ## ⚙️ Lưu ý quan trọng
 
 ### Cấu hình
+
 1. ✅ **Chỉ cần sửa** `app/config/config.php`
 2. ✅ Tên thư mục phải khớp với `PROJECT_NAME`
 3. ✅ Bật Apache + MySQL trong XAMPP
@@ -361,11 +388,13 @@ categorizes              # Phân loại danh mục
 5. ✅ Tạo thư mục `public/images/uploads/` và chmod 755
 
 ### Session Cart
+
 - Giỏ hàng lưu trong `$_SESSION['cart']`
 - Format: `[product_id => quantity]`
 - Không cần đăng nhập để thêm vào giỏ
 
 ### Admin Access
+
 - Kiểm tra `$_SESSION['users_role'] === 'admin'` trong constructor
 - Redirect về home nếu không phải admin
 
@@ -374,9 +403,11 @@ categorizes              # Phân loại danh mục
 ## 🆘 Xử lý lỗi thường gặp
 
 ### ❌ Lỗi "Failed to open stream" / "No such file"
+
 **Nguyên nhân:** Sai tên thư mục hoặc sai cấu hình `PROJECT_NAME`
 
 **Giải pháp:**
+
 1. Kiểm tra tên thư mục trong htdocs: `C:/xampp/htdocs/BTL_Fahasa`
 2. Mở `app/config/config.php`, sửa dòng 23:
    ```php
@@ -386,9 +417,11 @@ categorizes              # Phân loại danh mục
 ---
 
 ### ❌ Lỗi "View does not exist"
+
 **Nguyên nhân:** Đường dẫn view không đúng
 
 **Giải pháp:**
+
 1. Kiểm tra file view có tồn tại trong `app/views/`
 2. Kiểm tra tên file view trong controller:
    ```php
@@ -398,9 +431,11 @@ categorizes              # Phân loại danh mục
 ---
 
 ### ❌ Lỗi "Connection failed" / Database error
+
 **Nguyên nhân:** Chưa khởi động MySQL hoặc sai thông tin database
 
 **Giải pháp:**
+
 1. Bật MySQL trong XAMPP Control Panel
 2. Kiểm tra port MySQL (mặc định 3306, có thể là 3307)
 3. Mở `app/config/config.php`, kiểm tra:
@@ -416,18 +451,22 @@ categorizes              # Phân loại danh mục
 ---
 
 ### ❌ Lỗi "Call to undefined method"
+
 **Nguyên nhân:** Model không có method được gọi
 
 **Giải pháp:**
+
 1. Kiểm tra method có tồn tại trong Model
 2. Kiểm tra tên method có đúng không (phân biệt hoa/thường)
 
 ---
 
 ### ❌ Lỗi 404 / Blank page
+
 **Nguyên nhân:** URL rewriting không hoạt động
 
 **Giải pháp:**
+
 1. Kiểm tra file `public/.htaccess` có tồn tại
 2. Bật `mod_rewrite` trong Apache:
    - Mở `httpd.conf` trong XAMPP
@@ -438,9 +477,11 @@ categorizes              # Phân loại danh mục
 ---
 
 ### ❌ Lỗi upload ảnh
+
 **Nguyên nhân:** Thư mục uploads không tồn tại hoặc không có quyền ghi
 
 **Giải pháp:**
+
 1. Tạo thư mục: `public/images/uploads/`
 2. Cấp quyền ghi (Linux/Mac):
    ```bash
@@ -453,6 +494,7 @@ categorizes              # Phân loại danh mục
 ## 🚀 Phát triển tiếp
 
 ### Các tính năng cần bổ sung
+
 - [ ] Tích hợp payment gateway (VNPay, MoMo)
 - [ ] Email notification (PHPMailer)
 - [ ] CSRF protection
@@ -465,6 +507,7 @@ categorizes              # Phân loại danh mục
 - [ ] RESTful API
 
 ### Cải tiến hiệu năng
+
 - [ ] Caching (Redis, Memcached)
 - [ ] Database indexing
 - [ ] Image optimization
@@ -490,6 +533,7 @@ Dự án này được phát triển cho mục đích học tập (Bài Tập L�
 ## 📞 Liên hệ & Hỗ trợ
 
 Nếu gặp vấn đề, vui lòng:
+
 1. Kiểm tra phần **Xử lý lỗi thường gặp** ở trên
 2. Tạo issue trên GitHub
 3. Liên hệ team qua email

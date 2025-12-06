@@ -1,4 +1,4 @@
-<?php require_once APP_ROOT . '/views/admin/layout/header.php'; ?>
+
 
 <div class="col-12">
     <div class="card">
@@ -52,4 +52,3 @@
     </div>
 </div>
 
-<?php require_once APP_ROOT . '/views/admin/layout/footer.php'; ?>

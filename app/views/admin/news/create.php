@@ -1,4 +1,4 @@
-<?php require_once APP_ROOT . '/views/admin/layout/header.php'; ?>
+
 
 <div class="page-body">
     <div class="container-xl">
@@ -39,5 +39,3 @@
         </form>
     </div>
 </div>
-
-<?php require_once APP_ROOT . '/views/admin/layout/footer.php'; ?>

@@ -1,22 +1,58 @@
 
+<script>
+  
+// Toggle Sidebar
+function toggleSidebar() {
+    const sidebar = document.getElementById('adminSidebar');
+    sidebar.classList.toggle('collapsed');
 
+    // Save state to localStorage
+    if (sidebar.classList.contains('collapsed')) {
+        localStorage.setItem('adminSidebarCollapsed', 'true');
+    } else {
+        localStorage.setItem('adminSidebarCollapsed', 'false');
+    }
+}
+
+// Restore sidebar state from localStorage
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('adminSidebar');
+    const isCollapsed = localStorage.getItem('adminSidebarCollapsed');
+
+    if (isCollapsed === 'true') {
+        sidebar.classList.add('collapsed');
+    }
+
+    // Active menu highlighting
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (currentPath.includes(href.replace('<?= BASE_URL ?>', ''))) {
+            link.classList.add('active');
+        }
+    });
+});
+
+// Mobile sidebar toggle
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('adminSidebar');
+    sidebar.classList.toggle('mobile-show');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('adminSidebar');
+    const isClickInside = sidebar.contains(e.target);
+
+    if (!isClickInside && window.innerWidth <= 768 && sidebar.classList.contains('mobile-show')) {
+        sidebar.classList.remove('mobile-show');
+    }
+});
+</script>
+
+</main>
 </div>
-        </div>
-        <footer class="footer footer-transparent d-print-none">
-          <div class="container-xl">
-            <div class="row text-center align-items-center flex-row-reverse">
-              <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-                <ul class="list-inline list-inline-dots mb-0">
-                  <li class="list-inline-item">
-                    Copyright &copy; 2025 BTL Fahasa Team.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
-  </body>
+</body>
 </html>
