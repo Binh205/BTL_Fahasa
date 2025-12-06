@@ -83,3 +83,19 @@
         
         <div class="page-body">
           <div class="container-xl"></div>
+
+
+<li class="nav-item">
+  <a class="nav-link" href="<?= BASE_URL ?>admin/news">
+    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="fas fa-newspaper"></i></span>
+    <span class="nav-link-title">Quản lý Tin tức</span>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link" href="<?= BASE_URL ?>admin/products">
+    <span class="nav-link-icon d-md-none d-lg-inline-block"><i class="fas fa-box"></i></span>
+    <span class="nav-link-title">Quản lý Sản phẩm</span>
+  </a>
+</li>
+

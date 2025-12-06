@@ -33,7 +33,7 @@ class AuthController extends Controller
                 if ($user && password_verify($password, $user['password'])) {
                     
                     // --- ĐĂNG NHẬP THÀNH CÔNG ---
-                    $_SESSION['users_id'] = $user['id'];
+                    $_SESSION['users_id'] = $user['user_id'];
                     $_SESSION['users_username'] = $user['username'];
                     $_SESSION['users_role'] = $user['role']; // QUAN TRỌNG CHO ADMIN
 

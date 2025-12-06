@@ -32,7 +32,7 @@
                 </form>
             </div>
         </div>
-        </div>
+    </div>
 </div>
 
 <?php require_once APP_ROOT . '/views/admin/layout/footer.php'; ?>
