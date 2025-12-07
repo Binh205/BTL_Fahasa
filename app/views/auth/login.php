@@ -28,7 +28,7 @@ $old = $data['old'] ?? [];
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
       <label><input type="checkbox" name="remember"> Ghi nhớ</label>
-      <a href="/auth/forgot">Quên mật khẩu?</a>
+      <a href="<?= BASE_URL ?>auth/forgot">Quên mật khẩu?</a>
     </div>
 
     <button type="submit" style="width:100%; padding:10px; background:#f97316; color:#fff; border:none; border-radius:8px;">Đăng nhập</button>
