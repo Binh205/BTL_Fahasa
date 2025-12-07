@@ -47,4 +47,17 @@ class User extends DB {
             'password' => $passwordHash
         ]);
     }
+    public function getById($id) {
+    $sql = "SELECT user_id AS id, username, fullname, email, phone, avatar, gender, birthday, address, created_at
+            FROM users
+            WHERE user_id = :id
+            LIMIT 1";
+    return $this->single($sql, ['id' => $id]);
+}
+
+    public function updateProfile($id, $data) {
+        $sql = "UPDATE users SET fullname=:fullname, phone=:phone, email=:email, gender=:gender, birthday=:birthday, address=:address WHERE id=:id";
+        $data['id'] = $id;
+        return $this->query($sql, $data);
+    }
 }

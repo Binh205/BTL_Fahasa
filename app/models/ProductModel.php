@@ -315,4 +315,15 @@ class ProductModel extends DB
     $stmt->execute($productIds);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  public function getById($id) {
+        return $this->single("SELECT id, name, image, price, old_price, author, rating, sold FROM products WHERE id = :id", ['id'=>$id]);
+    }
+
+  public function getByIds(array $ids) {
+        if (empty($ids)) return [];
+        $in = implode(',', array_fill(0, count($ids), '?'));
+        // your DB->all may not accept positional params; adapt if needed
+        $sql = "SELECT id, name, image, price, old_price, author, rating, sold FROM products WHERE id IN ($in)";
+        return $this->all($sql, $ids);
+  }
 }

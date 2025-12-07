@@ -3,8 +3,8 @@ class DB {
     private $host = "localhost";
     private $username = "root";
     private $password = "";
-    private $dbname = "fahasa";
-    private $port = 3307;
+    private $dbname = "fahasa_db";
+    private $port = 3306;
     public $con;
 
     // Đoạn code ĐÃ SỬA (Thêm Port)

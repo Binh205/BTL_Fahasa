@@ -37,7 +37,16 @@ class AuthController extends Controller
                     $_SESSION['users_id'] = $user['user_id'];
                     $_SESSION['users_username'] = $user['username'];
                     $_SESSION['users_role'] = $user['role']; // QUAN TRỌNG CHO ADMIN
-
+                    // Merge guest wishlist (nếu có)
+                if (!empty($_SESSION['guest_wishlist'])) {
+                    $wm = $this->model('WishlistModel'); // hoặc new WishlistModel() nếu model() ko autoload
+                    foreach (array_unique($_SESSION['guest_wishlist']) as $pid) {
+                       $pid = (int)$pid;
+                       if ($pid <= 0) continue;
+                       $wm->add($_SESSION['users_id'], $pid);
+                    }
+                    unset($_SESSION['guest_wishlist']);
+                }
                     // Chuyển hướng đúng (Sửa lỗi Location /)
                     if ($user['role'] === 'admin') {
                         $this->redirect('admin');

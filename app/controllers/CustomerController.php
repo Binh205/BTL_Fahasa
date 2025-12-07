@@ -1,237 +1,263 @@
 <?php
-/**
- * CUSTOMER CONTROLLER
- * Quản lý trang cá nhân của khách hàng
- */
-
+// app/controllers/CustomerController.php
 class CustomerController extends Controller {
-    
-    /**
-     * Constructor - Kiểm tra đăng nhập
-     */
     public function __construct() {
-        // Khởi tạo session nếu chưa có
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        // Kiểm tra đăng nhập
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        // Tạm thời: cho phép guest (không ép login).
+        // Nếu muốn kích hoạt lại yêu cầu login: uncomment redirect section dưới.
+        /*
         if (!isset($_SESSION['users_id'])) {
             header('Location: ' . BASE_URL . 'auth/login');
             exit;
         }
+        */
     }
-    
-    /**
-     * Trang thông tin tài khoản
-     */
+
+    // Profile page
     public function index() {
-        // Mock user data
-        $userData = [
-            'user_id' => $_SESSION['users_id'],
-            'username' => $_SESSION['users_username'] ?? 'Nguyễn Văn A',
-            'fullname' => 'Nguyễn Văn A',
-            'email' => 'nguyenvana@example.com',
-            'phone' => '0901234567',
-            'gender' => 'male',
-            'birthday' => '1990-01-15',
-            'address' => '123 Nguyễn Huệ, Quận 1, TP.HCM',
-            'avatar' => null,
-            'created_at' => '2024-01-01'
-        ];
-        
-        $data = [
-            'title' => 'Thông tin tài khoản - ' . APP_NAME,
-            'page' => 'customer',
-            'user' => $userData
-        ];
-        
+        // Nếu đã login -> lấy từ DB
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $userModel = $this->model('UserModel');
+            $user = $userModel->getById($_SESSION['users_id']);
+            // Nếu model trả null, fallback vào session (edge case)
+            if (!$user) $user = $_SESSION['guest_user'] ?? null;
+        } else {
+            // Guest: nếu chưa có guest_user trong session thì tạo mẫu để hiển thị/ sửa
+            if (!isset($_SESSION['guest_user'])) {
+                $_SESSION['guest_user'] = [
+                    'user_id' => 0,
+                    'username' => 'Khách',
+                    'fullname' => '',
+                    'email' => '',
+                    'phone' => '',
+                    'gender' => 'male',
+                    'birthday' => '',
+                    'address' => '',
+                    'avatar' => null,
+                    'created_at' => date('Y-m-d H:i:s')
+                ];
+            }
+            $user = $_SESSION['guest_user'];
+        }
+
+        $data = ['user' => $user];
         $this->view('customer/index', $data);
     }
-    
-    /**
-     * Trang đơn hàng của tôi
-     */
+
+    // Update profile (AJAX POST) - if guest, save to session; if logged, save to DB
+    public function updateProfile() {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        $payload = [
+            'fullname' => trim($_POST['fullname'] ?? ''),
+            'phone'    => trim($_POST['phone'] ?? ''),
+            'email'    => trim($_POST['email'] ?? ''),
+            'gender'   => $_POST['gender'] ?? null,
+            'birthday' => $_POST['birthday'] ?? null,
+            'address'  => $_POST['address'] ?? null
+        ];
+
+        // If logged in -> update DB
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $uid = $_SESSION['users_id'];
+            $userModel = $this->model('UserModel');
+            $ok = $userModel->updateProfile($uid, $payload);
+            if ($ok) {
+                // Update session username if used elsewhere
+                $_SESSION['users_username'] = $payload['fullname'] ?: $_SESSION['users_username'];
+                echo json_encode(['success' => true]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Không cập nhật được vào DB']);
+            }
+            return;
+        }
+
+        // Guest: lưu vào session (không ghi DB)
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['guest_user'] = array_merge($_SESSION['guest_user'] ?? [], $payload);
+        // đảm bảo created_at tồn tại
+        if (!isset($_SESSION['guest_user']['created_at'])) $_SESSION['guest_user']['created_at'] = date('Y-m-d H:i:s');
+
+        echo json_encode(['success' => true, 'guest' => true]);
+    }
+
+    // Orders (kept minimal) - require login in real app, but we'll show mock orders for guest
     public function orders() {
-        // Mock orders data
-        $orders = [
-            [
-                'order_id' => 'DH001',
-                'order_date' => '2024-11-25',
-                'status' => 'completed',
-                'status_text' => 'Đã giao hàng',
-                'total' => 450000,
-                'items' => [
-                    [
-                        'product_name' => 'Đắc Nhân Tâm',
-                        'quantity' => 1,
-                        'price' => 150000,
-                        'image' => 'images/product-page/dac-nhan-tam.jpg'
-                    ],
-                    [
-                        'product_name' => 'Nhà Giả Kim',
-                        'quantity' => 2,
-                        'price' => 150000,
-                        'image' => 'images/product-page/nha-gia-kim.jpg'
-                    ]
-                ]
-            ],
-            [
-                'order_id' => 'DH002',
-                'order_date' => '2024-11-28',
-                'status' => 'shipping',
-                'status_text' => 'Đang giao hàng',
-                'total' => 320000,
-                'items' => [
-                    [
-                        'product_name' => 'Tư Duy Nhanh Và Chậm',
-                        'quantity' => 1,
-                        'price' => 320000,
-                        'image' => 'images/product-page/tu-duy-nhanh-va-cham.jpg'
-                    ]
-                ]
-            ],
-            [
-                'order_id' => 'DH003',
-                'order_date' => '2024-12-01',
-                'status' => 'processing',
-                'status_text' => 'Đang xử lý',
-                'total' => 280000,
-                'items' => [
-                    [
-                        'product_name' => 'Hiểu Về Trái Tim',
-                        'quantity' => 1,
-                        'price' => 280000,
-                        'image' => 'images/product-page/hieu-ve-trai-tim.jpg'
-                    ]
-                ]
-            ]
-        ];
-        
-        $data = [
-            'title' => 'Đơn hàng của tôi - ' . APP_NAME,
-            'page' => 'customer',
-            'orders' => $orders
-        ];
-        
-        $this->view('customer/orders', $data);
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $orderModel = $this->model('OrderModel');
+            $orders = $orderModel->getByUserId($_SESSION['users_id']);
+            foreach ($orders as &$o) {
+                $o['items'] = $orderModel->getItems($o['id']);
+            }
+        } else {
+            // guest: show empty or mock orders (you can customize)
+            $orders = []; // or keep mock data as before
+        }
+        $this->view('customer/orders', ['orders' => $orders]);
     }
-    
-    /**
-     * Trang thông báo
-     */
+
+    // Notifications
     public function notifications() {
-        // Mock notifications data
-        $notifications = [
-            [
-                'id' => 1,
-                'type' => 'order',
-                'icon' => 'fa-box',
-                'title' => 'Đơn hàng DH002 đang được giao',
-                'content' => 'Đơn hàng của bạn đang trên đường giao đến. Dự kiến giao hàng trong 1-2 ngày tới.',
-                'time' => '2 giờ trước',
-                'is_read' => false
-            ],
-            [
-                'id' => 2,
-                'type' => 'promotion',
-                'icon' => 'fa-gift',
-                'title' => 'Giảm giá 20% cho đơn hàng tiếp theo',
-                'content' => 'Chúc mừng! Bạn nhận được mã giảm giá 20% cho đơn hàng tiếp theo. Mã: FAHASA20',
-                'time' => '1 ngày trước',
-                'is_read' => false
-            ],
-            [
-                'id' => 3,
-                'type' => 'order',
-                'icon' => 'fa-check-circle',
-                'title' => 'Đơn hàng DH001 đã giao thành công',
-                'content' => 'Đơn hàng của bạn đã được giao thành công. Cảm ơn bạn đã mua hàng tại Fahasa!',
-                'time' => '3 ngày trước',
-                'is_read' => true
-            ],
-            [
-                'id' => 4,
-                'type' => 'system',
-                'icon' => 'fa-info-circle',
-                'title' => 'Cập nhật chính sách đổi trả',
-                'content' => 'Fahasa đã cập nhật chính sách đổi trả sản phẩm. Vui lòng xem chi tiết tại mục Chính sách.',
-                'time' => '1 tuần trước',
-                'is_read' => true
-            ]
-        ];
-        
-        $data = [
-            'title' => 'Thông báo - ' . APP_NAME,
-            'page' => 'customer',
-            'notifications' => $notifications
-        ];
-        
-        $this->view('customer/notifications', $data);
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $nm = $this->model('NotificationModel');
+            $notes = $nm->getByUserId($_SESSION['users_id']);
+        } else {
+            // guest notifications: none (or mock)
+            $notes = $_SESSION['guest_notifications'] ?? [];
+        }
+        $this->view('customer/notifications', ['notifications' => $notes]);
     }
-    
-    /**
-     * Trang sản phẩm yêu thích
-     */
+
+    // Mark single notification read (AJAX)
+    public function markNotificationRead() {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { echo json_encode(['success' => false]); return; }
+
+        $nid = (int)($_POST['id'] ?? 0);
+        if ($nid <= 0) { echo json_encode(['success' => false]); return; }
+
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $nm = $this->model('NotificationModel');
+            $ok = $nm->markRead($nid, $_SESSION['users_id']);
+            echo json_encode(['success' => (bool)$ok]);
+            return;
+        }
+
+        // Guest: mark in session
+        if (isset($_SESSION['guest_notifications']) && is_array($_SESSION['guest_notifications'])) {
+            foreach ($_SESSION['guest_notifications'] as &$n) {
+                if ((int)($n['id'] ?? 0) === $nid) {
+                    $n['is_read'] = 1;
+                    echo json_encode(['success' => true]);
+                    return;
+                }
+            }
+        }
+        echo json_encode(['success' => false]);
+    }
+
+    // Mark all notifications read (AJAX)
+    public function markAllNotificationsRead() {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { echo json_encode(['success' => false]); return; }
+
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $nm = $this->model('NotificationModel');
+            $ok = $nm->markAllRead($_SESSION['users_id']);
+            echo json_encode(['success' => (bool)$ok]);
+            return;
+        }
+
+        // Guest
+        if (isset($_SESSION['guest_notifications']) && is_array($_SESSION['guest_notifications'])) {
+            foreach ($_SESSION['guest_notifications'] as &$n) $n['is_read'] = 1;
+            echo json_encode(['success' => true]);
+            return;
+        }
+
+        echo json_encode(['success' => false]);
+    }
+
+    // Wishlist page (reads DB for logged users, session for guests)
     public function wishlist() {
-        // Mock wishlist data
-        $wishlist = [
-            [
-                'product_id' => 1,
-                'product_name' => 'Đắc Nhân Tâm',
-                'author' => 'Dale Carnegie',
-                'price' => 150000,
-                'original_price' => 180000,
-                'discount' => 17,
-                'image' => 'images/product-page/dac-nhan-tam.jpg',
-                'rating' => 4.8,
-                'sold' => 1250,
-                'added_date' => '2024-11-20'
-            ],
-            [
-                'product_id' => 2,
-                'product_name' => 'Tư Duy Nhanh Và Chậm',
-                'author' => 'Daniel Kahneman',
-                'price' => 320000,
-                'original_price' => 380000,
-                'discount' => 16,
-                'image' => 'images/product-page/tu-duy-nhanh-va-cham.jpg',
-                'rating' => 4.9,
-                'sold' => 890,
-                'added_date' => '2024-11-22'
-            ],
-            [
-                'product_id' => 3,
-                'product_name' => 'Hiểu Về Trái Tim',
-                'author' => 'Minh Niệm',
-                'price' => 280000,
-                'original_price' => 320000,
-                'discount' => 13,
-                'image' => 'images/product-page/hieu-ve-trai-tim.jpg',
-                'rating' => 4.7,
-                'sold' => 650,
-                'added_date' => '2024-11-25'
-            ],
-            [
-                'product_id' => 4,
-                'product_name' => 'Nhà Giả Kim',
-                'author' => 'Paulo Coelho',
-                'price' => 150000,
-                'original_price' => 170000,
-                'discount' => 12,
-                'image' => 'images/product-page/nha-gia-kim.jpg',
-                'rating' => 4.6,
-                'sold' => 2100,
-                'added_date' => '2024-11-28'
-            ]
-        ];
-        
-        $data = [
-            'title' => 'Sản phẩm yêu thích - ' . APP_NAME,
-            'page' => 'customer',
-            'wishlist' => $wishlist
-        ];
-        
-        $this->view('customer/wishlist', $data);
+        $list = [];
+        $productModel = $this->model('ProductModel');
+
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $wm = $this->model('WishlistModel');
+            $rows = $wm->getByUserId($_SESSION['users_id']);
+            foreach ($rows as $r) {
+                $list[] = [
+                    'product_id' => $r['product_id'],
+                    'product_name'=> $r['product_name'],
+                    'image'=> $r['image'],
+                    'price'=> $r['price'],
+                    'original_price'=> $r['original_price'],
+                    'author'=> $r['author'] ?? '',
+                    'rating'=> $r['rating'] ?? 0,
+                    'sold'=> $r['sold'] ?? 0,
+                    'discount'=> (isset($r['original_price']) && $r['original_price']>$r['price']) ? round(100-($r['price']/$r['original_price']*100)) : 0
+                ];
+            }
+        } else {
+            // guest: use session list of product IDs
+            $guest = $_SESSION['guest_wishlist'] ?? [];
+            if (!empty($guest)) {
+                // assume productModel->getByIds exists; if not, fetch one by one
+                if (method_exists($productModel, 'getByIds')) {
+                    $products = $productModel->getByIds($guest);
+                } else {
+                    $products = [];
+                    foreach ($guest as $pid) {
+                        $p = $productModel->getById($pid);
+                        if ($p) $products[] = $p;
+                    }
+                }
+                foreach ($products as $p) {
+                    $list[] = [
+                        'product_id' => $p['id'] ?? $p['product_id'] ?? 0,
+                        'product_name'=> $p['name'] ?? $p['product_name'] ?? '',
+                        'image'=> $p['image'] ?? '',
+                        'price'=> $p['price'] ?? 0,
+                        'original_price'=> $p['old_price'] ?? ($p['original_price'] ?? 0),
+                        'author'=> $p['author'] ?? '',
+                        'rating'=> $p['rating'] ?? 0,
+                        'sold'=> $p['sold'] ?? 0,
+                        'discount'=> (isset($p['old_price']) && $p['old_price']>$p['price']) ? round(100-($p['price']/$p['old_price']*100)) : 0
+                    ];
+                }
+            }
+        }
+
+        $this->view('customer/wishlist', ['wishlist' => $list]);
+    }
+
+    // API add wishlist (POST)
+    public function addWishlist() {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { echo json_encode(['success'=>false,'message'=>'Method not allowed']); return; }
+        $pid = (int)($_POST['product_id'] ?? 0);
+        if ($pid <= 0) { echo json_encode(['success'=>false,'message'=>'Invalid product']); return; }
+
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $wm = $this->model('WishlistModel');
+            $ok = $wm->add($_SESSION['users_id'], $pid);
+            echo json_encode(['success' => (bool)$ok]);
+            return;
+        }
+
+        // guest: add to session array
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['guest_wishlist']) || !is_array($_SESSION['guest_wishlist'])) $_SESSION['guest_wishlist'] = [];
+        if (!in_array($pid, $_SESSION['guest_wishlist'])) $_SESSION['guest_wishlist'][] = $pid;
+        $_SESSION['guest_wishlist'] = array_values(array_unique($_SESSION['guest_wishlist']));
+        echo json_encode(['success'=>true, 'guest'=>true, 'count'=>count($_SESSION['guest_wishlist'])]);
+    }
+
+    // API remove wishlist (POST)
+    public function removeWishlist() {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { echo json_encode(['success'=>false,'message'=>'Method not allowed']); return; }
+        $pid = (int)($_POST['product_id'] ?? 0);
+        if ($pid <= 0) { echo json_encode(['success'=>false,'message'=>'Invalid product']); return; }
+
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $wm = $this->model('WishlistModel');
+            $ok = $wm->remove($_SESSION['users_id'], $pid);
+            echo json_encode(['success' => (bool)$ok]);
+            return;
+        }
+
+        // guest: remove from session
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        if (!isset($_SESSION['guest_wishlist']) || !is_array($_SESSION['guest_wishlist'])) {
+            echo json_encode(['success'=>false,'message'=>'Not found']); return;
+        }
+        $_SESSION['guest_wishlist'] = array_values(array_diff($_SESSION['guest_wishlist'], [$pid]));
+        echo json_encode(['success'=>true, 'guest'=>true, 'count'=>count($_SESSION['guest_wishlist'])]);
     }
 }

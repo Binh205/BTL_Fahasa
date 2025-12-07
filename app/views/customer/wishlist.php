@@ -332,36 +332,54 @@
 </div>
 
 <script>
-// Remove from wishlist
+// Remove from wishlist (call API)
 document.querySelectorAll('.btn-remove-wishlist').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        
-        if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) {
-            const card = this.closest('.product-card');
-            
-            // Animate removal
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            
-            setTimeout(() => {
-                card.remove();
-                
-                // Check if empty
-                const remainingCards = document.querySelectorAll('.product-card');
-                if (remainingCards.length === 0) {
-                    location.reload();
-                } else {
-                    // Update count
-                    const countElement = document.querySelector('.page-title span');
-                    if (countElement) {
-                        countElement.textContent = `(${remainingCards.length} sản phẩm)`;
+
+        if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi danh sách yêu thích?')) return;
+
+        const card = this.closest('.product-card');
+        const pid = card?.dataset?.productId || card?.getAttribute('data-product-id');
+
+        // animate optimistic
+        card.style.opacity = '0.6';
+
+        fetch('<?= BASE_URL ?>customer/removeWishlist', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'product_id=' + encodeURIComponent(pid)
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                // remove with animation
+                card.style.transition = 'all 0.25s';
+                card.style.transform = 'scale(0.85)';
+                card.style.opacity = '0';
+                setTimeout(() => {
+                    card.remove();
+                    const remaining = document.querySelectorAll('.product-card').length;
+                    if (remaining === 0) location.reload();
+                    else {
+                        const countEl = document.querySelector('.page-title span');
+                        if (countEl) countEl.textContent = `(${remaining} sản phẩm)`;
                     }
-                }
-            }, 300);
-        }
+                }, 250);
+            } else if (res.need_login) {
+                window.location.href = '<?= BASE_URL ?>auth/login';
+            } else {
+                card.style.opacity = '1';
+                showToast(res.message || 'Xóa thất bại', 'danger');
+            }
+        })
+        .catch(() => {
+            card.style.opacity = '1';
+            showToast('Lỗi kết nối', 'danger');
+        });
     });
 });
+</script>
 
 // Add to cart
 document.querySelectorAll('.btn-add-cart').forEach(btn => {
