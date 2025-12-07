@@ -409,18 +409,21 @@
                         <span class="nav-link-text">Cài đặt chung</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= ($page ?? '') == 'contacts' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/contacts">
-                        <i class="fa-solid fa-envelope"></i>
-                        <span class="nav-link-text">Liên hệ</span>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link <?= ($page ?? '') == 'qa' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/qa">
                         <i class="fa-solid fa-question-circle"></i>
                         <span class="nav-link-text">Hỏi đáp</span>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link <?= ($page ?? '') == 'contacts' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/contacts">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span class="nav-link-text">Liên hệ</span>
+                    </a>
+                </li>
+
             </ul>
         </div>
     </nav>
