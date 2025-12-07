@@ -182,6 +182,46 @@
         z-index: 10;
     }
 
+    .btn-wishlist {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: white;
+        border: none;
+        color: var(--fahasa-gray);
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 15;
+    }
+
+    .btn-wishlist:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-wishlist.active {
+        color: var(--fahasa-red);
+    }
+
+    .btn-wishlist.active i {
+        animation: heartBeat 0.3s ease-in-out;
+    }
+
+    @keyframes heartBeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.3); }
+        50% { transform: scale(1.1); }
+        75% { transform: scale(1.2); }
+    }
+
     .product-image {
         height: 220px;
         background-color: #f8f9fa;
@@ -337,9 +377,6 @@
                        name="search" 
                        placeholder="Tìm kiếm sách, tác giả, thể loại..." 
                        value="<?= htmlspecialchars($search ?? '') ?>">
-                <button type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
             </div>
             <button type="submit" class="btn" style="background-color: var(--fahasa-red); color: white; border: none; padding: 8px 20px; border-radius: 4px;">
                 <i class="fas fa-search"></i> Tìm kiếm
@@ -409,14 +446,22 @@
                 // Check if product has an old price and if it's greater than the current price
                 $isDiscounted = isset($product['old_price']) && $product['old_price'] > $product['price'];
                 $discountPercentage = $isDiscounted ? round(100 - ($product['price'] / $product['old_price']) * 100) : 0;
+                // Check if product is in wishlist
+                $isInWishlist = in_array($product['product_id'], $wishlistIds);
             ?>
                 <a href="<?= BASE_URL ?>product/detail/<?= $product['product_id'] ?>" class="product-card">
-                    <?php if ($isDiscounted): 
+                    <?php if ($isDiscounted):
                         // Display discount badge if the product is discounted
                     ?>
                         <div class="product-badge">Giảm <?= $discountPercentage ?>%</div>
                     <?php endif;
                     ?>
+                    <button class="btn-wishlist <?= $isInWishlist ? 'active' : '' ?>"
+                            data-product-id="<?= $product['product_id'] ?>"
+                            onclick="event.preventDefault(); toggleWishlist(this);"
+                            title="<?= $isInWishlist ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích' ?>">
+                        <i class="<?= $isInWishlist ? 'fas' : 'far' ?> fa-heart"></i>
+                    </button>
                     <div class="product-image">
                         <img src="<?= BASE_URL . $product['image_url'] ?>" alt="<?= htmlspecialchars($product['title']) ?>">
                     </div>
@@ -496,6 +541,105 @@
         urlParams.delete('page'); // Reset page when sorting
         window.location.search = urlParams.toString();
     }
+
+    // Toggle wishlist
+    function toggleWishlist(btn) {
+        const productId = btn.dataset.productId;
+        const icon = btn.querySelector('i');
+        const isActive = btn.classList.contains('active');
+
+        // Optimistic UI update
+        btn.disabled = true;
+
+        const endpoint = isActive ? 'customer/removeWishlist' : 'customer/addWishlist';
+
+        fetch('<?= BASE_URL ?>' + endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'product_id=' + encodeURIComponent(productId)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Toggle state
+                btn.classList.toggle('active');
+
+                if (btn.classList.contains('active')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.title = 'Xóa khỏi yêu thích';
+                    showToast('Đã thêm vào danh sách yêu thích!', 'success');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    btn.title = 'Thêm vào yêu thích';
+                    showToast('Đã xóa khỏi danh sách yêu thích!', 'info');
+                }
+            } else {
+                showToast(data.message || 'Có lỗi xảy ra!', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Không thể kết nối đến server!', 'error');
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
+    }
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'}`;
+        toast.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; animation: slideIn 0.3s ease-out;';
+
+        const iconMap = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle'
+        };
+
+        toast.innerHTML = `
+            <i class="fas ${iconMap[type]} me-2"></i>
+            ${message}
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Add CSS animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 
 <?php require_once APP_ROOT . '/views/components/footer.php'; ?>

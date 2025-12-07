@@ -10,17 +10,18 @@ class ProductModel extends DB
     // Default options
     $search = $options['search'] ?? '';
     $category_id = $options['category_id'] ?? null;
+    $sort = $options['sort'] ?? '';
     $limit = $options['limit'] ?? 12;
     $offset = $options['offset'] ?? 0;
 
-    $sql = "SELECT 
-                p.*, 
-                pi.image_url, 
+    $sql = "SELECT
+                p.*,
+                pi.image_url,
                 aop.author_name as author
             FROM product p
             LEFT JOIN (
-                SELECT product_id, image_url 
-                FROM product_image 
+                SELECT product_id, image_url
+                FROM product_image
                 GROUP BY product_id
             ) AS pi ON p.product_id = pi.product_id
             LEFT JOIN author_of_product aop ON p.product_id = aop.product_id
@@ -30,23 +31,37 @@ class ProductModel extends DB
     $whereClauses = [];
 
     if (!empty($search)) {
-      $whereClauses[] = "(p.title LIKE :search OR aop.author_name LIKE :search)";
-      $params[':search'] = '%' . $search . '%';
+      $whereClauses[] = "(p.title LIKE :search1 OR aop.author_name LIKE :search2)";
+      $params[':search1'] = '%' . $search . '%';
+      $params[':search2'] = '%' . $search . '%';
     }
 
     if (!empty($category_id) && is_numeric($category_id)) {
       $whereClauses[] = "cp.category_id = :category_id";
       $params[':category_id'] = $category_id;
     }
-    
+
     if (count($whereClauses) > 0) {
       $sql .= " WHERE " . implode(' AND ', $whereClauses);
     }
-    
+
     $sql .= " GROUP BY p.product_id";
-    $sql .= " LIMIT :limit OFFSET :offset";
-    $params[':limit'] = $limit;
-    $params[':offset'] = $offset;
+
+    // Thêm ORDER BY clause dựa trên sort parameter
+    $orderClause = " ORDER BY p.product_id DESC"; // Mặc định
+    if ($sort == 'price-asc') {
+      $orderClause = " ORDER BY p.price ASC";
+    } elseif ($sort == 'price-desc') {
+      $orderClause = " ORDER BY p.price DESC";
+    } elseif ($sort == 'name-asc') {
+      $orderClause = " ORDER BY p.title ASC";
+    } elseif ($sort == 'name-desc') {
+      $orderClause = " ORDER BY p.title DESC";
+    }
+    $sql .= $orderClause;
+
+    // Thêm LIMIT và OFFSET trực tiếp vào SQL (đã ép kiểu int nên an toàn)
+    $sql .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
 
     $result = $this->query($sql, $params);
     return $result->fetchAll(PDO::FETCH_ASSOC);
@@ -70,8 +85,9 @@ class ProductModel extends DB
     $whereClauses = [];
 
     if (!empty($search)) {
-      $whereClauses[] = "(p.title LIKE :search OR aop.author_name LIKE :search)";
-      $params[':search'] = '%' . $search . '%';
+      $whereClauses[] = "(p.title LIKE :search1 OR aop.author_name LIKE :search2)";
+      $params[':search1'] = '%' . $search . '%';
+      $params[':search2'] = '%' . $search . '%';
     }
 
     if (!empty($category_id) && is_numeric($category_id)) {

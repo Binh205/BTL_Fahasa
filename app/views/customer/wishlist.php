@@ -259,17 +259,23 @@
                     <?php if (!empty($wishlist)): ?>
                         <div class="wishlist-grid">
                             <?php foreach ($wishlist as $product): ?>
-                                <div class="product-card" data-product-id="<?= $product['product_id'] ?>">
+                                <div class="product-card"
+                                     data-product-id="<?= $product['product_id'] ?>"
+                                     onclick="window.location.href='<?= BASE_URL ?>product/detail/<?= $product['product_id'] ?>'"
+                                     style="cursor: pointer;">
+
                                     <div class="product-image">
                                         <img src="<?= BASE_URL . $product['image'] ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
                                         <?php if ($product['discount'] > 0): ?>
                                             <span class="product-badge">-<?= $product['discount'] ?>%</span>
                                         <?php endif; ?>
-                                        <button class="btn-remove-wishlist" title="Xóa khỏi yêu thích">
+                                        <button class="btn-remove-wishlist"
+                                                onclick="event.stopPropagation();"
+                                                title="Xóa khỏi yêu thích">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                    
+
                                     <div class="product-info">
                                         <h3 class="product-name">
                                             <?= htmlspecialchars($product['product_name']) ?>
@@ -277,10 +283,12 @@
                                         <div class="product-author">
                                             <?= htmlspecialchars($product['author']) ?>
                                         </div>
-                                        
+
+                                        <!-- Rating section - only show if data exists -->
+                                        <?php if (isset($product['rating']) && isset($product['sold'])): ?>
                                         <div class="product-rating">
                                             <span class="rating-stars">
-                                                <?php 
+                                                <?php
                                                 $rating = $product['rating'];
                                                 for ($i = 1; $i <= 5; $i++) {
                                                     if ($i <= floor($rating)) {
@@ -296,7 +304,8 @@
                                             <span class="rating-value"><?= $rating ?></span>
                                             <span class="rating-sold">| Đã bán <?= $product['sold'] ?></span>
                                         </div>
-                                        
+                                        <?php endif; ?>
+
                                         <div class="product-price">
                                             <span class="price-current">
                                                 <?= number_format($product['price']) ?>đ
@@ -307,10 +316,6 @@
                                                 </span>
                                             <?php endif; ?>
                                         </div>
-                                        
-                                        <button class="btn-add-cart">
-                                            <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
-                                        </button>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

@@ -29,6 +29,7 @@ class ProductController extends Controller
         // Lấy các tham số từ URL
         $search = trim($_GET['search'] ?? '');
         $category_id = $_GET['category'] ?? ''; // Now expects category ID
+        $sort = $_GET['sort'] ?? ''; // Thêm sort parameter
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $limit = 12;
         $offset = ($page - 1) * $limit;
@@ -37,6 +38,7 @@ class ProductController extends Controller
         $options = [
             'search' => $search,
             'category_id' => $category_id,
+            'sort' => $sort,
             'limit' => $limit,
             'offset' => $offset
         ];
@@ -47,6 +49,15 @@ class ProductController extends Controller
         $totalPages = ceil($totalProducts / $limit);
         $categories = $this->categoryModel->getAllCategories();
 
+        // Lấy danh sách wishlist của user (nếu đã đăng nhập)
+        $wishlistIds = [];
+        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
+            $wishlistModel = $this->model('WishlistModel');
+            $wishlistIds = $wishlistModel->getProductIds($_SESSION['users_id']);
+        } elseif (isset($_SESSION['guest_wishlist']) && is_array($_SESSION['guest_wishlist'])) {
+            $wishlistIds = $_SESSION['guest_wishlist'];
+        }
+
         $data = [
             'title' => 'Danh sách sản phẩm - ' . APP_NAME,
             'page' => 'product',
@@ -54,9 +65,11 @@ class ProductController extends Controller
             'categories' => $categories,
             'search' => $search,
             'selectedCategory' => $category_id,
+            'selectedSort' => $sort,
             'currentPage' => $page,
             'totalPages' => $totalPages,
-            'totalProducts' => $totalProducts
+            'totalProducts' => $totalProducts,
+            'wishlistIds' => $wishlistIds
         ];
 
         $this->view('product/index', $data);

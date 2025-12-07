@@ -205,12 +205,10 @@ class CustomerController extends Controller {
                 $list[] = [
                     'product_id' => $r['product_id'],
                     'product_name'=> $r['product_name'],
-                    'image'=> $r['image'],
+                    'image'=> $r['image'] ?? 'images/product-page/default.jpg',
                     'price'=> $r['price'],
-                    'original_price'=> $r['original_price'],
-                    'author'=> $r['author'] ?? '',
-                    'rating'=> $r['rating'] ?? 0,
-                    'sold'=> $r['sold'] ?? 0,
+                    'original_price'=> $r['original_price'] ?? 0,
+                    'author'=> $r['author'] ?? 'Chưa có thông tin',
                     'discount'=> (isset($r['original_price']) && $r['original_price']>$r['price']) ? round(100-($r['price']/$r['original_price']*100)) : 0
                 ];
             }
@@ -218,33 +216,33 @@ class CustomerController extends Controller {
             // guest: use session list of product IDs
             $guest = $_SESSION['guest_wishlist'] ?? [];
             if (!empty($guest)) {
-                // assume productModel->getByIds exists; if not, fetch one by one
-                if (method_exists($productModel, 'getByIds')) {
-                    $products = $productModel->getByIds($guest);
+                // Sử dụng ProductModel để lấy sản phẩm
+                if (method_exists($productModel, 'getProductsByIds')) {
+                    $products = $productModel->getProductsByIds($guest);
                 } else {
                     $products = [];
-                    foreach ($guest as $pid) {
-                        $p = $productModel->getById($pid);
-                        if ($p) $products[] = $p;
-                    }
                 }
                 foreach ($products as $p) {
                     $list[] = [
-                        'product_id' => $p['id'] ?? $p['product_id'] ?? 0,
-                        'product_name'=> $p['name'] ?? $p['product_name'] ?? '',
-                        'image'=> $p['image'] ?? '',
-                        'price'=> $p['price'] ?? 0,
-                        'original_price'=> $p['old_price'] ?? ($p['original_price'] ?? 0),
-                        'author'=> $p['author'] ?? '',
-                        'rating'=> $p['rating'] ?? 0,
-                        'sold'=> $p['sold'] ?? 0,
+                        'product_id' => $p['product_id'],
+                        'product_name'=> $p['title'],
+                        'image'=> $p['image_url'] ?? 'images/product-page/default.jpg',
+                        'price'=> $p['price'],
+                        'original_price'=> $p['old_price'] ?? 0,
+                        'author'=> $p['author'] ?? 'Chưa có thông tin',
                         'discount'=> (isset($p['old_price']) && $p['old_price']>$p['price']) ? round(100-($p['price']/$p['old_price']*100)) : 0
                     ];
                 }
             }
         }
 
-        $this->view('customer/wishlist', ['wishlist' => $list]);
+        $data = [
+            'title' => 'Sản phẩm yêu thích - ' . APP_NAME,
+            'page' => 'customer',
+            'wishlist' => $list
+        ];
+
+        $this->view('customer/wishlist', $data);
     }
 
     // API add wishlist (POST)

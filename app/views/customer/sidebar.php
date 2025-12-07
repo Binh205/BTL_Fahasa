@@ -141,12 +141,12 @@ $isWishlist = strpos($requestUri, 'customer/wishlist') !== false;
                 <span>Đơn hàng của tôi</span>
             </a>
         </li>
-        <li class="sidebar-menu-item">
+        <!-- <li class="sidebar-menu-item">
             <a href="<?= BASE_URL ?>customer/notifications" class="sidebar-menu-link <?= $isNotifications ? 'active' : '' ?>">
                 <i class="fas fa-bell"></i>
                 <span>Thông báo</span>
             </a>
-        </li>
+        </li> -->
         <li class="sidebar-menu-item">
             <a href="<?= BASE_URL ?>customer/wishlist" class="sidebar-menu-link <?= $isWishlist ? 'active' : '' ?>">
                 <i class="fas fa-heart"></i>
