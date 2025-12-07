@@ -143,18 +143,17 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
             background-color: white;
         }
 
-        .header-icons a {
-            color: var(--fahasa-dark);
-            font-size: 20px;
-            margin-left: 18px;
-            text-decoration: none;
-            position: relative;
-        }
+       .header-icons .dropdown-menu a {
+    margin-left: 0;    
+    font-size: 14px;     
+    padding: 8px 16px;  
+    width: 100%;         
+}
 
-        .header-icons a:hover {
-            color: var(--fahasa-red);
-        }
 
+.header-icons .dropdown-menu a:not(:hover) {
+    color: var(--fahasa-dark); 
+}
         .cart-badge {
             position: absolute;
             top: -8px;
@@ -176,6 +175,16 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
             margin-left: 8px;
             color: var(--fahasa-dark);
         }
+
+        .header-wrapper {
+    position: -webkit-sticky; 
+    position: sticky;         
+    top: 0;                   
+    z-index: 1020;           
+    background-color: white;  
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+
 
         /* Responsive tweaks */
         @media (max-width: 767px) {
@@ -202,6 +211,8 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
 
 </head>
 <body>
+
+<div class="header-wrapper">
     <!-- Top Header -->
     <div class="top-header" role="banner">
         <div class="container">
@@ -241,10 +252,7 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
 
                 <div class="col-3 col-md-9 d-flex justify-content-end align-items-center"> 
                     <div class="header-icons d-inline-flex align-items-center">
-                        <a href="<?= $base ?>wishlist" title="Yêu thích" aria-label="Yêu thích">
-                            <i class="far fa-heart" aria-hidden="true"></i>
-                        </a>
-
+                        
                         <a href="<?= $base ?>cart" title="Giỏ hàng" aria-label="Giỏ hàng" class="position-relative ms-3">
                             <i class="fas fa-shopping-cart" aria-hidden="true"></i>
                             <?php if ($cartCount > 0): ?>
@@ -298,7 +306,7 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
             </div>
         </div>
     </nav>
-
+</div>
     <!-- Scripts: Bootstrap JS (popper)
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
