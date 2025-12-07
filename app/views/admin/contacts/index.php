@@ -1,8 +1,10 @@
 <div class="col-12">
     <div class="card">
+
         <div class="card-header">
             <h3 class="card-title">Danh sách liên hệ từ khách hàng</h3>
         </div>
+
         
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap datatable">
