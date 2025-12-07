@@ -194,33 +194,49 @@
 <script>
 document.getElementById('profileForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    // Simulate save
-    const btn = this.querySelector('.btn-save');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang lưu...';
+
+    const form = this;
+    const data = new URLSearchParams(new FormData(form)).toString();
+    const btn = form.querySelector('.btn-save');
+    const orig = btn.innerHTML;
     btn.disabled = true;
-    
-    setTimeout(function() {
-        btn.innerHTML = '<i class="fas fa-check me-2"></i>Đã lưu!';
-        
-        // Show success alert
-        const alert = document.createElement('div');
-        alert.className = 'alert alert-success alert-dismissible fade show mt-3';
-        alert.innerHTML = `
-            <i class="fas fa-check-circle me-2"></i>
-            Cập nhật thông tin thành công!
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        document.querySelector('.profile-form').insertBefore(alert, document.querySelector('.profile-form').firstChild);
-        
-        setTimeout(function() {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            alert.remove();
-        }, 2000);
-    }, 1500);
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang lưu...';
+
+    fetch('<?= BASE_URL ?>customer/updateProfile', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: data
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        if (res.success) {
+            showToast('Cập nhật thành công');
+            setTimeout(()=> location.reload(), 800);
+        } else if (res.need_login) {
+            window.location.href = '<?= BASE_URL ?>auth/login';
+        } else {
+            showToast(res.message || 'Lỗi', 'danger');
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        showToast('Lỗi kết nối', 'danger');
+    });
 });
+
+/* small toast helper (if not present globally) */
+function showToast(msg, type='success') {
+    const colors = { success: '#10b981', danger:'#ef4444', info:'#3b82f6' };
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;right:20px;top:20px;padding:12px 16px;border-radius:8px;color:#fff;z-index:99999;background:${colors[type]||colors.info};box-shadow:0 6px 20px rgba(0,0,0,0.12)`;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(()=> el.style.opacity = '0', 2000);
+    setTimeout(()=> el.remove(), 2600);
+}
 </script>
 
 <?php require_once APP_ROOT . '/views/components/footer.php'; ?>

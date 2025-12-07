@@ -252,9 +252,27 @@
         margin-right: 10px;
         color: var(--fahasa-orange);
     }
+    .qa-group {
+        transition: all 0.3s ease-in-out;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .qa-group.hidden {
+        display: none; /* Ẩn hoàn toàn khỏi layout */
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    /* Active tab style update */
+    .category-tab.active {
+        background-color: var(--fahasa-red);
+        color: white;
+        border-color: var(--fahasa-red);
+        box-shadow: 0 4px 10px rgba(201, 33, 39, 0.3);
+    }
 </style>
 
-<!-- Breadcrumb -->
 <div class="breadcrumb-section">
     <div class="container">
         <nav aria-label="breadcrumb">
@@ -266,23 +284,20 @@
     </div>
 </div>
 
-<!-- Hero Section -->
 <div class="container">
     <div class="qa-hero">
         <div class="container">
             <h2><i class="fas fa-question-circle"></i> Câu hỏi thường gặp</h2>
             <p>Tìm câu trả lời nhanh chóng cho các thắc mắc của bạn</p>
             <div class="search-qa">
-                <input type="text" placeholder="Tìm kiếm câu hỏi...">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm câu hỏi...">
                 <button type="button"><i class="fas fa-search"></i></button>
             </div>
         </div>
     </div>
     
     <div class="row">
-        <!-- Main Content -->
         <div class="col-md-8">
-            <!-- Category Tabs -->
             <div class="category-tabs">
                 <a href="#" class="category-tab active" data-category="all">
                     <i class="fas fa-th"></i> Tất cả
@@ -299,315 +314,248 @@
                 <a href="#" class="category-tab" data-category="return">
                     <i class="fas fa-undo"></i> Đổi trả
                 </a>
-                <a href="#" class="category-tab" data-category="account">
-                    <i class="fas fa-user"></i> Tài khoản
-                </a>
             </div>
             
-            <!-- Đặt hàng -->
-            <h3 class="page-title">Về đặt hàng</h3>
-            <div class="accordion" id="orderAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#order1">
-                            <i class="fas fa-question-circle me-2"></i> Làm thế nào để đặt hàng trên website?
-                        </button>
-                    </h2>
-                    <div id="order1" class="accordion-collapse collapse show" data-bs-parent="#orderAccordion">
-                        <div class="accordion-body">
-                            <strong>Các bước đặt hàng:</strong>
-                            <ol>
-                                <li>Tìm kiếm sản phẩm bạn muốn mua</li>
-                                <li>Nhấn nút "Thêm vào giỏ hàng"</li>
-                                <li>Vào giỏ hàng và kiểm tra lại đơn hàng</li>
-                                <li>Nhấn "Thanh toán" và điền thông tin giao hàng</li>
-                                <li>Chọn phương thức thanh toán và hoàn tất đơn hàng</li>
-                            </ol>
-                            Bạn sẽ nhận được email xác nhận đơn hàng sau khi đặt hàng thành công.
+            <div id="qa-container">
+
+                <div class="qa-group" data-category="order">
+                    <h3 class="page-title">Về đặt hàng</h3>
+                    <div class="accordion" id="orderAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#order1">
+                                    <i class="fas fa-question-circle me-2"></i> Làm thế nào để đặt hàng trên website?
+                                </button>
+                            </h2>
+                            <div id="order1" class="accordion-collapse collapse show" data-bs-parent="#orderAccordion">
+                                <div class="accordion-body">
+                                    <strong>Các bước đặt hàng:</strong>
+                                    <ol>
+                                        <li>Tìm kiếm sản phẩm bạn muốn mua</li>
+                                        <li>Nhấn nút "Thêm vào giỏ hàng"</li>
+                                        <li>Vào giỏ hàng và kiểm tra lại đơn hàng</li>
+                                        <li>Nhấn "Thanh toán" và điền thông tin giao hàng</li>
+                                        <li>Chọn phương thức thanh toán và hoàn tất đơn hàng</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order2">
+                                    <i class="fas fa-question-circle me-2"></i> Tôi có thể đặt hàng qua điện thoại không?
+                                </button>
+                            </h2>
+                            <div id="order2" class="accordion-collapse collapse" data-bs-parent="#orderAccordion">
+                                <div class="accordion-body">
+                                    Có, bạn có thể gọi đến hotline <strong>1900-6656</strong> để được hỗ trợ đặt hàng.
+                                </div>
+                            </div>
+                        </div>
+
+                         <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order3">
+                                    <i class="fas fa-question-circle me-2"></i> Tôi có thể hủy đơn hàng không?
+                                </button>
+                            </h2>
+                            <div id="order3" class="accordion-collapse collapse" data-bs-parent="#orderAccordion">
+                                <div class="accordion-body">
+                                    Bạn có thể hủy đơn hàng trước khi đơn hàng được xác nhận và chuẩn bị giao.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order2">
-                            <i class="fas fa-question-circle me-2"></i> Tôi có thể đặt hàng qua điện thoại không?
-                        </button>
-                    </h2>
-                    <div id="order2" class="accordion-collapse collapse" data-bs-parent="#orderAccordion">
-                        <div class="accordion-body">
-                            Có, bạn có thể gọi đến hotline <strong>1900-6656</strong> để được hỗ trợ đặt hàng. 
-                            Đội ngũ tư vấn viên của chúng tôi sẵn sàng phục vụ từ 8:00 - 22:00 hàng ngày.
+                <div class="qa-group" data-category="payment">
+                    <h3 class="page-title mt-4">Về thanh toán</h3>
+                    <div class="accordion" id="paymentAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment1">
+                                    <i class="fas fa-question-circle me-2"></i> Có những phương thức thanh toán nào?
+                                </button>
+                            </h2>
+                            <div id="payment1" class="accordion-collapse collapse" data-bs-parent="#paymentAccordion">
+                                <div class="accordion-body">
+                                    <strong>Chúng tôi hỗ trợ các phương thức thanh toán sau:</strong>
+                                    <ul>
+                                        <li>COD, Chuyển khoản, Thẻ ATM/Visa, Ví điện tử...</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment2">
+                                    <i class="fas fa-question-circle me-2"></i> Thanh toán online có an toàn không?
+                                </button>
+                            </h2>
+                            <div id="payment2" class="accordion-collapse collapse" data-bs-parent="#paymentAccordion">
+                                <div class="accordion-body">
+                                    Hoàn toàn an toàn với bảo mật SSL 256-bit.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#order3">
-                            <i class="fas fa-question-circle me-2"></i> Tôi có thể hủy đơn hàng không?
-                        </button>
-                    </h2>
-                    <div id="order3" class="accordion-collapse collapse" data-bs-parent="#orderAccordion">
-                        <div class="accordion-body">
-                            Bạn có thể hủy đơn hàng trước khi đơn hàng được xác nhận và chuẩn bị giao. 
-                            Vui lòng liên hệ ngay với bộ phận chăm sóc khách hàng qua hotline hoặc email để được hỗ trợ.
+                <div class="qa-group" data-category="shipping">
+                    <h3 class="page-title mt-4">Về vận chuyển</h3>
+                    <div class="accordion" id="shippingAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping1">
+                                    <i class="fas fa-question-circle me-2"></i> Thời gian giao hàng là bao lâu?
+                                </button>
+                            </h2>
+                            <div id="shipping1" class="accordion-collapse collapse" data-bs-parent="#shippingAccordion">
+                                <div class="accordion-body">
+                                    Nội thành 1-2 ngày, ngoại thành 2-4 ngày.
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Thanh toán -->
-            <h3 class="page-title mt-5">Về thanh toán</h3>
-            <div class="accordion" id="paymentAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment1">
-                            <i class="fas fa-question-circle me-2"></i> Có những phương thức thanh toán nào?
-                        </button>
-                    </h2>
-                    <div id="payment1" class="accordion-collapse collapse" data-bs-parent="#paymentAccordion">
-                        <div class="accordion-body">
-                            <strong>Chúng tôi hỗ trợ các phương thức thanh toán sau:</strong>
-                            <ul>
-                                <li><strong>Thanh toán khi nhận hàng (COD):</strong> Thanh toán bằng tiền mặt khi nhận hàng</li>
-                                <li><strong>Chuyển khoản ngân hàng:</strong> Chuyển khoản trực tiếp vào tài khoản công ty</li>
-                                <li><strong>Thẻ ATM/Visa/Master:</strong> Thanh toán online qua cổng thanh toán</li>
-                                <li><strong>Ví điện tử:</strong> MoMo, ZaloPay, VNPay</li>
-                            </ul>
+                         <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping2">
+                                    <i class="fas fa-question-circle me-2"></i> Phí vận chuyển là bao nhiêu?
+                                </button>
+                            </h2>
+                            <div id="shipping2" class="accordion-collapse collapse" data-bs-parent="#shippingAccordion">
+                                <div class="accordion-body">
+                                    Miễn phí cho đơn hàng trên 150k.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#payment2">
-                            <i class="fas fa-question-circle me-2"></i> Thanh toán online có an toàn không?
-                        </button>
-                    </h2>
-                    <div id="payment2" class="accordion-collapse collapse" data-bs-parent="#paymentAccordion">
-                        <div class="accordion-body">
-                            Hoàn toàn an toàn! Chúng tôi sử dụng cổng thanh toán được mã hóa SSL 256-bit, 
-                            đảm bảo thông tin thẻ của bạn được bảo mật tuyệt đối. Thông tin thanh toán không 
-                            được lưu trữ trên hệ thống của chúng tôi.
+                <div class="qa-group" data-category="return">
+                    <h3 class="page-title mt-4">Về đổi trả hàng</h3>
+                    <div class="accordion" id="returnAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return1">
+                                    <i class="fas fa-question-circle me-2"></i> Chính sách đổi trả như thế nào?
+                                </button>
+                            </h2>
+                            <div id="return1" class="accordion-collapse collapse" data-bs-parent="#returnAccordion">
+                                <div class="accordion-body">
+                                    Đổi trả trong vòng 7 ngày nếu lỗi nhà sản xuất.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Vận chuyển -->
-            <h3 class="page-title mt-5">Về vận chuyển</h3>
-            <div class="accordion" id="shippingAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping1">
-                            <i class="fas fa-question-circle me-2"></i> Thời gian giao hàng là bao lâu?
-                        </button>
-                    </h2>
-                    <div id="shipping1" class="accordion-collapse collapse" data-bs-parent="#shippingAccordion">
-                        <div class="accordion-body">
-                            <strong>Thời gian giao hàng dự kiến:</strong>
-                            <ul>
-                                <li><strong>Nội thành TP.HCM:</strong> 1-2 ngày làm việc</li>
-                                <li><strong>Các tỉnh thành khác:</strong> 2-4 ngày làm việc</li>
-                                <li><strong>Vùng xa, hải đảo:</strong> 4-7 ngày làm việc</li>
-                            </ul>
-                            Thời gian có thể thay đổi tùy theo điều kiện thực tế và thời tiết.
-                        </div>
-                    </div>
+
+                <div id="no-results" class="text-center mt-5 hidden" style="display:none;">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>Không tìm thấy kết quả phù hợp</h4>
                 </div>
-                
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping2">
-                            <i class="fas fa-question-circle me-2"></i> Phí vận chuyển là bao nhiêu?
-                        </button>
-                    </h2>
-                    <div id="shipping2" class="accordion-collapse collapse" data-bs-parent="#shippingAccordion">
-                        <div class="accordion-body">
-                            <strong>Chính sách phí vận chuyển:</strong>
-                            <ul>
-                                <li><strong>Miễn phí:</strong> Đơn hàng từ 150.000đ trở lên</li>
-                                <li><strong>30.000đ:</strong> Đơn hàng dưới 150.000đ (nội thành)</li>
-                                <li><strong>40.000đ:</strong> Đơn hàng dưới 150.000đ (ngoại thành)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#shipping3">
-                            <i class="fas fa-question-circle me-2"></i> Làm thế nào để theo dõi đơn hàng?
-                        </button>
-                    </h2>
-                    <div id="shipping3" class="accordion-collapse collapse" data-bs-parent="#shippingAccordion">
-                        <div class="accordion-body">
-                            Bạn có thể theo dõi đơn hàng bằng cách:
-                            <ol>
-                                <li>Đăng nhập vào tài khoản</li>
-                                <li>Vào mục "Đơn hàng của tôi"</li>
-                                <li>Xem chi tiết trạng thái đơn hàng</li>
-                            </ol>
-                            Hoặc sử dụng mã vận đơn trong email xác nhận để tra cứu trên website đơn vị vận chuyển.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Đổi trả -->
-            <h3 class="page-title mt-5">Về đổi trả hàng</h3>
-            <div class="accordion" id="returnAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return1">
-                            <i class="fas fa-question-circle me-2"></i> Chính sách đổi trả như thế nào?
-                        </button>
-                    </h2>
-                    <div id="return1" class="accordion-collapse collapse" data-bs-parent="#returnAccordion">
-                        <div class="accordion-body">
-                            <strong>Điều kiện đổi trả:</strong>
-                            <ul>
-                                <li>Sản phẩm còn nguyên tem, mác, chưa qua sử dụng</li>
-                                <li>Đổi trả trong vòng 7 ngày kể từ ngày nhận hàng</li>
-                                <li>Có hóa đơn mua hàng hoặc đơn hàng điện tử</li>
-                                <li>Sản phẩm bị lỗi từ nhà sản xuất</li>
-                            </ul>
-                            <strong>Lưu ý:</strong> Không áp dụng đổi trả với sách đã qua sử dụng hoặc có dấu hiệu hư hỏng do người dùng.
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#return2">
-                            <i class="fas fa-question-circle me-2"></i> Quy trình đổi trả hàng?
-                        </button>
-                    </h2>
-                    <div id="return2" class="accordion-collapse collapse" data-bs-parent="#returnAccordion">
-                        <div class="accordion-body">
-                            <strong>Các bước đổi trả:</strong>
-                            <ol>
-                                <li>Liên hệ bộ phận CSKH qua hotline hoặc email</li>
-                                <li>Cung cấp thông tin đơn hàng và lý do đổi trả</li>
-                                <li>Đóng gói sản phẩm và gửi lại theo hướng dẫn</li>
-                                <li>Chờ xác nhận và xử lý (2-3 ngày làm việc)</li>
-                                <li>Nhận sản phẩm mới hoặc hoàn tiền</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+            </div> </div>
         
-        <!-- Sidebar -->
         <div class="col-md-4">
-            <!-- Popular Questions -->
             <div class="popular-questions">
                 <h5><i class="fas fa-fire"></i> Câu hỏi phổ biến</h5>
                 <ul>
-                    <li>
-                        <a href="#order1" data-bs-toggle="collapse">
-                            <i class="fas fa-chevron-right"></i>
-                            Cách đặt hàng trên website
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#payment1" data-bs-toggle="collapse">
-                            <i class="fas fa-chevron-right"></i>
-                            Phương thức thanh toán
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#shipping1" data-bs-toggle="collapse">
-                            <i class="fas fa-chevron-right"></i>
-                            Thời gian giao hàng
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#shipping2" data-bs-toggle="collapse">
-                            <i class="fas fa-chevron-right"></i>
-                            Phí vận chuyển
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#return1" data-bs-toggle="collapse">
-                            <i class="fas fa-chevron-right"></i>
-                            Chính sách đổi trả
-                        </a>
-                    </li>
+                    <li><a href="#order1" onclick="triggerFilter('order')"><i class="fas fa-chevron-right"></i> Cách đặt hàng</a></li>
+                    <li><a href="#payment1" onclick="triggerFilter('payment')"><i class="fas fa-chevron-right"></i> Phương thức thanh toán</a></li>
+                    <li><a href="#return1" onclick="triggerFilter('return')"><i class="fas fa-chevron-right"></i> Chính sách đổi trả</a></li>
                 </ul>
             </div>
-            
-            <!-- Quick Links -->
-            <div class="popular-questions">
-                <h5><i class="fas fa-link"></i> Liên kết hữu ích</h5>
-                <ul>
-                    <li>
-                        <a href="<?= BASE_URL ?>home/about">
-                            <i class="fas fa-chevron-right"></i>
-                            Giới thiệu về Fahasa
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-chevron-right"></i>
-                            Hướng dẫn mua hàng
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-chevron-right"></i>
-                            Chính sách bảo mật
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-chevron-right"></i>
-                            Điều khoản sử dụng
-                        </a>
-                    </li>
-                </ul>
             </div>
-        </div>
     </div>
     
-    <!-- Contact Box -->
     <div class="contact-box">
-        <h4>Không tìm thấy câu trả lời?</h4>
-        <p>Đừng lo lắng! Đội ngũ chăm sóc khách hàng của chúng tôi luôn sẵn sàng hỗ trợ bạn</p>
-        <div class="contact-methods">
-            <div class="contact-method">
-                <i class="fas fa-phone-alt"></i>
-                <div class="label">Hotline</div>
-                <div class="value">1900-6656</div>
-            </div>
-            <div class="contact-method">
-                <i class="fas fa-envelope"></i>
-                <div class="label">Email</div>
-                <div class="value">support@fahasa.com</div>
-            </div>
-            <div class="contact-method">
-                <i class="fab fa-facebook-messenger"></i>
-                <div class="label">Messenger</div>
-                <div class="value">m.me/fahasa</div>
-            </div>
         </div>
-    </div>
 </div>
 
 <script>
-    // Category tab switching
-    document.querySelectorAll('.category-tab').forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            
-            // Here you can add filtering logic based on data-category attribute
-            const category = this.getAttribute('data-category');
-            console.log('Selected category:', category);
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.category-tab');
+        const groups = document.querySelectorAll('.qa-group');
+        const searchInput = document.getElementById('searchInput');
+
+        // Hàm xử lý Filter
+        function filterQA(category) {
+            // 1. Update active tab style
+            tabs.forEach(t => {
+                if(t.getAttribute('data-category') === category) {
+                    t.classList.add('active');
+                } else {
+                    t.classList.remove('active');
+                }
+            });
+
+            // 2. Show/Hide content groups
+            groups.forEach(group => {
+                const groupCategory = group.getAttribute('data-category');
+                
+                if (category === 'all' || category === groupCategory) {
+                    // Hiển thị
+                    group.classList.remove('hidden');
+                    // Reset animation trick
+                    setTimeout(() => {
+                        group.style.opacity = '1';
+                        group.style.transform = 'translateY(0)';
+                    }, 50);
+                } else {
+                    // Ẩn đi
+                    group.style.opacity = '0';
+                    group.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        group.classList.add('hidden');
+                    }, 300); // Chờ animation xong mới ẩn display:none
+                }
+            });
+        }
+
+        // Gán sự kiện Click cho Tabs
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const category = this.getAttribute('data-category');
+                filterQA(category);
+            });
         });
+
+        // (Nâng cao) Hàm search đơn giản
+        if(searchInput) {
+            searchInput.addEventListener('keyup', function() {
+                const term = this.value.toLowerCase();
+                if(term === '') {
+                    // Nếu xóa hết ô tìm kiếm thì reset về tab đang active
+                    const activeTab = document.querySelector('.category-tab.active');
+                    filterQA(activeTab.getAttribute('data-category'));
+                    return;
+                }
+
+                // Nếu đang search thì hiện tất cả group lên để tìm bên trong
+                groups.forEach(group => group.classList.remove('hidden'));
+                
+                // Logic tìm kiếm text bên trong accordion button
+                const buttons = document.querySelectorAll('.accordion-button');
+                buttons.forEach(btn => {
+                    const text = btn.textContent.toLowerCase();
+                    const item = btn.closest('.accordion-item');
+                    if(text.includes(term)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+        
+        // Expose function to global scope for Sidebar links
+        window.triggerFilter = function(cat) {
+            filterQA(cat);
+            // Scroll to top of content
+            document.getElementById('qa-container').scrollIntoView({behavior: 'smooth'});
+        };
     });
 </script>
 

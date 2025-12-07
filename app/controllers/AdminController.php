@@ -45,15 +45,15 @@ class AdminController extends Controller {
         $this->view('admin/admin', $data);
     }
 
-     public function contacts() {
-        $data = [
-            'title' => 'Quản lý Liên hệ',
-            'page' => 'contatcts',
-            'products' => $this->adminModel->getAllContacts(),
-            'contentFile' => APP_ROOT . '/views/admin/contacts/index.php'
-        ];
-        $this->view('admin/admin', $data);
-    }
+    public function contacts() {
+    $data = [
+        'title' => 'Quản lý Liên hệ',
+        'page' => 'contacts', 
+        'contacts' => $this->adminModel->getAllContacts(), 
+        'contentFile' => APP_ROOT . '/views/admin/contacts/index.php'
+    ];
+    $this->view('admin/admin', $data);
+}
 
     public function deleteContact() {
         if ($this->isPost()) {

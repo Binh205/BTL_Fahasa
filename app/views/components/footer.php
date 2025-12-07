@@ -180,5 +180,52 @@
             }
         });
     </script>
+    <script>
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-wishlist');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const pid = btn.getAttribute('data-product-id');
+    if (!pid) return;
+
+    btn.disabled = true;
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+    fetch('<?= BASE_URL ?>customer/addWishlist', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'product_id=' + encodeURIComponent(pid)
+    })
+    .then(r => r.json())
+    .then(res => {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        if (res.success) {
+            // Visual feedback
+            btn.classList.remove('btn-outline-danger');
+            btn.classList.add('text-danger');
+            btn.innerHTML = '<i class="fas fa-heart"></i>';
+            showToast('Đã thêm vào yêu thích');
+        } else if (res.need_login) {
+            // nếu server yêu cầu login
+            window.location.href = '<?= BASE_URL ?>auth/login';
+        } else if (res.guest) {
+            btn.classList.add('text-danger');
+            btn.innerHTML = '<i class="fas fa-heart"></i>';
+            showToast('Đã thêm tạm vào yêu thích (guest)');
+        } else {
+            showToast(res.message || 'Thêm thất bại', 'danger');
+        }
+    })
+    .catch(() => {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+        showToast('Lỗi kết nối', 'danger');
+    });
+});
+</script>
 </body>
 </html>

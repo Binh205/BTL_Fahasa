@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title><?= $title ?? 'Admin Dashboard' ?> - FAHASA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -112,6 +113,12 @@
                     <a class="nav-link <?= ($page ?? '') == 'customers' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/customers">
                         <i class="fa-solid fa-users"></i>
                         <span class="nav-link-text">Khách hàng</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($page ?? '') == 'contacts' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/qa">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="nav-link-text">Hỏi đáp</span>
                     </a>
                 </li>
                 <li class="nav-item">
