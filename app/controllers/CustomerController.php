@@ -15,33 +15,98 @@ class CustomerController extends Controller {
 
     // Profile page
     public function index() {
-        // Nếu đã login -> lấy từ DB
-        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
-            $userModel = $this->model('UserModel');
-            $user = $userModel->getById($_SESSION['users_id']);
-            // Nếu model trả null, fallback vào session (edge case)
-            if (!$user) $user = $_SESSION['guest_user'] ?? null;
-        } else {
-            // Guest: nếu chưa có guest_user trong session thì tạo mẫu để hiển thị/ sửa
-            if (!isset($_SESSION['guest_user'])) {
-                $_SESSION['guest_user'] = [
-                    'user_id' => 0,
-                    'username' => 'Khách',
-                    'fullname' => '',
-                    'email' => '',
-                    'phone' => '',
-                    'gender' => 'male',
-                    'birthday' => '',
-                    'address' => '',
-                    'avatar' => null,
-                    'created_at' => date('Y-m-d H:i:s')
-                ];
-            }
-            $user = $_SESSION['guest_user'];
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['users_id']) || empty($_SESSION['users_id'])) {
+            header('Location: ' . BASE_URL . 'auth/login');
+            exit();
         }
 
-        $data = ['user' => $user];
+        // Lấy thông tin user từ database
+        $userModel = $this->model('UserModel');
+        $user = $userModel->getById($_SESSION['users_id']);
+
+        if (!$user) {
+            // Nếu không tìm thấy user, logout
+            session_destroy();
+            header('Location: ' . BASE_URL . 'auth/login');
+            exit();
+        }
+
+        $data = [
+            'title' => 'Thông tin tài khoản - ' . APP_NAME,
+            'page' => 'customer',
+            'user' => $user
+        ];
+
         $this->view('customer/index', $data);
+    }
+
+    // API cập nhật thông tin cá nhân
+    public function updateProfile() {
+        header('Content-Type: application/json');
+
+        // Kiểm tra method
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            return;
+        }
+
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['users_id']) || empty($_SESSION['users_id'])) {
+            echo json_encode(['success' => false, 'message' => 'Vui lòng đăng nhập']);
+            return;
+        }
+
+        $userId = $_SESSION['users_id'];
+
+        // Lấy dữ liệu từ POST
+        $fullname = trim($_POST['fullname'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+
+        // Validate
+        if (empty($fullname)) {
+            echo json_encode(['success' => false, 'message' => 'Vui lòng nhập họ tên']);
+            return;
+        }
+
+        if (empty($email)) {
+            echo json_encode(['success' => false, 'message' => 'Vui lòng nhập email']);
+            return;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['success' => false, 'message' => 'Email không hợp lệ']);
+            return;
+        }
+
+        // Kiểm tra email đã tồn tại chưa
+        $userModel = $this->model('UserModel');
+        if ($userModel->isEmailExists($email, $userId)) {
+            echo json_encode(['success' => false, 'message' => 'Email đã được sử dụng']);
+            return;
+        }
+
+        // Kiểm tra phone đã tồn tại chưa (nếu có nhập)
+        if (!empty($phone) && $userModel->isPhoneExists($phone, $userId)) {
+            echo json_encode(['success' => false, 'message' => 'Số điện thoại đã được sử dụng']);
+            return;
+        }
+
+        // Cập nhật thông tin
+        $data = [
+            'fullname' => $fullname,
+            'email' => $email,
+            'phone' => $phone
+        ];
+
+        $result = $userModel->updateProfile($userId, $data);
+
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Cập nhật thông tin thành công!']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Cập nhật thất bại, vui lòng thử lại']);
+        }
     }
     
     /**

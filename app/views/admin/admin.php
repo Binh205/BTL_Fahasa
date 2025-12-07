@@ -115,12 +115,7 @@
                         <span class="nav-link-text">Khách hàng</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= ($page ?? '') == 'contacts' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/qa">
-                        <i class="fa-solid fa-circle-question"></i>
-                        <span class="nav-link-text">Hỏi đáp</span>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link <?= ($page ?? '') == 'news' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/news">
                         <i class="fa-solid fa-newspaper"></i>
@@ -132,16 +127,23 @@
         <div class="nav-section">
             <div class="nav-section-title">Cấu hình</div>
             <ul>
-                <li class="nav-item">
-                    <a class="nav-link <?= ($page ?? '') == 'settings' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/settings">
-                        <i class="fa-solid fa-cog"></i>
-                        <span class="nav-link-text">Cài đặt</span>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link <?= ($page ?? '') == 'contacts' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/contacts">
                         <i class="fa-solid fa-envelope"></i>
                         <span class="nav-link-text">Liên hệ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($page ?? '') == 'qa' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/qa">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span class="nav-link-text">Hỏi đáp</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= ($page ?? '') == 'settings' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/settings">
+                        <i class="fa-solid fa-cog"></i>
+                        <span class="nav-link-text">Cài đặt</span>
                     </a>
                 </li>
             </ul>

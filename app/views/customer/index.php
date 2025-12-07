@@ -127,53 +127,56 @@
                     <!-- Profile Form -->
                     <form class="profile-form" id="profileForm">
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="fullname" class="form-label">Họ và tên *</label>
-                                <input type="text" class="form-control" id="fullname" name="fullname" 
-                                       value="<?= htmlspecialchars($user['fullname'] ?? '') ?>" required>
-                            </div>
-                            
-                            <div class="col-md-6 mb-3">
-                                <label for="phone" class="form-label">Số điện thoại *</label>
-                                <input type="tel" class="form-control" id="phone" name="phone" 
-                                       value="<?= htmlspecialchars($user['phone'] ?? '') ?>" required>
+                            <div class="col-md-12 mb-3">
+                                <label for="fullname" class="form-label">
+                                    <i class="fas fa-user me-2 text-muted"></i>Họ và tên *
+                                </label>
+                                <input type="text" class="form-control" id="fullname" name="fullname"
+                                       value="<?= htmlspecialchars($user['fullname'] ?? '') ?>"
+                                       placeholder="Nhập họ và tên đầy đủ"
+                                       required>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="email" name="email" 
-                                       value="<?= htmlspecialchars($user['email'] ?? '') ?>" required>
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-2 text-muted"></i>Email *
+                                </label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                       value="<?= htmlspecialchars($user['email'] ?? '') ?>"
+                                       placeholder="example@email.com"
+                                       required>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
-                                <label for="gender" class="form-label">Giới tính</label>
-                                <select class="form-select" id="gender" name="gender">
-                                    <option value="male" <?= ($user['gender'] ?? 'male') === 'male' ? 'selected' : '' ?>>Nam</option>
-                                    <option value="female" <?= ($user['gender'] ?? '') === 'female' ? 'selected' : '' ?>>Nữ</option>
-                                    <option value="other" <?= ($user['gender'] ?? '') === 'other' ? 'selected' : '' ?>>Khác</option>
-                                </select>
+                                <label for="phone" class="form-label">
+                                    <i class="fas fa-phone me-2 text-muted"></i>Số điện thoại
+                                </label>
+                                <input type="tel" class="form-control" id="phone" name="phone"
+                                       value="<?= htmlspecialchars($user['phone'] ?? '') ?>"
+                                       placeholder="Nhập số điện thoại">
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="birthday" class="form-label">Ngày sinh</label>
-                                <input type="date" class="form-control" id="birthday" name="birthday" 
-                                       value="<?= htmlspecialchars($user['birthday'] ?? '') ?>">
+                                <label for="role" class="form-label">
+                                    <i class="fas fa-user-tag me-2 text-muted"></i>Vai trò
+                                </label>
+                                <input type="text" class="form-control" id="role"
+                                       value="<?= htmlspecialchars($user['role'] ?? 'Customer') ?>"
+                                       readonly disabled>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Thành viên từ</label>
-                                <input type="text" class="form-control" 
-                                       value="<?= date('d/m/Y', strtotime($user['created_at'] ?? 'now')) ?>" readonly disabled>
+                                <label class="form-label">
+                                    <i class="fas fa-calendar me-2 text-muted"></i>Thành viên từ
+                                </label>
+                                <input type="text" class="form-control"
+                                       value="<?= !empty($user['created_date']) ? date('d/m/Y', strtotime($user['created_date'])) : 'N/A' ?>"
+                                       readonly disabled>
                             </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Địa chỉ</label>
-                            <textarea class="form-control" id="address" name="address" rows="3"><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
                         </div>
                         
                         <div class="mt-4 d-flex gap-3">
