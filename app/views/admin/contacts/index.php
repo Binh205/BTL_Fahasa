@@ -2,12 +2,7 @@
 
 <div class="col-12">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="card-title">Danh sách Hỏi/Đáp (Q&A)</h3>
-            <a href="<?= BASE_URL ?>admin/createQa" class="btn btn-success d-none d-sm-inline-block">
-                <i class="fas fa-plus me-1"></i> Thêm câu hỏi
-            </a>
-        </div>
+        
         
         <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap datatable">
