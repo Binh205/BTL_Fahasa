@@ -128,69 +128,71 @@ class Admin extends DB {
     public function getAllOrders() {
         $sql = "SELECT
                     o.order_id,
-                    o.created_date,
-                    o.status,
-                    o.total,
+                    o.user_id,
+                    o.recipient_name,
+                    o.recipient_phone,
+                    o.shipping_address,
+                    o.payment_method,
+                    o.subtotal,
                     o.shipping_fee,
+                    o.total_amount as total,
+                    o.status,
                     o.note,
-                    o.point_used,
-                    o.point_earned,
-                    p.payment_method,
-                    p.customer_id,
-                    u.name as customer_name,
+                    o.created_at as created_date,
+                    o.updated_at,
+                    u.fullname as customer_name,
                     u.email as customer_email,
                     u.phone as customer_phone
                 FROM orders o
-                LEFT JOIN payment p ON o.payment_id = p.payment_id
-                LEFT JOIN users u ON p.customer_id = u.user_id
-                ORDER BY o.created_date DESC, o.order_id DESC";
+                LEFT JOIN users u ON o.user_id = u.user_id
+                ORDER BY o.created_at DESC, o.order_id DESC";
         return $this->all($sql);
     }
 
     public function getOrderById($orderId) {
         $sql = "SELECT
                     o.order_id,
-                    o.created_date,
-                    o.status,
-                    o.total,
+                    o.user_id,
+                    o.recipient_name,
+                    o.recipient_phone,
+                    o.shipping_address,
+                    o.payment_method,
+                    o.subtotal,
                     o.shipping_fee,
+                    o.total_amount as total,
+                    o.status,
                     o.note,
-                    o.point_used,
-                    o.point_earned,
-                    p.payment_method,
-                    p.customer_id,
-                    u.name as customer_name,
+                    o.created_at as created_date,
+                    o.updated_at,
+                    u.fullname as customer_name,
                     u.email as customer_email,
-                    u.phone as customer_phone,
-                    u.address as customer_address
+                    u.phone as customer_phone
                 FROM orders o
-                LEFT JOIN payment p ON o.payment_id = p.payment_id
-                LEFT JOIN users u ON p.customer_id = u.user_id
+                LEFT JOIN users u ON o.user_id = u.user_id
                 WHERE o.order_id = :order_id";
         return $this->single($sql, ['order_id' => $orderId]);
     }
 
     public function getOrderItems($orderId) {
         $sql = "SELECT
-                    ci.product_id,
-                    ci.quantity,
+                    op.product_id,
+                    op.quantity,
+                    op.price,
+                    op.subtotal,
                     p.title,
-                    p.price,
-                    (ci.quantity * p.price) as subtotal,
-                    pi.image_url
-                FROM cart_items ci
-                JOIN product p ON ci.product_id = p.product_id
+                    pi.image_url,
+                    GROUP_CONCAT(ap.author_name SEPARATOR ', ') as author
+                FROM order_product op
+                JOIN product p ON op.product_id = p.product_id
                 LEFT JOIN product_image pi ON p.product_id = pi.product_id
-                WHERE ci.user_id = (
-                    SELECT customer_id FROM payment
-                    WHERE payment_id = (SELECT payment_id FROM orders WHERE order_id = :order_id)
-                )
-                GROUP BY ci.product_id";
+                LEFT JOIN author_of_product ap ON p.product_id = ap.product_id
+                WHERE op.order_id = :order_id
+                GROUP BY op.product_id, op.order_id";
         return $this->all($sql, ['order_id' => $orderId]);
     }
 
     public function updateOrderStatus($orderId, $status) {
-        $sql = "UPDATE orders SET status = :status WHERE order_id = :order_id";
+        $sql = "UPDATE orders SET status = :status, updated_at = NOW() WHERE order_id = :order_id";
         return $this->query($sql, ['status' => $status, 'order_id' => $orderId]);
     }
 
@@ -205,8 +207,136 @@ class Admin extends DB {
                     SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) as processing_orders,
                     SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
                     SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_orders,
-                    SUM(total) as total_revenue
+                    SUM(total_amount) as total_revenue
                 FROM orders";
         return $this->single($sql);
+    }
+
+    // ================= QUẢN LÝ KHÁCH HÀNG (CUSTOMERS) =================
+
+    public function getAllCustomers() {
+        $sql = "SELECT
+                    u.user_id,
+                    u.fullname,
+                    u.email,
+                    u.phone,
+                    u.created_date,
+                    c.member_type,
+                    c.total_fpoint,
+                    COUNT(DISTINCT o.order_id) as total_orders,
+                    SUM(CASE WHEN o.status = 'completed' THEN o.total_amount ELSE 0 END) as total_spent
+                FROM users u
+                LEFT JOIN customer c ON u.user_id = c.user_id
+                LEFT JOIN orders o ON u.user_id = o.user_id
+                WHERE u.role = 'customer'
+                GROUP BY u.user_id
+                ORDER BY u.created_date DESC";
+        return $this->all($sql);
+    }
+
+    public function getCustomerById($customerId) {
+        $sql = "SELECT
+                    u.user_id,
+                    u.fullname,
+                    u.email,
+                    u.phone,
+                    u.note,
+                    u.created_date,
+                    c.member_type,
+                    c.total_fpoint
+                FROM users u
+                LEFT JOIN customer c ON u.user_id = c.user_id
+                WHERE u.user_id = :customer_id AND u.role = 'customer'";
+        return $this->single($sql, ['customer_id' => $customerId]);
+    }
+
+    public function getCustomerOrders($customerId) {
+        $sql = "SELECT
+                    o.order_id,
+                    o.created_at as created_date,
+                    o.status,
+                    o.total_amount as total,
+                    o.shipping_fee,
+                    o.payment_method,
+                    COUNT(DISTINCT op.product_id) as total_items
+                FROM orders o
+                LEFT JOIN order_product op ON o.order_id = op.order_id
+                WHERE o.user_id = :customer_id
+                GROUP BY o.order_id
+                ORDER BY o.created_at DESC";
+        return $this->all($sql, ['customer_id' => $customerId]);
+    }
+
+    public function getCustomerStats($customerId) {
+        $sql = "SELECT
+                    COUNT(DISTINCT o.order_id) as total_orders,
+                    SUM(CASE WHEN o.status = 'completed' THEN o.total_amount ELSE 0 END) as total_spent,
+                    SUM(CASE WHEN o.status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
+                    SUM(CASE WHEN o.status = 'completed' THEN 1 ELSE 0 END) as completed_orders
+                FROM orders o
+                WHERE o.user_id = :customer_id";
+        return $this->single($sql, ['customer_id' => $customerId]);
+    }
+
+    public function deleteCustomer($customerId) {
+        // Xóa customer record
+        $this->query("DELETE FROM customer WHERE user_id = :id", ['id' => $customerId]);
+        // Xóa user record
+        return $this->query("DELETE FROM users WHERE user_id = :id AND role = 'customer'", ['id' => $customerId]);
+    }
+
+    // ================= QUẢN LÝ DANH MỤC (CATEGORIES) =================
+
+    public function getAllCategories() {
+        // Kiểm tra xem bảng category_product có tồn tại không
+        try {
+            $sql = "SELECT
+                        c.category_id,
+                        c.category_name,
+                        c.description,
+                        COUNT(DISTINCT cp.product_id) as total_products
+                    FROM category c
+                    LEFT JOIN category_product cp ON c.category_id = cp.category_id
+                    GROUP BY c.category_id
+                    ORDER BY c.category_name ASC";
+            return $this->all($sql);
+        } catch (Exception $e) {
+            // Nếu bảng category_product chưa tồn tại, chỉ lấy từ category
+            $sql = "SELECT
+                        category_id,
+                        category_name,
+                        description,
+                        0 as total_products
+                    FROM category
+                    ORDER BY category_name ASC";
+            return $this->all($sql);
+        }
+    }
+
+    public function getCategoryById($categoryId) {
+        $sql = "SELECT * FROM category WHERE category_id = :category_id";
+        return $this->single($sql, ['category_id' => $categoryId]);
+    }
+
+    public function createCategory($data) {
+        $sql = "INSERT INTO category (category_name, description)
+                VALUES (:category_name, :description)";
+        return $this->query($sql, $data);
+    }
+
+    public function updateCategory($categoryId, $data) {
+        $sql = "UPDATE category
+                SET category_name = :category_name,
+                    description = :description
+                WHERE category_id = :category_id";
+        $data['category_id'] = $categoryId;
+        return $this->query($sql, $data);
+    }
+
+    public function deleteCategory($categoryId) {
+        // Xóa liên kết category-product trước (nếu có ON DELETE CASCADE thì không cần)
+        $this->query("DELETE FROM category_product WHERE category_id = :id", ['id' => $categoryId]);
+        // Xóa category
+        return $this->query("DELETE FROM category WHERE category_id = :id", ['id' => $categoryId]);
     }
 }

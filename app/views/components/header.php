@@ -11,15 +11,12 @@ function e($v) {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 }
 
-// Cart count - đảm bảo là số nguyên không âm
+// Cart count - lấy từ database nếu đã đăng nhập
 $cartCount = 0;
-if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-    // nếu $_SESSION['cart'] là mảng [productId => qty]
-    $sum = 0;
-    foreach ($_SESSION['cart'] as $q) {
-        $sum += intval($q);
-    }
-    $cartCount = max(0, $sum);
+if (isset($_SESSION['users_id'])) {
+    require_once APP_ROOT . '/models/CartModel.php';
+    $cartModel = new CartModel();
+    $cartCount = max(0, $cartModel->getCartCount($_SESSION['users_id']));
 }
 
 // User info

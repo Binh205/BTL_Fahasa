@@ -115,59 +115,120 @@
     
     .order-item {
         display: flex;
+        align-items: center;
         gap: 15px;
         padding: 15px 0;
         border-bottom: 1px solid var(--fahasa-light-gray);
     }
-    
+
     .order-item:last-child {
         border-bottom: none;
     }
-    
+
     .order-item-image {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 100px;
         flex-shrink: 0;
-        background-color: var(--fahasa-light-gray);
+        background-color: #f5f5f5;
         border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         overflow: hidden;
+        border: 1px solid #e0e0e0;
+        text-decoration: none;
+        transition: all 0.3s;
     }
-    
+
+    .order-item-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
     .order-item-image img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
     }
-    
-    .order-item-image i {
-        font-size: 2rem;
-        color: var(--fahasa-gray);
-    }
-    
+
     .order-item-info {
         flex: 1;
+        min-width: 0;
     }
-    
+
     .order-item-name {
         font-weight: 600;
+        font-size: 15px;
         color: var(--fahasa-dark);
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        text-decoration: none;
+        display: block;
+        transition: color 0.3s;
+        line-height: 1.4;
     }
-    
+
+    .order-item-name:hover {
+        color: var(--fahasa-red);
+    }
+
     .order-item-qty {
         color: var(--fahasa-gray);
-        font-size: 0.9rem;
+        font-size: 14px;
     }
-    
+
     .order-item-price {
-        font-weight: 600;
-        color: var(--fahasa-red);
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--fahasa-gray);
         text-align: right;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
-    
+
+    .order-summary-inline {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid var(--fahasa-light-gray);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        /* gap: 8px; */
+        
+        border-top: 2px solid var(--fahasa-red);
+    }
+
+    .order-summary-inline .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        font-size: 0.95rem;
+    }
+
+    .order-summary-inline .summary-label {
+        color: var(--fahasa-gray);
+    }
+
+    .order-summary-inline .summary-value {
+        font-weight: 600;
+        color: var(--fahasa-dark);
+    }
+
+    .order-summary-inline .summary-total {
+        margin-top: 8px;
+        padding-top: 8px;
+    }
+
+    .order-summary-inline .summary-total .summary-label {
+        font-weight: 700;
+        color: var(--fahasa-dark);
+        font-size: 1.1rem;
+    }
+
+    .order-summary-inline .summary-total .summary-value {
+        font-weight: 700;
+        color: var(--fahasa-red);
+        font-size: 1.3rem;
+    }
+
     .order-footer {
         padding: 15px 20px;
         background-color: #fafafa;
@@ -177,52 +238,37 @@
         flex-wrap: wrap;
         gap: 15px;
     }
-    
-    .order-total {
-        font-size: 1.1rem;
-    }
-    
-    .order-total-label {
+
+    .order-info-text {
         color: var(--fahasa-gray);
-        margin-right: 10px;
+        font-size: 0.95rem;
     }
-    
-    .order-total-amount {
-        font-weight: 700;
-        color: var(--fahasa-red);
-        font-size: 1.3rem;
+
+    .order-info-text i {
+        margin-right: 5px;
     }
-    
-    .order-actions {
-        display: flex;
-        gap: 10px;
-    }
-    
+
     .btn-order {
-        padding: 8px 20px;
+        padding: 10px 24px;
         border-radius: 6px;
         border: none;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
-    
-    .btn-view {
-        background-color: var(--fahasa-orange);
+
+    .btn-cancel {
+        background-color: #ef4444;
         color: white;
     }
-    
-    .btn-view:hover {
-        background-color: #e68419;
-    }
-    
-    .btn-reorder {
-        background-color: var(--fahasa-red);
-        color: white;
-    }
-    
-    .btn-reorder:hover {
-        background-color: #a51b1f;
+
+    .btn-cancel:hover {
+        background-color: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
     }
     
     .empty-state {
@@ -250,26 +296,44 @@
             flex-direction: column;
             align-items: flex-start;
         }
-        
+
         .order-item {
-            flex-direction: column;
+            flex-wrap: wrap;
         }
-        
+
+        .order-item-image {
+            width: 60px;
+            height: 85px;
+        }
+
+        .order-item-info {
+            flex: 1 1 100%;
+            order: 2;
+        }
+
         .order-item-price {
-            text-align: left;
+            text-align: right;
+            order: 1;
+            margin-left: auto;
         }
-        
+
+        .order-summary-inline {
+            align-items: stretch;
+        }
+
+        .order-summary-inline .summary-row {
+            justify-content: space-between;
+        }
+
         .order-footer {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            gap: 10px;
         }
-        
-        .order-actions {
-            width: 100%;
-        }
-        
+
         .btn-order {
-            flex: 1;
+            width: 100%;
+            justify-content: center;
         }
     }
 </style>
@@ -335,42 +399,43 @@
                                     <div class="order-body">
                                         <?php foreach ($order['items'] as $item): ?>
                                             <div class="order-item">
-                                                <div class="order-item-image">
+                                                <a href="<?= BASE_URL ?>product/detail/<?= $item['product_id'] ?>" class="order-item-image">
                                                     <img src="<?= BASE_URL . $item['image'] ?>" alt="<?= htmlspecialchars($item['product_name']) ?>">
-                                                </div>
+                                                </a>
                                                 <div class="order-item-info">
-                                                    <div class="order-item-name">
+                                                    <a href="<?= BASE_URL ?>product/detail/<?= $item['product_id'] ?>" class="order-item-name">
                                                         <?= htmlspecialchars($item['product_name']) ?>
-                                                    </div>
+                                                    </a>
                                                     <div class="order-item-qty">
                                                         Số lượng: <?= $item['quantity'] ?>
                                                     </div>
                                                 </div>
                                                 <div class="order-item-price">
-                                                    <?= number_format($item['price'] * $item['quantity']) ?>đ
+                                                    <?= number_format($item['subtotal']) ?>đ
                                                 </div>
                                             </div>
                                         <?php endforeach; ?>
+
+                                        <!-- Order Summary (dọc bên phải) -->
+                                        <div class="order-summary-inline">
+                                            <div class="summary-row summary-total">
+                                                <span class="summary-label">Tổng cộng:</span>
+                                                <span class="summary-value"><?= number_format($order['total']) ?>đ</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    
+
                                     <!-- Order Footer -->
                                     <div class="order-footer">
-                                        <div class="order-total">
-                                            <span class="order-total-label">Tổng tiền:</span>
-                                            <span class="order-total-amount">
-                                                <?= number_format($order['total']) ?>đ
-                                            </span>
+                                        <div class="order-info-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span>Đơn hàng #<?= $order['order_id'] ?></span>
                                         </div>
-                                        <div class="order-actions">
-                                            <button class="btn-order btn-view">
-                                                <i class="fas fa-eye me-2"></i>Xem chi tiết
+                                        <?php if (in_array($order['status'], ['pending', 'processing'])): ?>
+                                            <button class="btn-order btn-cancel" onclick="confirmCancelOrder(<?= $order['order_id'] ?>)">
+                                                <i class="fas fa-times-circle"></i> Hủy đơn hàng
                                             </button>
-                                            <?php if ($order['status'] === 'completed'): ?>
-                                                <button class="btn-order btn-reorder">
-                                                    <i class="fas fa-redo me-2"></i>Mua lại
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -398,10 +463,10 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
         // Update active button
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        
+
         const status = this.dataset.status;
         const orders = document.querySelectorAll('.order-card');
-        
+
         orders.forEach(order => {
             if (status === 'all' || order.dataset.status === status) {
                 order.style.display = 'block';
@@ -412,21 +477,34 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// View order detail
-document.querySelectorAll('.btn-view').forEach(btn => {
-    btn.addEventListener('click', function() {
-        alert('Chức năng xem chi tiết đơn hàng đang được phát triển!');
-    });
-});
+// Confirm cancel order
+async function confirmCancelOrder(orderId) {
+    if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+        return;
+    }
 
-// Reorder
-document.querySelectorAll('.btn-reorder').forEach(btn => {
-    btn.addEventListener('click', function() {
-        if (confirm('Bạn có muốn mua lại đơn hàng này?')) {
-            alert('Đã thêm sản phẩm vào giỏ hàng!');
+    try {
+        const formData = new FormData();
+        formData.append('order_id', orderId);
+
+        const response = await fetch('<?= BASE_URL ?>order/cancelOrder', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert(result.message || 'Đã hủy đơn hàng thành công!');
+            location.reload(); // Reload page để cập nhật trạng thái
+        } else {
+            alert(result.message || 'Không thể hủy đơn hàng!');
         }
-    });
-});
+    } catch (error) {
+        console.error('Error canceling order:', error);
+        alert('Lỗi khi hủy đơn hàng. Vui lòng thử lại!');
+    }
+}
 </script>
 
 <?php require_once APP_ROOT . '/views/components/footer.php'; ?>

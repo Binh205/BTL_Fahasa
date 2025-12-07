@@ -12,18 +12,20 @@ Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các
 - 📖 Xem chi tiết sản phẩm, sản phẩm liên quan (còn comment đánh giá)
 - 🛒 Giỏ hàng: Thêm/Xóa/Cập nhật số lượng (đã xong)
 - 👤 Đăng ký/Đăng nhập tài khoản (đã xong)
-- 📦 Quản lý đơn hàng cá nhân
+- 📦 Quản lý đơn hàng cá nhân (còn cập nhật đơn hàng của tôi)
 - ❤️ Danh sách sản phẩm yêu thích
 - 🔔 Thông báo đơn hàng và khuyến mãi
-- 📰 Đọc tin tức, bài viết
-- ❓ Hỏi đáp
+- 📰 Đọc tin tức, bài viết (Hiếu làm)
+- ❓ Hỏi đáp (Nghi làm)
 
 ### 🔧 Chức năng cho Admin
 
-- 📚 Quản lý sản phẩm (CRUD)
-- 📰 Quản lý tin tức/bài viết
-- ❓ Quản lý câu hỏi/câu trả lời
-- 📧 Quản lý liên hệ từ khách hàng
+- 📚 Quản lý sản phẩm (CRUD) (cơ bản xong)
+- Quản lý đơn hàng (cơ bản xong)
+-     Quản lý danh mục sản phẩm                                                                (cơ bản xong)
+- 📰 Quản lý tin tức/bài viết (Hiếu làm)
+- ❓ Quản lý câu hỏi/câu trả lời (Nghi làm)
+- 📧 Quản lý khách hàng (cơ bản xong)
 - ⚙️ Cấu hình thông tin website
 - 📝 Chỉnh sửa nội dung trang tĩnh
 

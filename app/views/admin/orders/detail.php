@@ -282,19 +282,19 @@
                 <h3>Thông tin khách hàng</h3>
                 <div class="info-row">
                     <span class="info-label">Họ tên:</span>
-                    <span class="info-value"><?= htmlspecialchars($order['customer_name'] ?? 'N/A') ?></span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Email:</span>
-                    <span class="info-value"><?= htmlspecialchars($order['customer_email'] ?? 'N/A') ?></span>
+                    <span class="info-value"><?= htmlspecialchars($order['recipient_name'] ?? 'N/A') ?></span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Số điện thoại:</span>
-                    <span class="info-value"><?= htmlspecialchars($order['customer_phone'] ?? 'N/A') ?></span>
+                    <span class="info-value"><?= htmlspecialchars($order['recipient_phone'] ?? 'N/A') ?></span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Địa chỉ:</span>
-                    <span class="info-value"><?= htmlspecialchars($order['customer_address'] ?? 'N/A') ?></span>
+                    <span class="info-value"><?= htmlspecialchars($order['shipping_address'] ?? 'N/A') ?></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ghi chú: </span>
+                    <span class="info-value"><?= htmlspecialchars($order['note'] ?? 'N/A') ?></span>
                 </div>
             </div>
 
@@ -311,11 +311,11 @@
                 </div>
                 <div class="info-row">
                     <span class="info-label">Điểm sử dụng:</span>
-                    <span class="info-value"><?= number_format($order['point_used']) ?> điểm</span>
+                    <span class="info-value">In progress</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Điểm tích lũy:</span>
-                    <span class="info-value"><?= number_format($order['point_earned']) ?> điểm</span>
+                    <span class="info-value">In Progress</span>
                 </div>
             </div>
         </div>
@@ -384,12 +384,6 @@
             <span>Phí vận chuyển:</span>
             <span><?= number_format($order['shipping_fee']) ?>đ</span>
         </div>
-        <?php if ($order['point_used'] > 0): ?>
-        <div class="summary-row">
-            <span>Giảm giá (điểm):</span>
-            <span class="text-muted">-<?= number_format($order['point_used'] * 1000) ?>đ</span>
-        </div>
-        <?php endif; ?>
         <div class="summary-row total">
             <span>Tổng cộng:</span>
             <span><?= number_format($order['total']) ?>đ</span>

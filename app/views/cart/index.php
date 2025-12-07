@@ -1,5 +1,11 @@
 <?php require_once APP_ROOT . '/views/components/header.php'; ?>
 
+<!-- Checkout Popup CSS -->
+<link rel="stylesheet" href="<?= BASE_URL ?>css/checkout-popup.css">
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <style>
     .breadcrumb-section {
         background-color: var(--fahasa-light-gray);
@@ -67,12 +73,25 @@
 
     .cart-item {
         display: grid;
-        grid-template-columns: 100px 2fr 120px 100px 80px;
+        grid-template-columns: 40px 100px 2fr 120px 100px 80px;
         gap: 20px;
         padding: 20px;
         border-bottom: 1px solid var(--fahasa-light-gray);
         align-items: center;
         transition: background-color 0.3s;
+    }
+
+    .item-checkbox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .item-checkbox input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--fahasa-red);
     }
 
     .cart-item:hover {
@@ -388,7 +407,8 @@
         <div class="cart-container">
             <div class="cart-items" id="cart-items-list">
                 <div class="cart-header">
-                    Sản phẩm (<span id="cart-count-display"><?= count($cartItems) ?></span>)
+                    Sản phẩm (<span id="cart-count-display"><?= count($cartItems) ?></span>) -
+                    Đã chọn: <span id="selected-count"><?= count($cartItems) ?></span>
                 </div>
 
                 <?php foreach ($cartItems as $item):
@@ -396,6 +416,15 @@
                     $isLoggedInJS = json_encode($isLoggedIn);
                 ?>
                     <div class="cart-item" data-product-id="<?= $item['product_id'] ?>" id="cart-item-<?= $item['product_id'] ?>">
+                        <div class="item-checkbox">
+                            <input type="checkbox"
+                                   class="product-checkbox"
+                                   data-product-id="<?= $item['product_id'] ?>"
+                                   data-price="<?= $item['price'] ?>"
+                                   data-quantity="<?= $item['quantity'] ?>"
+                                   onchange="updateCheckoutSummary()"
+                                   checked>
+                        </div>
                         <div class="item-image">
                             <img src="<?= BASE_URL . $item['image_url'] ?>" alt="<?= htmlspecialchars($item['title']) ?>">
                         </div>
@@ -477,6 +506,110 @@
             </a>
         </div>
     <?php endif; ?>
+</div>
+
+<!-- Checkout Popup -->
+<div id="checkoutPopup" class="checkout-modal" style="display: none;">
+    <div class="checkout-modal-content">
+        <div class="checkout-modal-header">
+            <h2>Xác nhận đơn hàng</h2>
+            <button class="close-popup" onclick="closeCheckoutPopup()">&times;</button>
+        </div>
+
+        <div class="checkout-modal-body">
+            <!-- Bước 1: Thông tin người nhận -->
+            <div class="checkout-section">
+                <h3>Thông tin Giao hàng</h3>
+                <div class="address-selector" style="margin-bottom: 15px;">
+                    <select id="saved_addresses" onchange="loadSavedAddress()" style="width: 100%; padding: 10px; border-radius: 4px;">
+                        <option value="">-- Chọn thông tin đã lưu --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tên người nhận <span class="required">*</span></label>
+                    <input type="text" id="recipient_name" required placeholder="Nhập tên người nhận">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại <span class="required">*</span></label>
+                    <input type="tel" id="recipient_phone" required placeholder="Nhập số điện thoại">
+                </div>
+                
+
+                <div id="address_form">
+                    <div class="form-group">
+                        <label>Tỉnh/Thành phố <span class="required">*</span></label>
+                        <select id="province" class="select2-search" required>
+                            <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phường/Xã <span class="required">*</span></label>
+                        <select id="ward" class="select2-search" required>
+                            <option value="">-- Chọn Phường/Xã --</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group">
+                        <label>Số nhà, tên đường <span class="required">*</span></label>
+                        <input type="text" id="street_address" required placeholder="Ví dụ: 123 Nguyễn Trãi">
+                    </div>
+                    <button onclick="saveNewAddress()" class="btn-primary">Lưu thông tin</button>
+                </div>
+            </div>
+
+            <!-- Danh sách sản phẩm đã chọn -->
+            <div class="checkout-section">
+                <h3>Sản phẩm đã chọn</h3>
+                <div id="checkout_products_list"></div>
+            </div>
+
+            <!-- Thêm ghi chú -->
+            <div class="checkout-section">
+                <h3>Ghi chú</h3>
+                <textarea id="order_note" placeholder="Nhập ghi chú cho đơn hàng (nếu có)" rows="5" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+            </div>
+
+            <!-- Phương thức thanh toán -->
+            <div class="checkout-section">
+                <h3>Phương thức thanh toán</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="COD" checked>
+                        <span>Thanh toán khi nhận hàng (COD)</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="E-wallet">
+                        <span>Ví điện tử (Momo, ZaloPay)</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="Credit Card">
+                        <span>Thẻ tín dụng/Ghi nợ</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Tổng tiền -->
+            <div class="checkout-total">
+                <div class="total-row">
+                    <span>Tạm tính:</span>
+                    <span id="checkout_subtotal">0đ</span>
+                </div>
+                <div class="total-row">
+                    <span>Phí vận chuyển:</span>
+                    <span id="checkout_shipping">30,000đ</span>
+                </div>
+                <div class="total-row total-final">
+                    <span>Tổng cộng:</span>
+                    <span id="checkout_total">0đ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-modal-footer">
+            <button onclick="closeCheckoutPopup()" class="btn-cancel">Hủy</button>
+            <button onclick="submitOrder()" class="btn-submit">Đặt hàng <span id="final_total"></span></button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -674,11 +807,85 @@
         // Không cần reload vì đã cập nhật UI và server (hoặc localStorage)
     }
 
+    // Cập nhật summary dựa trên sản phẩm đã chọn
+    function updateCheckoutSummary() {
+        const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+        let subtotal = 0;
+        let selectedCount = 0;
+
+        checkboxes.forEach(checkbox => {
+            const price = parseInt(checkbox.dataset.price);
+            const quantityInput = document.getElementById(`quantity-${checkbox.dataset.productId}`);
+            const quantity = parseInt(quantityInput.value);
+            subtotal += price * quantity;
+            selectedCount++;
+        });
+
+        const shipping = selectedCount > 0 ? 30000 : 0;
+        const total = subtotal + shipping;
+
+        // Cập nhật UI
+        document.getElementById('selected-count').textContent = selectedCount;
+        document.getElementById('summary-subtotal').textContent = formatCurrency(subtotal);
+        document.getElementById('summary-shipping').textContent = formatCurrency(shipping);
+        document.getElementById('summary-total').textContent = formatCurrency(total);
+    }
+
+    // Cập nhật lại khi thay đổi số lượng
+    const originalUpdateQuantity = updateQuantity;
+    updateQuantity = async function(productId, quantity, isLoggedIn) {
+        await originalUpdateQuantity(productId, quantity, isLoggedIn);
+        updateCheckoutSummary(); // Cập nhật lại tính toán sau khi đổi số lượng
+    };
+
     // Xử lý thanh toán
     function handleCheckout() {
-        alert('Chức năng thanh toán sẽ được phát triển trong phiên bản tiếp theo!');
-        // Trong thực tế, chuyển hướng đến trang thanh toán
+        const checkboxes = document.querySelectorAll('.product-checkbox:checked');
+
+        if (checkboxes.length === 0) {
+            alert('Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!');
+            return;
+        }
+
+        // Lấy danh sách sản phẩm đã chọn
+        const selectedProducts = [];
+        checkboxes.forEach(checkbox => {
+            const productId = checkbox.dataset.productId;
+            const quantityInput = document.getElementById(`quantity-${productId}`);
+            selectedProducts.push({
+                product_id: productId,
+                quantity: parseInt(quantityInput.value),
+                price: parseInt(checkbox.dataset.price)
+            });
+        });
+
+        // Lưu vào sessionStorage để dùng trong popup
+        sessionStorage.setItem('checkout_products', JSON.stringify(selectedProducts));
+
+        // Mở popup thanh toán
+        openCheckoutPopup();
     }
+
+    // Load khi trang vừa mở
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCheckoutSummary();
+    });
+</script>
+
+<!-- jQuery (required for Select2) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Include Checkout Popup Script -->
+<script src="<?= BASE_URL ?>js/checkout-popup.js"></script>
+
+<script>
+// Initialize Select2 when popup opens
+$(document).ready(function() {
+    // Will be initialized when popup opens
+});
 </script>
 
 <?php require_once APP_ROOT . '/views/components/footer.php'; ?>

@@ -97,8 +97,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?= ($page ?? '') == 'categories' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/categories">
+                        <i class="fa-solid fa-tags"></i>
+                        <span class="nav-link-text">Danh mục</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?= ($page ?? '') == 'orders' ? 'active' : '' ?>" href="<?= BASE_URL ?>admin/orders">
-                        <i class="fa-solid fa-box"></i>
+                        <i class="fa-solid fa-shopping-cart"></i>
                         <span class="nav-link-text">Đơn hàng</span>
                     </a>
                 </li>

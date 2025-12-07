@@ -98,11 +98,11 @@ class CartManager {
 
   // Cập nhật số hiển thị trên icon cart
   updateCartCount(count) {
-    const badge = document.querySelector(".cart-count");
-    if (badge) {
+    const badges = document.querySelectorAll(".cart-badge, .cart-count");
+    badges.forEach(badge => {
       badge.textContent = count;
       badge.style.display = count > 0 ? "inline-block" : "none";
-    }
+    });
   }
 
   // Hiển thị thông báo
@@ -126,3 +126,12 @@ if (window.needSyncCart === true && localStorage.getItem("fahasa_cart")) {
 
 // Export để dùng global
 window.cartManager = cartManager;
+
+// Export global function để update cart badge
+window.updateCartBadge = function(count) {
+  const badges = document.querySelectorAll(".cart-badge, .cart-count");
+  badges.forEach(badge => {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? "inline-block" : "none";
+  });
+};

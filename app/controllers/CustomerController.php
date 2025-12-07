@@ -53,67 +53,71 @@ class CustomerController extends Controller {
      * Trang đơn hàng của tôi
      */
     public function orders() {
-        // Mock orders data
-        $orders = [
-            [
-                'order_id' => 'DH001',
-                'order_date' => '2024-11-25',
-                'status' => 'completed',
-                'status_text' => 'Đã giao hàng',
-                'total' => 450000,
-                'items' => [
-                    [
-                        'product_name' => 'Đắc Nhân Tâm',
-                        'quantity' => 1,
-                        'price' => 150000,
-                        'image' => 'images/product-page/dac-nhan-tam.jpg'
-                    ],
-                    [
-                        'product_name' => 'Nhà Giả Kim',
-                        'quantity' => 2,
-                        'price' => 150000,
-                        'image' => 'images/product-page/nha-gia-kim.jpg'
-                    ]
-                ]
-            ],
-            [
-                'order_id' => 'DH002',
-                'order_date' => '2024-11-28',
-                'status' => 'shipping',
-                'status_text' => 'Đang giao hàng',
-                'total' => 320000,
-                'items' => [
-                    [
-                        'product_name' => 'Tư Duy Nhanh Và Chậm',
-                        'quantity' => 1,
-                        'price' => 320000,
-                        'image' => 'images/product-page/tu-duy-nhanh-va-cham.jpg'
-                    ]
-                ]
-            ],
-            [
-                'order_id' => 'DH003',
-                'order_date' => '2024-12-01',
-                'status' => 'processing',
-                'status_text' => 'Đang xử lý',
-                'total' => 280000,
-                'items' => [
-                    [
-                        'product_name' => 'Hiểu Về Trái Tim',
-                        'quantity' => 1,
-                        'price' => 280000,
-                        'image' => 'images/product-page/hieu-ve-trai-tim.jpg'
-                    ]
-                ]
-            ]
-        ];
-        
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id']) && !isset($_SESSION['users_id'])) {
+            header('Location: ' . BASE_URL . 'auth/login');
+            exit();
+        }
+
+        $userId = $_SESSION['user_id'] ?? $_SESSION['users_id'] ?? null;
+
+        // Load Order model
+        require_once APP_ROOT . '/models/Order.php';
+        $orderModel = new Order();
+
+        // Lấy danh sách đơn hàng
+        $ordersData = $orderModel->getOrdersByUserId($userId, 20, 0);
+
+        // Format data cho view
+        $orders = [];
+        foreach ($ordersData as $order) {
+            // Lấy sản phẩm trong đơn hàng
+            $items = $orderModel->getOrderProducts($order['order_id']);
+
+            // Format items
+            $formattedItems = [];
+            foreach ($items as $item) {
+                $formattedItems[] = [
+                    'product_id' => $item['product_id'],
+                    'product_name' => $item['title'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                    'subtotal' => $item['subtotal'],
+                    'image' => $item['image_url'] ?? 'images/product-page/default.jpg',
+                    'author' => $item['author'] ?? 'N/A'
+                ];
+            }
+
+            // Map status text
+            $statusMap = [
+                'pending' => 'Chờ xử lý',
+                'processing' => 'Đang xử lý',
+                'shipped' => 'Đang giao',
+                'completed' => 'Hoàn thành',
+                'cancelled' => 'Đã hủy'
+            ];
+
+            $orders[] = [
+                'order_id' => $order['order_id'],
+                'order_date' => $order['created_at'],
+                'status' => $order['status'],
+                'status_text' => $statusMap[$order['status']] ?? $order['status'],
+                'total' => $order['total_amount'],
+                'shipping_fee' => $order['shipping_fee'],
+                'subtotal' => $order['subtotal'],
+                'payment_method' => $order['payment_method'],
+                'shipping_address' => $order['shipping_address'],
+                'note' => $order['note'],
+                'items' => $formattedItems
+            ];
+        }
+
         $data = [
             'title' => 'Đơn hàng của tôi - ' . APP_NAME,
             'page' => 'customer',
             'orders' => $orders
         ];
-        
+
         $this->view('customer/orders', $data);
     }
     

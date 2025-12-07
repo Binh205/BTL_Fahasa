@@ -363,4 +363,138 @@ class AdminController extends Controller {
         }
         $this->redirect('admin/orders');
     }
+
+    /**
+     * API endpoint để lấy chi tiết đơn hàng (AJAX)
+     */
+    public function getOrderDetailAjax() {
+        header('Content-Type: application/json');
+
+        $orderId = $_GET['order_id'] ?? 0;
+
+        if (!$orderId) {
+            echo json_encode(['success' => false, 'message' => 'Thiếu order_id']);
+            return;
+        }
+
+        $order = $this->adminModel->getOrderById($orderId);
+
+        if (!$order) {
+            echo json_encode(['success' => false, 'message' => 'Không tìm thấy đơn hàng']);
+            return;
+        }
+
+        $items = $this->adminModel->getOrderItems($orderId);
+
+        // Map status text
+        $statusMap = [
+            'pending' => 'Chờ xử lý',
+            'processing' => 'Đang xử lý',
+            'shipped' => 'Đang giao',
+            'completed' => 'Hoàn thành',
+            'cancelled' => 'Đã hủy'
+        ];
+
+        echo json_encode([
+            'success' => true,
+            'order' => [
+                'order_id' => $order['order_id'],
+                'created_date' => $order['created_date'],
+                'recipient_name' => $order['recipient_name'],
+                'recipient_phone' => $order['recipient_phone'],
+                'shipping_address' => $order['shipping_address'],
+                'payment_method' => $order['payment_method'],
+                'status' => $order['status'],
+                'status_text' => $statusMap[$order['status']] ?? $order['status'],
+                'subtotal' => $order['subtotal'],
+                'shipping_fee' => $order['shipping_fee'],
+                'total' => $order['total'],
+                'note' => $order['note']
+            ],
+            'items' => $items
+        ]);
+    }
+
+    // ================= CUSTOMER CONTROLLER LOGIC =================
+    public function customers() {
+        $data = [
+            'title' => 'Quản lý Khách hàng',
+            'page' => 'customers',
+            'customers' => $this->adminModel->getAllCustomers(),
+            'contentFile' => APP_ROOT . '/views/admin/customers/index.php'
+        ];
+        $this->view('admin/admin', $data);
+    }
+
+    public function customerDetail($customerId) {
+        $customer = $this->adminModel->getCustomerById($customerId);
+        if (!$customer) {
+            $this->redirect('admin/customers');
+            return;
+        }
+
+        $data = [
+            'title' => 'Chi tiết khách hàng: ' . $customer['fullname'],
+            'page' => 'customers',
+            'customer' => $customer,
+            'orders' => $this->adminModel->getCustomerOrders($customerId),
+            'stats' => $this->adminModel->getCustomerStats($customerId),
+            'contentFile' => APP_ROOT . '/views/admin/customers/detail.php'
+        ];
+        $this->view('admin/admin', $data);
+    }
+
+    public function deleteCustomer() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0) {
+            $this->adminModel->deleteCustomer($id);
+        }
+        $this->redirect('admin/customers');
+    }
+
+    // ================= CATEGORY CONTROLLER LOGIC =================
+    public function categories() {
+        $data = [
+            'title' => 'Quản lý Danh mục',
+            'page' => 'categories',
+            'categories' => $this->adminModel->getAllCategories(),
+            'contentFile' => APP_ROOT . '/views/admin/categories/index.php'
+        ];
+        $this->view('admin/admin', $data);
+    }
+
+    public function createCategory() {
+        if ($this->isPost()) {
+            $categoryData = [
+                'category_name' => $_POST['category_name'] ?? '',
+                'description' => $_POST['description'] ?? ''
+            ];
+
+            $this->adminModel->createCategory($categoryData);
+            $this->redirect('admin/categories');
+        }
+    }
+
+    public function updateCategory() {
+        if ($this->isPost()) {
+            $categoryId = $_POST['category_id'] ?? 0;
+            $categoryData = [
+                'category_name' => $_POST['category_name'] ?? '',
+                'description' => $_POST['description'] ?? ''
+            ];
+
+            if ($categoryId > 0) {
+                $this->adminModel->updateCategory($categoryId, $categoryData);
+            }
+            $this->redirect('admin/categories');
+        }
+    }
+
+    public function deleteCategory() {
+        $id = $_GET['id'] ?? 0;
+        if ($id > 0) {
+            $this->adminModel->deleteCategory($id);
+        }
+        $this->redirect('admin/categories');
+    }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Dec 07, 2025 at 01:06 PM
+-- Generation Time: Dec 07, 2025 at 09:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -71,10 +71,8 @@ INSERT INTO `cart_items` (`user_id`, `product_id`, `quantity`, `added_date`) VAL
 (101, 1, 2, '2025-12-06 15:30:38'),
 (101, 2, 1, '2025-12-06 15:30:55'),
 (103, 2, 2, '2025-12-06 15:33:20'),
-(111, 2, 1, '2025-12-07 19:04:47'),
-(111, 3, 1, '2025-12-07 19:05:52'),
-(111, 9, 1, '2025-12-07 19:01:43'),
-(111, 11, 1, '2025-12-07 19:05:15');
+(111, 2, 3, '2025-12-06 15:35:51'),
+(111, 7, 2, '2025-12-07 08:04:53');
 
 -- --------------------------------------------------------
 
@@ -228,16 +226,6 @@ CREATE TABLE `orders` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Thời gian cập nhật'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu thông tin đơn hàng';
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `user_id`, `recipient_name`, `recipient_phone`, `shipping_address`, `payment_method`, `subtotal`, `shipping_fee`, `total_amount`, `status`, `note`, `created_at`, `updated_at`) VALUES
-(1, 111, 'đạt', '0919566866', 'ko biết nữa, Phường Mường Lay, Điện Biên', 'COD', 85000.00, 30000.00, 115000.00, 'completed', '', '2025-12-07 08:10:35', '2025-12-07 08:19:29'),
-(2, 111, 'bình', '0919566866', 'ko biết nữa, Phường Tân Giang, Cao Bằng', 'Credit Card', 92000.00, 30000.00, 122000.00, 'cancelled', '', '2025-12-07 08:27:45', '2025-12-07 11:55:04'),
-(3, 111, 'đạt', '0919566866', 'ko biết nữa, Phường Mường Lay, Điện Biên', 'E-wallet', 468000.00, 30000.00, 498000.00, 'processing', '', '2025-12-07 09:07:45', '2025-12-07 09:12:00'),
-(4, 111, 'đạt', '0919566866', 'ko biết nữa, Phường Mường Lay, Điện Biên', 'COD', 999000.00, 30000.00, 1029000.00, 'pending', '', '2025-12-07 11:48:36', '2025-12-07 11:48:36');
-
 -- --------------------------------------------------------
 
 --
@@ -251,19 +239,6 @@ CREATE TABLE `order_product` (
   `price` decimal(10,2) NOT NULL COMMENT 'Giá tại thời điểm đặt hàng',
   `subtotal` decimal(10,2) NOT NULL COMMENT 'Thành tiền = price * quantity'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng lưu chi tiết sản phẩm trong đơn hàng';
-
---
--- Dumping data for table `order_product`
---
-
-INSERT INTO `order_product` (`order_id`, `product_id`, `quantity`, `price`, `subtotal`) VALUES
-(1, 1, 1, 85000.00, 85000.00),
-(2, 6, 1, 92000.00, 92000.00),
-(3, 9, 1, 468000.00, 468000.00),
-(4, 2, 2, 75000.00, 150000.00),
-(4, 6, 1, 92000.00, 92000.00),
-(4, 9, 1, 468000.00, 468000.00),
-(4, 11, 1, 289000.00, 289000.00);
 
 -- --------------------------------------------------------
 
@@ -825,7 +800,7 @@ ALTER TABLE `news`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID đơn hàng', AUTO_INCREMENT=5;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID đơn hàng';
 
 --
 -- AUTO_INCREMENT for table `pages`
