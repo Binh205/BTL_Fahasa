@@ -1,0 +1,9 @@
+# Bỏ qua thư mục .claude ở bất kỳ đâu trong dự án
+.claude/
+
+# Bỏ qua các file cấu hình cục bộ của IDE
+settings.local.json
+
+# Ví dụ bỏ qua thư mục cache và file log
+/vendor/
+*.log
