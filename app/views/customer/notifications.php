@@ -258,7 +258,7 @@
 </div>
 
 <script>
-// Mark notification as read when clicked
+// Mark notification as read when clicked (UI only)
 document.querySelectorAll('.notification-item').forEach(item => {
     item.addEventListener('click', function() {
         if (this.classList.contains('unread')) {
@@ -268,71 +268,62 @@ document.querySelectorAll('.notification-item').forEach(item => {
     });
 });
 
-// Mark all as read
-<script>
-// mark single (AJAX)
-document.querySelectorAll('.notification-item').forEach(item=>{
-  item.addEventListener('click', function(){
-    const id = this.dataset.id;
-    if (!id) return;
-    // optimistic UI
-    if (this.classList.contains('unread')) this.classList.remove('unread');
+// mark single notification as read (AJAX)
+document.querySelectorAll('.notification-item').forEach(item => {
+    item.addEventListener('click', function() {
+        const id = this.dataset.id;
+        if (!id) return;
+        // optimistic UI
+        if (this.classList.contains('unread')) this.classList.remove('unread');
 
-    fetch('<?= BASE_URL ?>customer/markNotificationRead', {
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body: 'id=' + encodeURIComponent(id)
-    }).then(r=>r.json()).then(res=>{
-      if (!res.success) {
-        // revert if failed
-        item.classList.add('unread');
-        showToast(res.message || 'Không thể đánh dấu', 'danger');
-      } else {
-        updateUnreadCount();
-      }
-    }).catch(()=> {
-      item.classList.add('unread');
-      showToast('Lỗi kết nối', 'danger');
+        fetch('<?= BASE_URL ?>customer/markNotificationRead', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'id=' + encodeURIComponent(id)
+        }).then(r => r.json()).then(res => {
+            if (!res.success) {
+                // revert if failed
+                item.classList.add('unread');
+                showToast(res.message || 'Không thể đánh dấu', 'danger');
+            } else {
+                updateUnreadCount();
+            }
+        }).catch(() => {
+            item.classList.add('unread');
+            showToast('Lỗi kết nối', 'danger');
+        });
     });
-  });
 });
 
-// mark all (AJAX)
-document.getElementById('markAllRead')?.addEventListener('click', function(){
-  const btn = this;
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+// mark all notifications as read (AJAX)
+document.getElementById('markAllRead')?.addEventListener('click', function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
 
-  fetch('<?= BASE_URL ?>customer/markAllNotificationsRead', {
-    method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    body: '' // no body required
-  }).then(r=>r.json()).then(res=>{
-    btn.disabled = false;
-    if (res.success) {
-      document.querySelectorAll('.notification-item.unread').forEach(i=>i.classList.remove('unread'));
-      updateUnreadCount();
-      btn.innerHTML = '<i class="fas fa-check me-2"></i>Đã đánh dấu!';
-      setTimeout(()=> btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc', 1200);
-    } else {
-      showToast(res.message || 'Không thể xử lý', 'danger');
-      btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc';
-    }
-  }).catch(()=> {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc';
-    showToast('Lỗi kết nối', 'danger');
-  });
+    fetch('<?= BASE_URL ?>customer/markAllNotificationsRead', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: '' // no body needed
+    }).then(r => r.json()).then(res => {
+        btn.disabled = false;
+        if (res.success) {
+            document.querySelectorAll('.notification-item.unread').forEach(i => i.classList.remove('unread'));
+            updateUnreadCount();
+            btn.innerHTML = '<i class="fas fa-check me-2"></i>Đã đánh dấu!';
+            setTimeout(() => btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc', 1200);
+        } else {
+            showToast(res.message || 'Không thể xử lý', 'danger');
+            btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc';
+        }
+    }).catch(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-double me-2"></i>Đánh dấu tất cả đã đọc';
+        showToast('Lỗi kết nối', 'danger');
+    });
 });
 
-function updateUnreadCount() {
-    const unreadCount = document.querySelectorAll('.notification-item.unread').length;
-    const countElement = document.getElementById('unreadCount');
-    if (countElement) countElement.textContent = unreadCount;
-}
-</script>
-
-// Update unread count
+// Update unread notification count on UI
 function updateUnreadCount() {
     const unreadCount = document.querySelectorAll('.notification-item.unread').length;
     const countElement = document.getElementById('unreadCount');

@@ -379,7 +379,6 @@ document.querySelectorAll('.btn-remove-wishlist').forEach(btn => {
         });
     });
 });
-</script>
 
 // Add to cart
 document.querySelectorAll('.btn-add-cart').forEach(btn => {
