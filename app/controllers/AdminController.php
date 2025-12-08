@@ -152,13 +152,20 @@ class AdminController extends Controller {
                 'summary' => $_POST['summary'],
                 'content' => $_POST['content'],
                 'category' => $_POST['category'],
-                'author' => $_SESSION['user_name'] ?? 'Admin',
-                'image' => $imagePath ?? 'images/default-news.jpg'
+                'image_url' => $imagePath ?? 'images/default-news.jpg',
+                'published_date' => $_POST['published_date'] ?? date('Y-m-d'),
+                'author_id' => $_SESSION['users_id'] ?? null
             ];
             $this->adminModel->addArticle($data);
             $this->redirect('admin/news');
         }
-        $this->view('admin/news/create');
+
+        $data = [
+            'title' => 'Thêm bài viết mới',
+            'page' => 'news',
+            'contentFile' => APP_ROOT . '/views/admin/news/create.php'
+        ];
+        $this->view('admin/admin', $data);
     }
 
     public function editNews() {
@@ -171,13 +178,19 @@ class AdminController extends Controller {
                 'content' => $_POST['content'],
                 'category' => $_POST['category']
             ];
-            if ($imagePath) $data['image'] = $imagePath;
-            
+            if ($imagePath) $data['image_url'] = $imagePath;
+
             $this->adminModel->updateArticle($id, $data);
             $this->redirect('admin/news');
         }
-        $data = ['article' => $this->adminModel->getArticleById($id)];
-        $this->view('admin/news/edit', $data);
+
+        $data = [
+            'title' => 'Sửa bài viết',
+            'page' => 'news',
+            'article' => $this->adminModel->getArticleById($id),
+            'contentFile' => APP_ROOT . '/views/admin/news/edit.php'
+        ];
+        $this->view('admin/admin', $data);
     }
 
     public function deleteNews() {

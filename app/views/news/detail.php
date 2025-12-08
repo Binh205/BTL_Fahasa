@@ -561,19 +561,18 @@
             <div class="article-meta">
                 <div class="article-author">
                     <i class="fas fa-user"></i>
-                    <span><?= htmlspecialchars($article['author']) ?></span>
+                    <span><?= htmlspecialchars($article['author_name'] ?? 'Admin') ?></span>
                 </div>
                 <div class="article-date">
                     <i class="fas fa-calendar-alt"></i>
-                    <span><?= date('d/m/Y', strtotime($article['published_date'])) ?></span>
+                    <span><?= date('d/m/Y', strtotime($article['published_date'] ?? $article['created_at'])) ?></span>
                 </div>
                 <div class="article-stats">
-                    <span><i class="fas fa-eye"></i> <?= $article['views'] ?> lượt xem</span>
-                    <span><i class="fas fa-comment"></i> <?= $article['comments'] ?> bình luận</span>
+                    <span><i class="fas fa-eye"></i> <?= $article['views'] ?? 0 ?> lượt xem</span>
                 </div>
             </div>
             <div class="article-image">
-                <img src="<?= BASE_URL . $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                <img src="<?= BASE_URL . ($article['image_url'] ?? 'images/news-page/default.jpg') ?>" alt="<?= htmlspecialchars($article['title']) ?>">
             </div>
         </header>
         
@@ -617,7 +616,7 @@
         <!-- Comment Section -->
         <div class="comments-section">
             <h2 class="section-title">
-                <i class="fas fa-comments"></i> Bình luận (<?= $article['comments'] ?>)
+                <i class="fas fa-comments"></i> Bình luận
             </h2>
             
             <!-- Comment Form -->

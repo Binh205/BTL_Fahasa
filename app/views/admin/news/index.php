@@ -35,14 +35,20 @@
                         <tr>
                             <td><?= $item['id'] ?></td>
                             <td>
-                                <img src="<?= BASE_URL . $item['image'] ?>" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                <?php if (!empty($item['image_url'])): ?>
+                                    <img src="<?= BASE_URL . $item['image_url'] ?>" class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                <?php else: ?>
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                        <i class="fas fa-image text-white"></i>
+                                    </div>
+                                <?php endif; ?>
                             </td>
                             <td class="text-wrap" style="max-width: 300px;">
                                 <div class="font-weight-medium"><?= htmlspecialchars($item['title']) ?></div>
-                                <div class="text-muted small text-truncate"><?= htmlspecialchars($item['summary']) ?></div>
+                                <div class="text-muted small text-truncate"><?= htmlspecialchars($item['summary'] ?? '') ?></div>
                             </td>
-                            <td><span class="badge bg-green-lt"><?= $item['category'] ?></span></td>
-                            <td><?= date('d/m/Y', strtotime($item['published_date'])) ?></td>
+                            <td><span class="badge bg-green-lt"><?= $item['category'] ?? 'N/A' ?></span></td>
+                            <td><?= !empty($item['published_date']) ? date('d/m/Y', strtotime($item['published_date'])) : date('d/m/Y', strtotime($item['created_at'])) ?></td>
                             <td>
                                 <a href="<?= BASE_URL ?>admin/editNews?id=<?= $item['id'] ?>" class="btn btn-primary btn-sm">Sửa</a>
                                 <a href="<?= BASE_URL ?>admin/deleteNews?id=<?= $item['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Xóa?')">Xóa</a>

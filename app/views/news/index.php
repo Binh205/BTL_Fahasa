@@ -389,18 +389,17 @@
             <?php foreach ($articles as $article): ?>
                 <a href="<?= BASE_URL ?>news/detail/<?= $article['id'] ?>" class="news-card">
                     <div class="news-image">
-                        <img src="<?= BASE_URL . $article['image'] ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                        <img src="<?= BASE_URL . ($article['image_url'] ?? 'images/news-page/default.jpg') ?>" alt="<?= htmlspecialchars($article['title']) ?>">
                     </div>
                     <div class="news-content">
-                        <div class="news-category"><?= ucfirst(str_replace('-', ' ', $article['category'])) ?></div>
+                        <div class="news-category"><?= ucfirst(str_replace('-', ' ', ($article['category'] ?? 'Tin tức'))) ?></div>
                         <h3 class="news-title"><?= htmlspecialchars($article['title']) ?></h3>
-                        <p class="news-summary"><?= htmlspecialchars($article['summary']) ?></p>
+                        <p class="news-summary"><?= htmlspecialchars($article['summary'] ?? '') ?></p>
                         <div class="news-meta">
-                            <div class="news-author"><?= htmlspecialchars($article['author']) ?></div>
-                            <div class="news-date"><?= date('d/m/Y', strtotime($article['published_date'])) ?></div>
+                            <div class="news-author"><?= htmlspecialchars($article['author_name'] ?? 'Admin') ?></div>
+                            <div class="news-date"><?= date('d/m/Y', strtotime($article['published_date'] ?? $article['created_at'])) ?></div>
                             <div class="news-stats">
-                                <span title="Lượt xem"><i class="fas fa-eye"></i> <?= $article['views'] ?></span>
-                                <span title="Bình luận"><i class="fas fa-comment"></i> <?= $article['comments'] ?></span>
+                                <span title="Lượt xem"><i class="fas fa-eye"></i> <?= $article['views'] ?? 0 ?></span>
                             </div>
                         </div>
                     </div>

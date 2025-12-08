@@ -67,29 +67,60 @@ class Admin extends DB {
 
 // ================= QUẢN LÝ TIN TỨC (NEWS) =================
     public function getAllArticles() {
-        return $this->all("SELECT * FROM news ORDER BY created_at DESC");
+        $sql = "SELECT n.*, u.fullname as author_name
+                FROM news n
+                LEFT JOIN users u ON n.author_id = u.user_id
+                ORDER BY n.created_at DESC";
+        return $this->all($sql);
     }
 
     public function getArticleById($id) {
-        return $this->single("SELECT * FROM news WHERE id = :id", ['id' => $id]);
+        $sql = "SELECT n.*, u.fullname as author_name
+                FROM news n
+                LEFT JOIN users u ON n.author_id = u.user_id
+                WHERE n.id = :id
+                LIMIT 1";
+        return $this->single($sql, ['id' => $id]);
     }
 
     public function addArticle($data) {
-        $sql = "INSERT INTO news (title, content, image_url, author_id)
-                VALUES (:title, :content, :image_url, :author_id)";
-        return $this->query($sql, $data);
+        $sql = "INSERT INTO news (title, summary, content, category, image_url, published_date, author_id)
+                VALUES (:title, :summary, :content, :category, :image_url, :published_date, :author_id)";
+        return $this->query($sql, [
+            'title' => $data['title'],
+            'summary' => $data['summary'] ?? null,
+            'content' => $data['content'],
+            'category' => $data['category'] ?? null,
+            'image_url' => $data['image_url'] ?? null,
+            'published_date' => $data['published_date'] ?? date('Y-m-d'),
+            'author_id' => $data['author_id']
+        ]);
     }
 
     public function updateArticle($id, $data) {
-        // Nếu có ảnh mới thì update cả ảnh, không thì giữ nguyên
+        $sql = "UPDATE news
+                SET title = :title,
+                    summary = :summary,
+                    content = :content,
+                    category = :category";
+
+        $params = [
+            'id' => $id,
+            'title' => $data['title'],
+            'summary' => $data['summary'] ?? null,
+            'content' => $data['content'],
+            'category' => $data['category'] ?? null
+        ];
+
+        // Nếu có ảnh mới thì update
         if (!empty($data['image_url'])) {
-            $sql = "UPDATE news SET title=:title, content=:content, image_url=:image_url WHERE id=:id";
-        } else {
-            $sql = "UPDATE news SET title=:title, content=:content WHERE id=:id";
-            unset($data['image_url']); // Bỏ key image_url khỏi mảng data
+            $sql .= ", image_url = :image_url";
+            $params['image_url'] = $data['image_url'];
         }
-        $data['id'] = $id; // Thêm id vào mảng tham số
-        return $this->query($sql, $data);
+
+        $sql .= " WHERE id = :id";
+
+        return $this->query($sql, $params);
     }
 
     public function deleteArticle($id) {
