@@ -38,7 +38,32 @@ $base = defined('BASE_URL') ? rtrim(BASE_URL, '/') . '/' : '/';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'BTL FAHASA') ?></title>
+
+    <!-- Title & Description -->
+    <title><?= e($title ?? 'BTL FAHASA - Website Bán Sách Trực Tuyến') ?></title>
+    <meta name="description" content="<?= e($description ?? 'BTL FAHASA - Website bán sách trực tuyến uy tín với hàng ngàn đầu sách đa dạng. Mua sách online giá tốt, giao hàng nhanh chóng, ưu đãi hấp dẫn.') ?>">
+    <meta name="keywords" content="<?= e($keywords ?? 'mua sách online, bán sách trực tuyến, fahasa, sách giáo khoa, văn học, self-help, tiểu thuyết, sách thiếu nhi') ?>">
+    <meta name="author" content="Nhóm L01_6 - HCMUT">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= e($ogUrl ?? BASE_URL) ?>">
+    <meta property="og:title" content="<?= e($ogTitle ?? $title ?? 'BTL FAHASA - Website Bán Sách Trực Tuyến') ?>">
+    <meta property="og:description" content="<?= e($ogDescription ?? $description ?? 'Website bán sách trực tuyến uy tín với hàng ngàn đầu sách đa dạng') ?>">
+    <meta property="og:image" content="<?= e($ogImage ?? BASE_URL . 'images/og-default.jpg') ?>">
+    <meta property="og:locale" content="vi_VN">
+    <meta property="og:site_name" content="BTL FAHASA">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="<?= e($ogUrl ?? BASE_URL) ?>">
+    <meta name="twitter:title" content="<?= e($ogTitle ?? $title ?? 'BTL FAHASA') ?>">
+    <meta name="twitter:description" content="<?= e($ogDescription ?? $description ?? 'Website bán sách trực tuyến') ?>">
+    <meta name="twitter:image" content="<?= e($ogImage ?? BASE_URL . 'images/og-default.jpg') ?>">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?= e($canonical ?? BASE_URL . ltrim($_SERVER['REQUEST_URI'] ?? '', '/')) ?>">
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

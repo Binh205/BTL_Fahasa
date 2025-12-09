@@ -1,42 +1,177 @@
-# 📚 BTL FAHASA - Website Bán Sách Trực Tuyến
+# BTL FAHASA - Website Bán Sách Trực Tuyến
 
-> Dự án Bài Tập Lớn môn Lập Trình Web - Xây dựng website bán sách trực tuyến sử dụng kiến trúc MVC thuần PHP
+> Dự án Bài Tập Lớn môn Lập Trình Web - Xây dựng website bán sách trực tuyến lấy cảm hứng từ Fahasa.com, sử dụng kiến trúc MVC thuần PHP
+
+[![License](https://img.shields.io/badge/license-Educational-blue.svg)](LICENSE)
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-777BB4?logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
 ## 📋 Mô tả dự án
 
-Website bán sách trực tuyến **BTL Fahasa** được xây dựng với các tính năng:
+Website bán sách trực tuyến **BTL Fahasa** là một nền tảng thương mại điện tử hoàn chỉnh, được phát triển với mục tiêu học tập và thực hành kiến trúc MVC. Dự án tái hiện các tính năng chính của Fahasa.com với giao diện thân thiện, hiện đại và trải nghiệm người dùng mượt mà.
 
-### 🎯 Chức năng cho Khách hàng
+### Chức năng cho Khách hàng (User)
 
-- 🔍 Tìm kiếm và lọc sản phẩm theo danh mục
-- 📖 Xem chi tiết sản phẩm, sản phẩm liên quan (còn comment đánh giá)
-- 🛒 Giỏ hàng: Thêm/Xóa/Cập nhật số lượng (đã xong)
-- 👤 Đăng ký/Đăng nhập tài khoản (đã xong)
-- 📦 Quản lý đơn hàng cá nhân (còn cập nhật đơn hàng của tôi)
-- ❤️ Danh sách sản phẩm yêu thích
-- 🔔 Thông báo đơn hàng và khuyến mãi
-- 📰 Đọc tin tức, bài viết (Hiếu làm)
-- ❓ Hỏi đáp (Nghi làm)
+**Người dùng chưa đăng nhập (Guest):**
 
-### 🔧 Chức năng cho Admin
+- 🏠 Truy cập trang chủ với banner quảng cáo và sản phẩm nổi bật
+- 📚 Duyệt danh sách sản phẩm theo danh mục (Grid layout responsive)
+- 🔍 Tìm kiếm sản phẩm theo tên, tác giả
+- 📖 Xem chi tiết sản phẩm với thông tin đầy đủ
+- 📰 Đọc tin tức, bài viết về sách
+- ℹ️ Xem trang giới thiệu, hỏi đáp, liên hệ
+- 📝 Đăng ký tài khoản mới
+- 🔑 Đăng nhập vào hệ thống
 
-- 📚 Quản lý sản phẩm (CRUD) (cơ bản xong)
-- Quản lý đơn hàng (cơ bản xong)
--     Quản lý danh mục sản phẩm                                                                (cơ bản xong)
-- 📰 Quản lý tin tức/bài viết (Hiếu làm)
-- ❓ Quản lý câu hỏi/câu trả lời (Nghi làm)
-- 📧 Quản lý khách hàng (cơ bản xong)
+**Người dùng đã đăng nhập (Customer):**
+
+- 🛒 Thêm sản phẩm vào giỏ hàng
+- ➕➖ Quản lý giỏ hàng (CRUD)
+- 💰 Xem tổng tiền tự động khi cập nhật giỏ hàng
+- 👤 Xem và chỉnh sửa thông tin cá nhân
+- 📦 Xem lịch sử đơn hàng (Tất cả, Đang xử lý, Đang giao, Hoàn thành, Đã hủy)
+- ❤️ Quản lý danh sách sản phẩm yêu thích
+- 🔔 Nhận thông báo về đơn hàng và khuyến mãi
+- 🚪 Đăng xuất khỏi hệ thống
+
+### 🔧 Chức năng cho Admin (Quản trị viên)
+
+**Dashboard & Analytics:**
+
+- 📊 Xem thống kê tổng quan (doanh thu, đơn hàng, sản phẩm, khách hàng)
+- 📈 Biểu đồ phân tích doanh số theo thời gian
+
+**Quản lý sản phẩm:**
+
+- ➕ Thêm sản phẩm mới với đầy đủ thông tin
+- ✏️ Chỉnh sửa thông tin sản phẩm
+- 🗑️ Xóa sản phẩm
+- 📁 Quản lý danh mục sản phẩm
+- 🖼️ Upload và quản lý hình ảnh sản phẩm
+
+**Quản lý đơn hàng:**
+
+- 👀 Xem danh sách tất cả đơn hàng
+- 🔄 Cập nhật trạng thái đơn hàng
+- 📋 Xem chi tiết đơn hàng
+
+**Quản lý nội dung:**
+
+- 📰 Thêm/sửa/xóa tin tức và bài viết
+- ❓ Quản lý câu hỏi/câu trả lời trong phần Q&A
+- 📧 Xem và trả lời các liên hệ từ khách hàng
+
+**Quản lý người dùng:**
+
+- 👥 Xem danh sách khách hàng
+- 🔐 Quản lý quyền truy cập (user/admin)
+- 🚫 Kích hoạt/vô hiệu hóa tài khoản
+
+**Cấu hình hệ thống:**
+
 - ⚙️ Cấu hình thông tin website
-- 📝 Chỉnh sửa nội dung trang tĩnh
+- 📝 Chỉnh sửa nội dung trang tĩnh (About, Contact)
 
 ### 💻 Công nghệ sử dụng
 
-- **Backend:** PHP thuần (không framework)
-- **Database:** MySQL/MariaDB
-- **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript
-- **Icon:** Font Awesome 6
-- **Architecture:** MVC Pattern
-- **Security:** PDO Prepared Statements, Password Hashing
+**Backend:**
+
+- PHP 7.4+ (thuần, không framework)
+- Custom MVC Framework tự xây dựng
+- PDO (PHP Data Objects) cho database abstraction
+- Session-based authentication
+
+**Database:**
+
+- MySQL 8.0+ / MariaDB
+- Thiết kế schema chuẩn hóa với foreign keys
+- Indexing cho tối ưu hiệu năng
+
+**Frontend:**
+
+- HTML5 với semantic elements
+- CSS3 (Custom styles + Bootstrap 5.3)
+- JavaScript (Vanilla JS + AJAX)
+- Bootstrap 5.3 - Responsive grid system
+- Font Awesome 6 - Icons
+- Google Fonts (Roboto)
+
+**Development Tools:**
+
+- XAMPP (Apache + PHP + MySQL)
+- Git & GitHub cho version control
+- Visual Studio Code / PhpStorm
+- LaTeX (Overleaf) cho documentation
+
+**Architecture & Design Patterns:**
+
+- MVC (Model-View-Controller) Pattern
+- Repository Pattern cho data access
+- Front Controller Pattern (Router)
+- Dependency Injection (DI) cơ bản
+
+**Security:**
+
+- PDO Prepared Statements (SQL Injection prevention)
+- Password Hashing với `password_hash()` (bcrypt)
+- XSS Prevention với `htmlspecialchars()`
+- Session Security & Role-based Access Control
+- HTTPS ready (SSL/TLS support)
+
+---
+
+## ✨ Đặc điểm nổi bật
+
+### 🏗️ Kiến trúc MVC tự xây dựng
+
+- **Không sử dụng framework** - Code từ đầu để hiểu sâu về MVC
+- **Router linh hoạt** - URL-friendly với .htaccess rewriting
+- **Base Controller** - Kế thừa và tái sử dụng code
+- **Database Abstraction** - PDO wrapper cho queries an toàn
+
+### 🎨 Giao diện & UX
+
+- **Responsive Design** - Tương thích mobile, tablet, desktop
+- **Bootstrap 5** - Grid system và components hiện đại
+- **Fahasa-inspired** - Màu sắc và layout giống Fahasa.com
+- **Font Awesome Icons** - Hơn 2000 icons miễn phí
+- **Smooth Animations** - Transitions và hover effects
+
+### 🔒 Bảo mật
+
+- **SQL Injection Protection** - 100% queries dùng prepared statements
+- **XSS Prevention** - Escape output trong views
+- **Password Security** - Bcrypt hashing với cost factor 10
+- **Session Management** - Secure session handling
+- **Role-based Access** - Phân quyền user/admin rõ ràng
+
+### 🔍 SEO (Search Engine Optimization)
+
+- **Meta Tags** - Title, Description, Keywords động theo từng trang
+- **Open Graph Tags** - Tối ưu khi share lên Facebook, Zalo
+- **Twitter Cards** - Hiển thị đẹp khi share lên Twitter
+- **Canonical URLs** - Tránh duplicate content
+- **robots.txt** - Hướng dẫn search engines crawl website
+- **Semantic HTML** - Sử dụng thẻ HTML5 semantic
+- **Alt text** - Mô tả cho images (accessibility + SEO)
+- **URL-friendly** - Clean URLs với slug
+
+### ⚡ Hiệu năng
+
+- **Lazy Loading** - Tải ảnh khi cần
+- **CSS/JS Minification** - Giảm kích thước file
+- **Database Indexing** - Tối ưu truy vấn
+- **Session Cart** - Giỏ hàng nhanh, không cần database
+
+### 📱 Tính năng nổi bật
+
+- **AJAX Cart** - Cập nhật giỏ hàng không reload trang
+- **Search & Filter** - Tìm kiếm và lọc sản phẩm real-time
+- **Wishlist** - Lưu sản phẩm yêu thích
+- **Order Tracking** - Theo dõi đơn hàng với nhiều trạng thái
+- **News System** - Hệ thống tin tức với categories
+- **Admin Dashboard** - Panel quản trị đầy đủ tính năng
 
 ---
 
@@ -82,7 +217,7 @@ define('DB_HOST', 'localhost');
 define('DB_USER', 'root');           // ← Sửa username MySQL của bạn
 define('DB_PASS', '');               // ← Sửa password MySQL của bạn
 define('DB_NAME', 'fahasa');         // ← Tên database
-define('DB_PORT', 3307);             // ← Sửa port nếu khác (mặc định: 3306)
+define('DB_PORT', 3307);             // ← Sửa port nếu khác (mặc định máy bình thường: 3306)
 
 // Dòng 23: Sửa tên thư mục dự án
 define('PROJECT_NAME', 'BTL_Fahasa'); // ← Tên thư mục trong htdocs
@@ -292,46 +427,214 @@ Response to User
 
 ## 📊 Cấu trúc Database
 
+### ERD - Entity Relationship Diagram
+
+Database được thiết kế chuẩn hóa đến dạng chuẩn 3NF (Third Normal Form) với 15+ bảng chính.
+
 ### Các bảng chính
 
+**1. users - Quản lý người dùng**
+
 ```sql
-users                    # Tài khoản người dùng
-├── user_id (PK)
-├── fullname
-├── email
-├── phone
-├── password (hashed)
-├── role (user/admin)
-└── created_date
-
-products                 # Sản phẩm
-├── product_id (PK)
-├── name
-├── price
-├── old_price
-├── category
-├── description
-└── image
-
-cart                     # Giỏ hàng
-├── cart_id (PK)
-├── customer_id (FK)
-└── quantity
-
-orders                   # Đơn hàng
-├── order_id (PK)
-├── customer_id (FK)
-├── total
-├── status
-└── order_date
-
-author_of_product        # Tác giả - Sản phẩm (N-N)
-├── product_id (FK)
-└── author_name
-
-categorizes              # Phân loại danh mục
-└── ...
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    fullname VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    password VARCHAR(255) NOT NULL,  -- bcrypt hashed
+    address TEXT,
+    gender ENUM('male', 'female', 'other'),
+    birthday DATE,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    INDEX idx_role (role)
+);
 ```
+
+**2. products - Sản phẩm**
+
+```sql
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    slug VARCHAR(200) UNIQUE,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    old_price DECIMAL(10,2),
+    discount_percent INT DEFAULT 0,
+    image VARCHAR(255),
+    category_id INT,
+    stock INT DEFAULT 0,
+    sold INT DEFAULT 0,
+    rating DECIMAL(2,1) DEFAULT 0,
+    view_count INT DEFAULT 0,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+    INDEX idx_category (category_id),
+    INDEX idx_price (price),
+    INDEX idx_status (status)
+);
+```
+
+**3. categories - Danh mục sản phẩm**
+
+```sql
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    slug VARCHAR(100) UNIQUE,
+    description TEXT,
+    parent_id INT NULL,
+    sort_order INT DEFAULT 0,
+    FOREIGN KEY (parent_id) REFERENCES categories(category_id)
+);
+```
+
+**4. orders - Đơn hàng**
+
+```sql
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    total DECIMAL(12,2) NOT NULL,
+    status ENUM('pending', 'processing', 'shipping', 'completed', 'cancelled')
+           DEFAULT 'pending',
+    payment_method ENUM('cod', 'bank_transfer', 'vnpay', 'momo'),
+    shipping_address TEXT NOT NULL,
+    shipping_phone VARCHAR(15),
+    note TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id),
+    INDEX idx_customer (customer_id),
+    INDEX idx_status (status),
+    INDEX idx_created (created_at)
+);
+```
+
+**5. order_details - Chi tiết đơn hàng**
+
+```sql
+CREATE TABLE order_details (
+    detail_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+```
+
+**6. cart - Giỏ hàng**
+
+```sql
+CREATE TABLE cart (
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_cart_item (customer_id, product_id)
+);
+```
+
+**7. wishlist - Sản phẩm yêu thích**
+
+```sql
+CREATE TABLE wishlist (
+    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_wishlist_item (customer_id, product_id)
+);
+```
+
+**8. news - Tin tức/Bài viết**
+
+```sql
+CREATE TABLE news (
+    news_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    slug VARCHAR(200) UNIQUE,
+    content TEXT,
+    image VARCHAR(255),
+    author_id INT,
+    category VARCHAR(50),
+    view_count INT DEFAULT 0,
+    status ENUM('draft', 'published') DEFAULT 'draft',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (author_id) REFERENCES users(user_id),
+    INDEX idx_status (status),
+    INDEX idx_category (category)
+);
+```
+
+**9. notifications - Thông báo**
+
+```sql
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    title VARCHAR(100),
+    content TEXT,
+    type ENUM('order', 'promotion', 'system'),
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_customer_read (customer_id, is_read)
+);
+```
+
+**10. contacts - Liên hệ**
+
+```sql
+CREATE TABLE contacts (
+    contact_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(15),
+    subject VARCHAR(200),
+    message TEXT NOT NULL,
+    status ENUM('new', 'processing', 'resolved') DEFAULT 'new',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_status (status)
+);
+```
+
+### Quan hệ giữa các bảng
+
+```
+users (1) ----< (N) orders
+users (1) ----< (N) cart
+users (1) ----< (N) wishlist
+users (1) ----< (N) notifications
+users (1) ----< (N) news (as author)
+
+products (1) ----< (N) order_details
+products (1) ----< (N) cart
+products (1) ----< (N) wishlist
+products (N) ----< (1) categories
+
+orders (1) ----< (N) order_details
+```
+
+### Indexes cho tối ưu hiệu năng
+
+- **Primary Keys:** Tự động indexed
+- **Foreign Keys:** Indexed cho JOIN queries
+- **Search Fields:** email, slug, status
+- **Date Fields:** created_at cho sắp xếp theo thời gian
 
 ---
 
@@ -360,16 +663,14 @@ categorizes              # Phân loại danh mục
 
 ### Controllers
 
-- `{Name}Controller.php` - PascalCase, suffix "Controller"
-- Method: `camelCase`
+- `{Name}Controller.php`
 
 ### Models
 
-- `{Name}.php` - PascalCase, singular noun
+- `{Name}.php`
 
 ### Views
 
-- Folder: `snake_case` hoặc `kebab-case`
 - File: `lowercase.php`
 
 ### Database
@@ -506,7 +807,6 @@ categorizes              # Phân loại danh mục
 - [ ] Coupon/Voucher system
 - [ ] Order tracking
 - [ ] Export reports (Excel/PDF)
-- [ ] RESTful API
 
 ### Cải tiến hiệu năng
 
@@ -518,28 +818,207 @@ categorizes              # Phân loại danh mục
 
 ---
 
-## 👥 Nhóm phát triển
+## 🎯 Mục tiêu dự án
 
-- **Thành viên 1:** [Tên]
-- **Thành viên 2:** [Tên]
-- **Thành viên 3:** [Tên]
+### Mục tiêu học tập:
+
+1. ✅ Hiểu và áp dụng kiến trúc **MVC (Model-View-Controller)** trong PHP
+2. ✅ Nắm vững các công nghệ frontend: **HTML5, CSS3, JavaScript, Bootstrap 5**
+3. ✅ Thực hành xây dựng ứng dụng web **full-stack** hoàn chỉnh
+4. ✅ Hiểu về quy trình phát triển phần mềm theo nhóm và Git workflow
+5. ✅ Áp dụng các biện pháp **bảo mật web** cơ bản (SQL Injection, XSS, Password Hashing)
+
+### Sản phẩm cuối cùng:
+
+- ✅ Website thương mại điện tử bán sách hoàn chỉnh
+- ✅ Tài liệu báo cáo chi tiết về dự án (LaTeX)
+- ✅ Source code có cấu trúc rõ ràng, dễ bảo trì
+- ✅ Database schema được thiết kế chuẩn hóa
+
+---
+
+## 📸 Screenshots
+
+### Giao diện khách hàng
+
+| Trang chủ                                | Danh sách sản phẩm                              | Chi tiết sản phẩm                               |
+| ---------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| ![Home](L01_Report/Images/home_page.png) | ![Products](L01_Report/Images/product_list.png) | ![Detail](L01_Report/Images/product_detail.png) |
+
+| Giỏ hàng                                 | Thông tin tài khoản                                | Đơn hàng                                  |
+| ---------------------------------------- | -------------------------------------------------- | ----------------------------------------- |
+| ![Cart](L01_Report/Images/cart_page.png) | ![Profile](L01_Report/Images/customer_profile.png) | ![Orders](L01_Report/Images/my_order.png) |
+
+### Giao diện Admin
+
+| Dashboard                                           | Quản lý sản phẩm                                  | Quản lý tin tức                           |
+| --------------------------------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| ![Dashboard](L01_Report/Images/dashboard_admin.jpg) | ![Products](L01_Report/Images/products_admin.jpg) | ![News](L01_Report/Images/news_admin.jpg) |
+
+---
+
+## 👥 Nhóm phát triển - L01_6
+
+| Thành viên       | MSSV    | Email              | Nhiệm vụ                     |
+| ---------------- | ------- | ------------------ | ---------------------------- |
+| **Nguyễn Văn A** | 2211xxx | email@hcmut.edu.vn | Team Lead, Backend, Database |
+| **Trần Thị B**   | 2211xxx | email@hcmut.edu.vn | Frontend, UI/UX Design       |
+| **Lê Văn C**     | 2211xxx | email@hcmut.edu.vn | Backend, Admin Panel         |
+
+**Giảng viên hướng dẫn:** Nguyễn Hữu Hiếu
+
+---
+
+## 📄 Tài liệu & Báo cáo
+
+### 📚 Documentation
+
+- **Báo cáo LaTeX:** [`L01_Report/main.pdf`](L01_Report/main.pdf) (36 trang)
+- **Source LaTeX:** [`L01_Report/`](L01_Report/)
+- **Database Schema:** [`db/fahasa.sql`](db/fahasa.sql)
+- **API Documentation:** Coming soon
+
+### 📖 Nội dung báo cáo
+
+1. **Giới thiệu** - E-commerce, Fahasa template, mục tiêu dự án
+2. **Cơ sở lý thuyết** - HTML5, CSS3, JavaScript, PHP, MVC, Bootstrap
+3. **Thiết kế ứng dụng** - Database, MVC architecture, tính năng hệ thống
+4. **Hiện thực** - Screenshots, code snippets quan trọng
+5. **Hướng dẫn cài đặt** - Chi tiết từng bước
+6. **Phân công công việc** - Team contributions
+7. **Tài liệu tham khảo** - References
+
+### 🎬 Demo
+
+- **Live Demo:** Coming soon
+- **Video Demo:** Coming soon
+- **Screenshots:** Xem phần [Screenshots](#-screenshots) ở trên
+
+---
+
+## 🎓 Học hỏi & Tham khảo
+
+### Tài liệu tham khảo chính
+
+1. **PHP Documentation** - https://www.php.net/docs.php
+2. **Bootstrap 5 Documentation** - https://getbootstrap.com/docs/5.3/
+3. **MySQL Documentation** - https://dev.mysql.com/doc/
+4. **MDN Web Docs** - https://developer.mozilla.org/
+5. **W3Schools** - https://www.w3schools.com/
+
+### Nguồn cảm hứng
+
+- **Fahasa.com** - https://www.fahasa.com/
+- **Tiki.vn** - https://tiki.vn/
+- **Shopee.vn** - https://shopee.vn/
+
+### Công cụ & Resources
+
+- **Font Awesome Icons** - https://fontawesome.com/
+- **Google Fonts** - https://fonts.google.com/
+- **Color Palette** - Fahasa brand colors
+- **Stock Images** - Unsplash, Pexels
 
 ---
 
 ## 📄 License
 
-Dự án này được phát triển cho mục đích học tập (Bài Tập Lớn môn Lập Trình Web).
+Dự án này được phát triển cho **mục đích học tập** (Bài Tập Lớn môn Lập Trình Web - HCMUT).
+
+```
+Copyright (c) 2024 Nhóm L01_6
+Trường Đại học Bách Khoa - ĐHQG TP.HCM
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software for educational purposes only.
+```
+
+⚠️ **Lưu ý:** Dự án này chỉ dùng để học tập và nghiên cứu. Không sử dụng cho mục đích thương mại.
+
+---
+
+## 🙏 Lời cảm ơn
+
+Chúng em xin gửi lời cảm ơn chân thành đến:
+
+- **Thầy Nguyễn Hữu Hiếu** - Giảng viên hướng dẫn
+- **Khoa Khoa học và Kỹ thuật Máy tính** - BK ĐHQG TP.HCM
+- **Fahasa.com** - Nguồn cảm hứng cho giao diện
+- **Cộng đồng PHP & Web Development** - Tài liệu và hỗ trợ
 
 ---
 
 ## 📞 Liên hệ & Hỗ trợ
 
-Nếu gặp vấn đề, vui lòng:
+### Gặp vấn đề?
 
-1. Kiểm tra phần **Xử lý lỗi thường gặp** ở trên
-2. Tạo issue trên GitHub
-3. Liên hệ team qua email
+1. ✅ Kiểm tra phần **[Xử lý lỗi thường gặp](#-xử-lý-lỗi-thường-gặp)** ở trên
+2. 📖 Đọc **[Hướng dẫn cài đặt](#-hướng-dẫn-cài-đặt)** chi tiết
+3. 🔍 Tìm kiếm trong **Issues** đã có
+4. 📝 Tạo **Issue mới** trên GitHub với thông tin chi tiết:
+   - Mô tả lỗi
+   - Screenshot (nếu có)
+   - Môi trường (OS, PHP version, XAMPP version)
+   - Steps to reproduce
+
+### GitHub Repository
+
+- **URL:** https://github.com/Binh205/BTL_Fahasa
+- **Issues:** https://github.com/Binh205/BTL_Fahasa/issues
+- **Pull Requests:** Welcome!
+
+### Liên hệ nhóm phát triển
+
+- **Email:** htbinh205@gmail.com
+- **Facebook Group:** [Link]
 
 ---
 
-**🎉 Chúc bạn triển khai thành công!**
+## 🌟 Contributing
+
+Mọi đóng góp đều được chào đón! Nếu bạn muốn cải thiện dự án:
+
+1. Fork repository
+2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Tạo Pull Request
+
+### Coding Standards
+
+- Follow PSR-12 cho PHP code
+- Use meaningful variable/function names
+- Comment code khi cần thiết
+- Test trước khi commit
+
+---
+
+## 📈 Changelog
+
+### Version 1.0.0 (2024-12-09)
+
+✅ **Initial Release**
+
+- Hoàn thành tất cả tính năng cơ bản
+- Giao diện User hoàn chỉnh
+- Admin Panel đầy đủ
+- Database schema hoàn thiện
+- Documentation đầy đủ (LaTeX Report)
+
+### Future Versions
+
+- [ ] Version 1.1.0 - Payment integration (VNPay, MoMo)
+- [ ] Version 1.2.0 - Email notifications
+- [ ] Version 2.0.0 - Mobile app (React Native)
+
+---
+
+<div align="center">
+
+**🎉 Chúc bạn triển khai thành công! 🎉**
+
+Made with ❤️ by **Nhóm L01_6** - HCMUT
+
+[⬆ Back to top](#-btl-fahasa---website-bán-sách-trực-tuyến)
+
+</div>

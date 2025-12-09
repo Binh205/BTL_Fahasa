@@ -13,8 +13,6 @@ Mặc dù dự án hiện tại sử dụng dữ liệu mock, thiết kế datab
 
 \begin{table}[H]
 \centering
-\caption{Bảng Users - Quản lý người dùng}
-\label{tab:users}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
@@ -30,12 +28,12 @@ role & ENUM & 'customer', 'admin' \\
 created\_at & DATETIME & Thời gian tạo tài khoản \\
 \hline
 \end{tabular}
+\caption{Bảng Users - Quản lý người dùng}
+\label{tab:users}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{Bảng Products - Quản lý sản phẩm}
-\label{tab:products}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
@@ -52,12 +50,12 @@ author & VARCHAR(100) & Tác giả sách \\
 stock & INT & Số lượng tồn kho \\
 \hline
 \end{tabular}
+\caption{Bảng Products - Quản lý sản phẩm}
+\label{tab:products}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{Bảng Orders - Quản lý đơn hàng}
-\label{tab:orders}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
@@ -70,20 +68,66 @@ shipping\_address & TEXT & Địa chỉ giao hàng \\
 created\_at & DATETIME & Thời gian đặt hàng \\
 \hline
 \end{tabular}
+\caption{Bảng Orders - Quản lý đơn hàng}
+\label{tab:orders}
 \end{table}
 
 % ------------------------------------------
-\subsection{Mô hình MVC}
+\subsection{Kiến trúc MVC tự xây dựng}
 
-Dự án áp dụng mô hình MVC tự xây dựng (custom MVC framework) không sử dụng framework có sẵn như Laravel hay Symfony.
+Dự án áp dụng mô hình MVC (Model-View-Controller) được xây dựng hoàn toàn từ đầu, không sử dụng framework có sẵn như Laravel hay Symfony. Điều này giúp hiểu sâu về cách thức hoạt động của pattern MVC.
 
-\textbf{Các thành phần:}
+\subsubsection{Luồng hoạt động MVC}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm, auto,
+    box/.style={rectangle, draw, fill=blue!20, text width=3cm, text centered, rounded corners, minimum height=1cm},
+    arrow/.style={->,>=stealth,thick}]
+
+    \node[box] (user) {User Request};
+    \node[box, below of=user] (router) {Router (App.php)};
+    \node[box, below of=router] (controller) {Controller};
+    \node[box, left of=controller, node distance=6cm] (model) {Model};
+    \node[box, right of=controller, node distance=6cm] (view) {View};
+    \node[box, below of=controller] (response) {HTTP Response};
+
+    \draw[arrow] (user) -- (router);
+    \draw[arrow] (router) -- node[right] {Parse URL} (controller);
+    \draw[arrow] (controller) -- node[above] {Query} (model);
+    \draw[arrow] (model) -- node[below] {Data} (controller);
+    \draw[arrow] (controller) -- node[above] {Render} (view);
+    \draw[arrow] (view) -- node[below] {HTML} (controller);
+    \draw[arrow] (controller) -- (response);
+\end{tikzpicture}
+\caption{Luồng xử lý request trong mô hình MVC}
+\label{fig:mvc-flow}
+\end{figure}
+
+\subsubsection{Các thành phần Core}
+
+\textbf{1. Router - App.php:}
 \begin{itemize}
-    \item \textbf{app/core/App.php:} Router chính, phân tích URL và gọi controller tương ứng
-    \item \textbf{app/core/Controller.php:} Base controller với các method chung
-    \item \textbf{app/controllers/:} Các controller xử lý logic
-    \item \textbf{app/models/:} Các model tương tác với dữ liệu
-    \item \textbf{app/views/:} Các view hiển thị giao diện
+    \item Parse URL thành: \texttt{[controller, method, params]}
+    \item Load controller tương ứng
+    \item Gọi method với parameters
+    \item Xử lý 404 nếu không tìm thấy
+\end{itemize}
+
+\textbf{2. Base Controller - Controller.php:}
+\begin{itemize}
+    \item \texttt{model(\$name)}: Load model động
+    \item \texttt{view(\$view, \$data)}: Render view với data
+    \item \texttt{redirect(\$path)}: Chuyển hướng trang
+    \item \texttt{isPost()}, \texttt{isGet()}: Kiểm tra HTTP method
+\end{itemize}
+
+\textbf{3. Database Wrapper - DB.php:}
+\begin{itemize}
+    \item PDO connection singleton
+    \item \texttt{query(\$sql, \$params)}: Execute với prepared statements
+    \item \texttt{single()}, \texttt{all()}: Fetch results
+    \item Transaction support
 \end{itemize}
 
 

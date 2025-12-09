@@ -5,80 +5,219 @@
 \section{Giới thiệu}
 
 % ------------------------------------------
-\subsection{Website thương mại điện tử}
+\subsection{Bối cảnh và động lực thực hiện}
 
-Trong thời đại công nghệ số ngày nay, thương mại điện tử (E-commerce) đã trở thành một phần không thể thiếu trong đời sống kinh tế - xã hội. Website thương mại điện tử là nền tảng cho phép doanh nghiệp và người tiêu dùng thực hiện các giao dịch mua bán trực tuyến một cách thuận tiện và nhanh chóng.
+Trong bối cảnh công nghệ 4.0, thương mại điện tử (E-commerce) đang phát triển mạnh mẽ tại Việt Nam với tốc độ tăng trưởng hàng năm lên đến 25-30\%\footnote{Theo báo cáo của Hiệp hội Thương mại điện tử Việt Nam (VECOM) năm 2024}. Việc mua sắm trực tuyến đã trở thành thói quen phổ biến của người tiêu dùng, đặc biệt là thế hệ trẻ.
 
-Các đặc điểm nổi bật của website thương mại điện tử:
-\begin{itemize}
-    \item \textbf{Tiếp cận rộng:} Không giới hạn về địa lý, khách hàng có thể truy cập mọi lúc mọi nơi
-    \item \textbf{Chi phí thấp:} Giảm chi phí vận hành so với cửa hàng truyền thống
-    \item \textbf{Cá nhân hóa:} Đề xuất sản phẩm phù hợp với từng khách hàng
-    \item \textbf{Dữ liệu phân tích:} Thu thập và phân tích hành vi người dùng
-\end{itemize}
+\textbf{Thương mại điện tử} là mô hình kinh doanh sử dụng nền tảng công nghệ số để thực hiện các giao dịch mua bán, thanh toán và giao nhận hàng hóa qua Internet. Mô hình này mang lại nhiều lợi ích:
 
-Theo xu hướng phát triển, các website thương mại điện tử ngày càng chú trọng đến trải nghiệm người dùng (UX), tốc độ tải trang, và tính bảo mật trong giao dịch.
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Tiêu chí} & \textbf{E-commerce} & \textbf{Truyền thống} \\
+\hline
+Phạm vi tiếp cận & Toàn quốc/Toàn cầu & Địa phương \\
+\hline
+Thời gian hoạt động & 24/7 & Giờ hành chính \\
+\hline
+Chi phí vận hành & Thấp (không thuê mặt bằng) & Cao (thuê mặt bằng, nhân sự) \\
+\hline
+Cá nhân hóa & Cao (AI, Big Data) & Thấp \\
+\hline
+Dữ liệu phân tích & Theo thời gian thực & Hạn chế \\
+\hline
+\end{tabular}
+\caption{So sánh thương mại điện tử và thương mại truyền thống}
+\label{tab:ecommerce-comparison}
+\end{table}
+
+Với những ưu điểm vượt trội, E-commerce đã và đang thay đổi căn bản cách thức kinh doanh và mua sắm hiện đại.
 
 % ------------------------------------------
-\subsection{Template Fahasa}
+\subsection{Nghiên cứu mô hình Fahasa.com}
 
-Fahasa.com là một trong những website bán sách trực tuyến hàng đầu tại Việt Nam, thuộc công ty cổ phần Phát hành Sách TP.HCM (FAHASA). Website cung cấp đa dạng các loại sách từ sách giáo khoa, văn học, self-help đến các sản phẩm văn phòng phẩm và đồ chơi.
+\textbf{Fahasa.com} là website bán sách trực tuyến hàng đầu Việt Nam, thuộc Công ty Cổ phần Phát hành Sách TP.HCM. Với hơn 40 năm kinh nghiệm, Fahasa đã xây dựng được nền tảng E-commerce thành công với những điểm mạnh:
 
-\textbf{Đặc điểm nổi bật của Fahasa:}
-\begin{itemize}
-    \item Giao diện thân thiện, dễ sử dụng
-    \item Hệ thống phân loại sách rõ ràng theo thể loại
-    \item Tính năng tìm kiếm mạnh mẽ
-    \item Giỏ hàng và thanh toán trực tuyến tiện lợi
-    \item Chương trình khuyến mãi và tích điểm cho thành viên
-\end{itemize}
-
-Dự án này lấy cảm hứng từ giao diện và các tính năng của Fahasa.com để xây dựng một website thương mại điện tử bán sách hoàn chỉnh.
-
-% ------------------------------------------
-\subsection{Mục tiêu của dự án}
-
-\textbf{Mục tiêu học tập:}
 \begin{enumerate}
-    \item Hiểu và áp dụng kiến trúc MVC (Model-View-Controller) trong PHP
-    \item Nắm vững các công nghệ frontend: HTML5, CSS3, JavaScript, Bootstrap
-    \item Thực hành xây dựng ứng dụng web full-stack
-    \item Hiểu về quy trình phát triển phần mềm theo nhóm
+    \item \textbf{UX/UI Design xuất sắc:}
+    \begin{itemize}
+        \item Layout rõ ràng, dễ điều hướng
+        \item Color scheme nhận diện thương hiệu (đỏ \#C92127)
+        \item Responsive design tối ưu cho mọi thiết bị
+    \end{itemize}
+
+    \item \textbf{Hệ thống phân loại thông minh:}
+    \begin{itemize}
+        \item Danh mục đa cấp (category hierarchy)
+        \item Tags và filters linh hoạt
+        \item Search suggestions thông minh
+    \end{itemize}
+
+    \item \textbf{Tính năng E-commerce đầy đủ:}
+    \begin{itemize}
+        \item Giỏ hàng với AJAX update
+        \item Wishlist và so sánh sản phẩm
+        \item Order tracking chi tiết
+        \item Payment gateway đa dạng
+    \end{itemize}
+
+    \item \textbf{Customer engagement:}
+    \begin{itemize}
+        \item Review và rating system
+        \item Blog và content marketing
+        \item Chương trình loyalty points
+    \end{itemize}
 \end{enumerate}
 
-\textbf{Sản phẩm cuối cùng:}
-\begin{itemize}
-    \item Website thương mại điện tử bán sách hoàn chỉnh
-    \item Tài liệu báo cáo chi tiết về dự án
-    \item Source code có cấu trúc rõ ràng, dễ bảo trì
-\end{itemize}
+Dự án của nhóm lấy cảm hứng từ Fahasa.com nhằm tái hiện các tính năng cốt lõi của một nền tảng E-commerce hiện đại, đồng thời áp dụng kiến thức đã học về lập trình web.
 
 % ------------------------------------------
-\subsection{Phạm vi báo cáo}
+\subsection{Mục tiêu dự án}
 
-\textbf{Các tính năng đã xây dựng:}
+Dự án được thực hiện với hai nhóm mục tiêu chính: mục tiêu học tập và mục tiêu sản phẩm.
+
+\subsubsection{Mục tiêu học tập}
+
+\begin{enumerate}
+    \item \textbf{Hiểu sâu về kiến trúc MVC:}
+    \begin{itemize}
+        \item Tự xây dựng framework MVC từ đầu (không dùng Laravel, CodeIgniter)
+        \item Hiểu rõ luồng hoạt động: Request → Router → Controller → Model → View
+        \item Thực hành Separation of Concerns
+    \end{itemize}
+
+    \item \textbf{Nắm vững Full-stack Development:}
+    \begin{itemize}
+        \item \textit{Frontend:} HTML5, CSS3, Bootstrap 5, JavaScript (AJAX)
+        \item \textit{Backend:} PHP 7.4+, PDO, Session Management
+        \item \textit{Database:} MySQL, Schema Design, Query Optimization
+    \end{itemize}
+
+    \item \textbf{Áp dụng Web Security Best Practices:}
+    \begin{itemize}
+        \item SQL Injection Prevention (Prepared Statements)
+        \item XSS Prevention (Output Escaping)
+        \item Password Hashing (Bcrypt)
+        \item Session Security, CSRF Protection
+    \end{itemize}
+
+    \item \textbf{Thực hành Software Engineering:}
+    \begin{itemize}
+        \item Git workflow (branching, merging, conflict resolution)
+        \item Code organization và naming conventions
+        \item Documentation (README, LaTeX report)
+        \item Teamwork và task distribution
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Mục tiêu sản phẩm}
+
+\textbf{Deliverables:}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Sản phẩm} & \textbf{Mô tả} \\
+\hline
+Website & E-commerce platform hoàn chỉnh với đầy đủ tính năng User \& Admin \\
+\hline
+Source Code & Cấu trúc MVC rõ ràng, comments đầy đủ, tuân thủ PSR-12 \\
+\hline
+Database & Schema chuẩn hóa 3NF, sample data, migration scripts \\
+\hline
+Documentation & Báo cáo LaTeX 30+ trang, README.md chi tiết \\
+\hline
+Demo & Video demo, screenshots, deployment guide \\
+\hline
+\end{tabular}
+\caption{Các sản phẩm bàn giao}
+\label{tab:deliverables}
+\end{table}
+
+% ------------------------------------------
+\subsection{Phạm vi và giới hạn}
+
+\subsubsection{Phạm vi thực hiện}
+
+Dự án tập trung vào việc xây dựng một nền tảng E-commerce hoàn chỉnh với hai phân hệ chính:
+
+\textbf{1. Phân hệ Khách hàng (Customer Frontend):}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Module} & \textbf{Tính năng} \\
+\hline
+Home & Banner slider, Featured products, Categories \\
+\hline
+Products & List view, Detail view, Search, Filter, Sort \\
+\hline
+Cart & CRUD operations, Quantity update (AJAX) \\
+\hline
+Checkout & Order placement, Shipping info \\
+\hline
+Account & Profile management, Order history, Wishlist, Notifications \\
+\hline
+Content & News, Blog, About, FAQ, Contact \\
+\hline
+Auth & Login, Register, Logout, Password recovery \\
+\hline
+\end{tabular}
+\caption{Các module của phân hệ Khách hàng}
+\label{tab:customer-modules}
+\end{table}
+
+\textbf{2. Phân hệ Quản trị (Admin Panel):}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|p{8cm}|}
+\hline
+\textbf{Module} & \textbf{Tính năng} \\
+\hline
+Dashboard & Statistics, Charts, Quick actions \\
+\hline
+Products & CRUD, Category management, Image upload \\
+\hline
+Orders & View, Update status, Order details \\
+\hline
+Customers & User list, Role management, Activity logs \\
+\hline
+Content & News CRUD, Q\&A management, Contact responses \\
+\hline
+Settings & Site config, SEO settings, Email templates \\
+\hline
+\end{tabular}
+\caption{Các module của Admin Panel}
+\label{tab:admin-modules}
+\end{table}
+
+\subsubsection{Công nghệ và công cụ}
+
 \begin{itemize}
-    \item Trang chủ với banner và sản phẩm nổi bật
-    \item Danh sách sản phẩm với tìm kiếm và lọc
-    \item Chi tiết sản phẩm
-    \item Giỏ hàng (thêm, xóa, cập nhật số lượng)
-    \item Trang thông tin khách hàng (profile, đơn hàng, wishlist)
-    \item Trang tin tức và chi tiết bài viết
-    \item Trang giới thiệu, hỏi đáp và liên hệ
-    \item Đăng nhập/Đăng ký (Frontend mockup)
+    \item \textbf{Frontend:} HTML5, CSS3, Bootstrap 5.3, JavaScript (ES6+), AJAX
+    \item \textbf{Backend:} PHP 7.4+, Custom MVC Framework, PDO
+    \item \textbf{Database:} MySQL 8.0, Normalized Schema (3NF)
+    \item \textbf{Security:} Prepared Statements, Password Hashing, XSS Prevention
+    \item \textbf{SEO:} Meta tags, Open Graph, robots.txt, Semantic HTML
+    \item \textbf{Dev Tools:} XAMPP, Git, VS Code, LaTeX 
 \end{itemize}
 
-\textbf{Công nghệ sử dụng:}
+\subsubsection{Giới hạn và hướng phát triển}
+
+\textbf{Giới hạn hiện tại:}
 \begin{itemize}
-    \item \textbf{Frontend:} HTML5, CSS3, Bootstrap 5, JavaScript
-    \item \textbf{Backend:} PHP 7.0+ với mô hình MVC tự xây dựng
-    \item \textbf{Icons:} Font Awesome 6
-    \item \textbf{Server:} XAMPP (Apache)
+    \item Chưa tích hợp payment gateway (VNPay, MoMo)
+    \item Chưa có hệ thống email notification tự động
+    \item Chưa implement CSRF token cho forms
+    \item Chưa có chức năng export báo cáo (Excel/PDF)
 \end{itemize}
 
-\textbf{Giới hạn của dự án:}
+\textbf{Hướng phát triển tương lai:}
 \begin{itemize}
-    \item Sử dụng dữ liệu mock thay vì database thực
-    \item Chưa tích hợp thanh toán trực tuyến
-    \item Chưa có panel quản trị hoàn chỉnh
+    \item Tích hợp thanh toán online và COD tracking
+    \item RESTful API cho mobile app integration
+    \item AI-based product recommendations
+    \item Real-time chat support (WebSocket)
+    \item Multi-vendor marketplace functionality
 \end{itemize}
