@@ -3,14 +3,6 @@
 class CustomerController extends Controller {
     public function __construct() {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        // Tạm thời: cho phép guest (không ép login).
-        // Nếu muốn kích hoạt lại yêu cầu login: uncomment redirect section dưới.
-        /*
-        if (!isset($_SESSION['users_id'])) {
-            header('Location: ' . BASE_URL . 'auth/login');
-            exit;
-        }
-        */
     }
 
     // Profile page
@@ -180,21 +172,6 @@ class CustomerController extends Controller {
 
         $this->view('customer/orders', $data);
     }
-
-    // Orders (kept minimal) - require login in real app, but we'll show mock orders for guest
-    /*public function orders() {
-        if (isset($_SESSION['users_id']) && !empty($_SESSION['users_id'])) {
-            $orderModel = $this->model('OrderModel');
-            $orders = $orderModel->getByUserId($_SESSION['users_id']);
-            foreach ($orders as &$o) {
-                $o['items'] = $orderModel->getItems($o['id']);
-            }
-        } else {
-            // guest: show empty or mock orders (you can customize)
-            $orders = []; // or keep mock data as before
-        }
-        $this->view('customer/orders', ['orders' => $orders]);
-    }*/
 
     // Notifications
     public function notifications() {
