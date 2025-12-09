@@ -1,0 +1,178 @@
+% ============================================
+% CHƯƠNG 3: THIẾT KẾ ỨNG DỤNG
+% ============================================
+
+\section{Thiết kế ứng dụng}
+
+% ------------------------------------------
+\subsection{Thiết kế cơ sở dữ liệu}
+
+Mặc dù dự án hiện tại sử dụng dữ liệu mock, thiết kế database được xây dựng với tầm nhìn mở rộng trong tương lai.
+
+\textbf{Sơ đồ các entities chính:}
+
+\begin{table}[H]
+\centering
+\caption{Bảng Users - Quản lý người dùng}
+\label{tab:users}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
+\hline
+id & INT (PK) & Khóa chính, auto increment \\
+username & VARCHAR(50) & Tên đăng nhập \\
+email & VARCHAR(100) & Email người dùng \\
+password & VARCHAR(255) & Mật khẩu đã hash \\
+fullname & VARCHAR(100) & Họ tên đầy đủ \\
+phone & VARCHAR(15) & Số điện thoại \\
+address & TEXT & Địa chỉ giao hàng \\
+role & ENUM & 'customer', 'admin' \\
+created\_at & DATETIME & Thời gian tạo tài khoản \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Bảng Products - Quản lý sản phẩm}
+\label{tab:products}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
+\hline
+id & INT (PK) & Khóa chính \\
+name & VARCHAR(200) & Tên sản phẩm \\
+slug & VARCHAR(200) & URL-friendly name \\
+description & TEXT & Mô tả chi tiết \\
+price & DECIMAL(10,2) & Giá bán \\
+original\_price & DECIMAL(10,2) & Giá gốc \\
+image & VARCHAR(255) & Đường dẫn hình ảnh \\
+category\_id & INT (FK) & Liên kết bảng categories \\
+author & VARCHAR(100) & Tác giả sách \\
+stock & INT & Số lượng tồn kho \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Bảng Orders - Quản lý đơn hàng}
+\label{tab:orders}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Mô tả} \\
+\hline
+id & INT (PK) & Khóa chính \\
+user\_id & INT (FK) & Liên kết bảng users \\
+total & DECIMAL(12,2) & Tổng tiền đơn hàng \\
+status & ENUM & 'processing', 'shipping', 'completed', 'cancelled' \\
+shipping\_address & TEXT & Địa chỉ giao hàng \\
+created\_at & DATETIME & Thời gian đặt hàng \\
+\hline
+\end{tabular}
+\end{table}
+
+% ------------------------------------------
+\subsection{Mô hình MVC}
+
+Dự án áp dụng mô hình MVC tự xây dựng (custom MVC framework) không sử dụng framework có sẵn như Laravel hay Symfony.
+
+\textbf{Các thành phần:}
+\begin{itemize}
+    \item \textbf{app/core/App.php:} Router chính, phân tích URL và gọi controller tương ứng
+    \item \textbf{app/core/Controller.php:} Base controller với các method chung
+    \item \textbf{app/controllers/:} Các controller xử lý logic
+    \item \textbf{app/models/:} Các model tương tác với dữ liệu
+    \item \textbf{app/views/:} Các view hiển thị giao diện
+\end{itemize}
+
+
+% ------------------------------------------
+\subsection{Cấu trúc thư mục}
+
+Dự án được tổ chức theo cấu trúc MVC rõ ràng:
+
+\begin{verbatim}
+BTL_Fahasa/
+|-- app/                      # Application code
+|   |-- config/               # Configuration files
+|   |-- controllers/          # Controller classes
+|   |-- core/                 # Core framework files
+|   |-- models/               # Model classes
+|   +-- views/                # View templates
+|-- public/                   # Public assets
+|   |-- index.php             # Entry point
+|   |-- css/                  # Stylesheets
+|   |-- js/                   # JavaScript files
+|   +-- images/               # Images
++-- db/                       # Database files
+\end{verbatim}
+
+
+% ------------------------------------------
+\subsection{Tính năng hệ thống}
+
+\subsubsection{Khách (Guest)}
+
+Người dùng chưa đăng nhập có thể:
+\begin{itemize}
+    \item Truy cập trang chủ và xem sản phẩm nổi bật
+    \item Duyệt danh sách sản phẩm theo danh mục
+    \item Xem chi tiết sản phẩm
+    \item Tìm kiếm sản phẩm
+    \item Đọc tin tức và bài viết
+    \item Xem trang giới thiệu, hỏi đáp, liên hệ
+    \item Đăng ký tài khoản mới
+    \item Đăng nhập vào hệ thống
+\end{itemize}
+
+\subsubsection{Thành viên (Customer)}
+
+Sau khi đăng nhập, thành viên có thêm các quyền:
+\begin{itemize}
+    \item Thêm sản phẩm vào giỏ hàng
+    \item Quản lý giỏ hàng (tăng/giảm số lượng, xóa)
+    \item Xem và chỉnh sửa thông tin cá nhân
+    \item Xem lịch sử đơn hàng
+    \item Quản lý danh sách sản phẩm yêu thích
+    \item Nhận thông báo về đơn hàng
+    \item Đăng xuất khỏi hệ thống
+\end{itemize}
+
+\subsubsection{Quản trị viên (Admin)}
+
+\textit{Lưu ý: Tính năng admin chưa được triển khai đầy đủ trong phiên bản hiện tại.}
+
+Các tính năng dự kiến:
+\begin{itemize}
+    \item Quản lý danh sách người dùng
+    \item Thêm/sửa/xóa sản phẩm
+    \item Quản lý danh mục sản phẩm
+    \item Xử lý đơn hàng
+    \item Quản lý nội dung tin tức
+    \item Xem thống kê và báo cáo
+\end{itemize}
+
+% ------------------------------------------
+\subsection{Luồng hoạt động (Flowcharts)}
+
+\textbf{Luồng đăng nhập:}
+\begin{enumerate}
+    \item Người dùng truy cập trang đăng nhập
+    \item Nhập username và password
+    \item Hệ thống kiểm tra thông tin
+    \item Nếu đúng: Tạo session, redirect về trang chủ
+    \item Nếu sai: Hiển thị thông báo lỗi
+\end{enumerate}
+
+\textbf{Luồng mua hàng:}
+\begin{enumerate}
+    \item Khách hàng duyệt sản phẩm
+    \item Click "Thêm vào giỏ" trên sản phẩm mong muốn
+    \item Kiểm tra đăng nhập - nếu chưa, yêu cầu đăng nhập
+    \item Sản phẩm được thêm vào giỏ hàng (Session)
+    \item Khách hàng có thể tiếp tục mua hoặc checkout
+    \item Xem giỏ hàng, điều chỉnh số lượng
+    \item Tiến hành thanh toán
+    \item Xác nhận đơn hàng
+\end{enumerate}
