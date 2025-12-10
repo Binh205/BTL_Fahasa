@@ -242,7 +242,7 @@ Sau khi import database, sử dụng tài khoản admin:
 
 ```
 Email/SĐT: admin@fahasa.com
-Mật khẩu: (xem trong database hoặc tạo mới qua register)
+Mật khẩu: admin
 ```
 
 ---
